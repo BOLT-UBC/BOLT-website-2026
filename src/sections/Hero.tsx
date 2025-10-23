@@ -3,6 +3,8 @@ import Button from "../components/Button";
 import SpaceScene from "../components/SpaceScene";
 import Navbar from "../components/Navbar";
 import { SITE_URLS } from "../config";
+import logoImage from "../assets/images/Logo.webp";
+
 
 const Hero: React.FC = () => {
 
@@ -10,10 +12,23 @@ const Hero: React.FC = () => {
     <div className="flex items-center justify-start bg-gradient-to-br from-[#1a0b2e] via-[#614ea5] to-[#493b7b] w-full h-screen px-6 sm:px-6 md:px-16 relative overflow-hidden -mt-0 top-0" id="Home">
       <SpaceScene />
       <Navbar />
-      <div className="flex flex-col justify-center items-start max-w-3xl p-4 md:p-6 gap-4 relative z-20">
+      <div className="flex justify-start items-center mt-8 lg:mt-0 relative z-30 w-full">
+       <div className="flex flex-col justify-center items-start max-w-3xl p-4 md:p-6 gap-4 relative">
++          
+        <div className="flex items-center gap-6">
                 <h1 className="font-inter text-6xl md:text-8xl font-bold text-white leading-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
                   BOLT
                 </h1>
+                <img
+            src={logoImage}
+            alt="UBC BOLT Logo"
+            className="w-20 sm:w-28 md:w-36 h-auto object-contain -ml-1"
+            loading="lazy"
+            decoding="async"
+            width="200"
+            height="200"
+          />
+        </div>
                 <h2 className="font-inter text-3xl md:text-5xl font-bold text-white leading-snug">
                   UBC's <span className="text-[#e879f9] uppercase">Largest</span> Data Club
                 </h2>
@@ -36,6 +51,9 @@ const Hero: React.FC = () => {
           />
         </div>
       </div>
+      
+          
+    </div>
     </div>
   );
 };

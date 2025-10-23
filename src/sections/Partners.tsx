@@ -9,6 +9,9 @@ const Partners: React.FC = memo(() => {
     { name: "Mastercard", logo: "/partners/mastercard.webp" },
     { name: "Red Bull", logo: "/partners/redbull.webp" },
     { name: "CGI", logo: "/partners/cgi.webp" },
+    { name: "Microsoft", logo: "/partners/microsoft.webp" },
+    { name: "Google", logo: "/partners/google.webp" },
+    { name: "Deloitte", logo: "/partners/deloitte_logo.webp" },
   ];
 
   // Duplicate partners array for seamless loop
