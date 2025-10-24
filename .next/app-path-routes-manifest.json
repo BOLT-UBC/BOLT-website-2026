@@ -1,0 +1,10 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/events/bolt-bootcamp/page": "/events/bolt-bootcamp",
+  "/events/bolt-circuit/page": "/events/bolt-circuit",
+  "/events/bolt-connect/page": "/events/bolt-connect",
+  "/events/first-byte/page": "/events/first-byte",
+  "/page": "/",
+  "/team/page": "/team"
+}
