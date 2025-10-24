@@ -34,7 +34,7 @@ export const authService = {
     })
 
     if (error) throw error
-    return data
+    return { user: data.user, error: null }
   },
 
   // Sign in with email and password
@@ -45,7 +45,7 @@ export const authService = {
     })
 
     if (error) throw error
-    return data
+    return { user: data.user, error: null }
   },
 
   // Sign out

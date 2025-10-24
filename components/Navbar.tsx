@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { NAVIGATION } from "../lib/constants";
 import { scrollToElement } from "../lib/dom";
+import { useAuth, authService } from "../lib/auth";
 
 const Navbar: React.FC = () => {
   const sections = useMemo(() => ["Home", "About", "Partners", "Events", "Solutions", "Team"], []);
@@ -15,8 +16,9 @@ const Navbar: React.FC = () => {
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const router = useRouter();
   const pathname = usePathname();
+  const { user, loading } = useAuth();
 
-  // Check if we're on the team page or any event page
+  // Check if we're on the team page or event page
   const isTeamPage = pathname === '/team';
   const isEventPage = pathname.startsWith('/events/');
   const isNotHomePage = isTeamPage || isEventPage;
@@ -90,8 +92,18 @@ const Navbar: React.FC = () => {
     }
   }, [sections, isNotHomePage, isTeamPage, isEventPage]);
 
+  const handleLogout = async () => {
+    try {
+      await authService.signOut()
+      router.push('/')
+    } catch (error) {
+      // Logout failed
+      void error
+    }
+  }
+
   const scrollToSection = (sectionId: string) => {
-    // If we're on the team page or event page and clicking any section, navigate to home first
+    // If we're on a non-home page and clicking any section, navigate to home first
     if (isNotHomePage) {
       if (sectionId === "Home") {
         router.push('/');
@@ -189,6 +201,27 @@ const Navbar: React.FC = () => {
             </button>
           </li>
         ))}
+
+        {/* Auth Buttons */}
+        <li>
+          {loading ? (
+            <div className="px-4 py-2 text-white/60 text-sm">Loading...</div>
+          ) : user ? (
+            <button
+              onClick={() => router.push('/membership')}
+              className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] hover:text-white/80"
+            >
+              Members
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push('/login')}
+              className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal hover:text-white/80"
+            >
+              Login
+            </button>
+          )}
+        </li>
       </ul>
     </nav>
 
@@ -211,6 +244,31 @@ const Navbar: React.FC = () => {
                 {section}
               </button>
             ))}
+
+            {/* Mobile Auth */}
+            {loading ? (
+              <div className="text-white/60 text-sm px-4 py-2">Loading...</div>
+            ) : user ? (
+              <button
+                onClick={() => {
+                  router.push('/membership');
+                  setMenuOpen(false);
+                }}
+                className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal"
+              >
+                Members
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  router.push('/login');
+                  setMenuOpen(false);
+                }}
+                className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal"
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       )}
