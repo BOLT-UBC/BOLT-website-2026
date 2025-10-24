@@ -1,10 +1,7 @@
-import type { Metadata } from 'next'
 import './globals.css'
+import { metadata } from '../lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'BOLT UBC - UBC\'s Largest Data Club',
-  description: 'Empowering UBC students to harness the power of data through hands-on workshops, case competitions, and networking events.',
-}
+export { metadata }
 
 export default function RootLayout({
   children,

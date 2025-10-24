@@ -1,8 +1,8 @@
-import React, { memo } from "react";
+import { memo } from "react";
 
 const DataBridge: React.FC = memo(() => {
   return (
-    <div className="w-full py-16 md:py-20 bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7]" id="Services">
+    <div className="w-full py-16 md:py-20 bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7]" id="Solutions">
       <div className="max-w-6xl mx-auto px-6 sm:px-6 md:px-8">
         <div className="mb-6 md:mb-8">
           <h2 className="font-inter text-sm font-normal text-gray-600 mb-2 lowercase italic">DataBridge</h2>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TeamData, Team as TeamType, Member } from "../../types/types";
 import { getProfileUrl } from "../../lib/assets";
 import Navbar from "../../components/Navbar";
@@ -12,7 +12,6 @@ const teamData = teamDataJson as unknown as TeamData;
 
 export default function TeamPage() {
   const [allMembers, setAllMembers] = useState<Member[]>([]);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     // Scroll to top when component mounts
@@ -27,10 +26,6 @@ export default function TeamPage() {
     });
     setAllMembers(members);
   }, []);
-
-  const handleImageLoad = (index: number) => {
-    setLoadedImages(prev => new Set(Array.from(prev).concat(index)));
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7]">
@@ -65,7 +60,6 @@ export default function TeamPage() {
                       className="w-full h-full object-cover"
                       loading="lazy"
                       decoding="async"
-                      onLoad={() => handleImageLoad(index)}
                       width="200"
                       height="200"
                     />
@@ -109,7 +103,6 @@ export default function TeamPage() {
                       className="w-full h-full object-cover"
                       loading="lazy"
                       decoding="async"
-                      onLoad={() => handleImageLoad(index)}
                       width="200"
                       height="200"
                     />

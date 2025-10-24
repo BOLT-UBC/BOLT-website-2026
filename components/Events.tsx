@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useRouter } from "next/navigation";
 import { Event, EventsData } from "../types/types";
 import { getEventImageUrl } from "../lib/assets";

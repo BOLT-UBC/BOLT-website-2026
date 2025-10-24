@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Member, TeamData } from "../types/types";
 import { getProfileUrl } from "../lib/assets";

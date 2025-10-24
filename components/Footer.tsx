@@ -8,6 +8,8 @@ function Footer() {
   const router = useRouter();
   const pathname = usePathname();
   const isTeamPage = pathname === '/team';
+  const isEventPage = pathname.startsWith('/events/');
+  const isNotHomePage = isTeamPage || isEventPage;
 
   const handleNavigation = (sectionId: string) => {
     // If clicking on Team, navigate to team page
@@ -16,8 +18,8 @@ function Footer() {
       return;
     }
 
-    // If we're on the team page, navigate to home first
-    if (isTeamPage) {
+    // If we're on the team page or event page, navigate to home first
+    if (isNotHomePage) {
       router.push('/');
       setTimeout(() => {
         if (typeof document !== 'undefined') {
@@ -128,6 +130,9 @@ function Footer() {
             </button>
             <button onClick={() => handleNavigation('Partners')} className="font-inter text-white/80 hover:text-white transition-colors">
               Partners
+            </button>
+            <button onClick={() => handleNavigation('Solutions')} className="font-inter text-white/80 hover:text-white transition-colors">
+              Solutions
             </button>
             <a href={SITE_URLS.membership} target="_blank" rel="noopener noreferrer" className="font-inter text-white/80 hover:text-white transition-colors">
               Membership

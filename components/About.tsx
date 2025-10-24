@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 const Carousel: React.FC<{ images: string[]; interval?: number; onImageLoad?: () => void }> = ({ images, interval = 4000, onImageLoad }) => {

@@ -12,6 +12,8 @@
 export const scrollToElement = (
   elementId: string
 ): boolean => {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return false; // SSR Guard
+
   const element = document.getElementById(elementId);
   if (element) {
     const elementRect = element.getBoundingClientRect();

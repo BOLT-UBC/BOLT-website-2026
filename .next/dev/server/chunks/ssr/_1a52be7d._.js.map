@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/jessicazhou/BOLT-website-2025/lib/metadata.ts"],"sourcesContent":["import type { Metadata } from 'next'\n\nexport const metadata: Metadata = {\n  title: 'BOLT UBC - UBC\\'s Largest Data Club',\n  description: 'Empowering UBC students to harness the power of data through hands-on workshops, case competitions, and networking events.',\n}\n\n"],"names":[],"mappings":";;;;AAEO,MAAM,WAAqB;IAChC,OAAO;IACP,aAAa;AACf","debugId":null}},
+    {"offset": {"line": 16, "column": 0}, "map": {"version":3,"sources":["file:///Users/jessicazhou/BOLT-website-2025/app/layout.tsx"],"sourcesContent":["import './globals.css'\nimport { metadata } from '../lib/metadata'\n\nexport { metadata }\n\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode\n}) {\n  return (\n    <html lang=\"en\">\n      <body suppressHydrationWarning={true}>{children}</body>\n    </html>\n  )\n}\n"],"names":[],"mappings":";;;;;AACA;;;;;AAIe,SAAS,WAAW,EACjC,QAAQ,EAGT;IACC,qBACE,8OAAC;QAAK,MAAK;kBACT,cAAA,8OAAC;YAAK,0BAA0B;sBAAO;;;;;;;;;;;AAG7C","debugId":null}},
+    {"offset": {"line": 59, "column": 0}, "map": {"version":3,"sources":["file:///Users/jessicazhou/BOLT-website-2025/node_modules/next/src/server/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.ts"],"sourcesContent":["module.exports = (\n  require('../../module.compiled') as typeof import('../../module.compiled')\n).vendored['react-rsc']!.ReactJsxDevRuntime\n"],"names":["module","exports","require","vendored","ReactJsxDevRuntime"],"mappings":"AAAAA,OAAOC,OAAO,GACZC,QAAQ,4HACRC,QAAQ,CAAC,YAAY,CAAEC,kBAAkB","ignoreList":[0],"debugId":null}}]
+}

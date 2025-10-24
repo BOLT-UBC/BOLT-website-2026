@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { NAVIGATION } from "../lib/constants";
 import { scrollToElement } from "../lib/dom";
@@ -16,8 +16,10 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Check if we're on the team page
+  // Check if we're on the team page or any event page
   const isTeamPage = pathname === '/team';
+  const isEventPage = pathname.startsWith('/events/');
+  const isNotHomePage = isTeamPage || isEventPage;
 
   // Function to update slider position
   const updateSliderPosition = (sectionName: string) => {
@@ -52,8 +54,12 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     // Only set up scroll listener on home page
-    if (isTeamPage) {
-      setActiveSection("Team");
+    if (isNotHomePage) {
+      if (isTeamPage) {
+        setActiveSection("Team");
+      } else if (isEventPage) {
+        setActiveSection("Events");
+      }
       return;
     }
 
@@ -82,11 +88,11 @@ const Navbar: React.FC = () => {
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
     }
-  }, [sections, isTeamPage]);
+  }, [sections, isNotHomePage, isTeamPage, isEventPage]);
 
   const scrollToSection = (sectionId: string) => {
-    // If we're on the team page and clicking any section, navigate to home first
-    if (isTeamPage) {
+    // If we're on the team page or event page and clicking any section, navigate to home first
+    if (isNotHomePage) {
       if (sectionId === "Home") {
         router.push('/');
       } else {
