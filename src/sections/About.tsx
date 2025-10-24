@@ -27,7 +27,7 @@ const About: React.FC = memo(() => {
         <div className="flex justify-center items-center mt-8 lg:mt-0">
           <img
             src={byteImage}
-            alt="UBC BOLT Community"
+            alt="BOLT UBC community members collaborating on data analytics projects"
             className="w-48 sm:w-56 md:w-64 h-auto object-contain"
             loading="lazy"
             decoding="async"
@@ -98,7 +98,7 @@ const Carousel: React.FC<{ images: string[]; interval?: number }> = ({ images, i
         ))}
       </div>
 
-      {/* prev / next */}    
+      {/* prev / next */}
 {images.length > 1 && (
   <>
     <button
@@ -146,7 +146,7 @@ const About: React.FC = memo(() => {
             </p>
           </div>
         </div>
-        
+
         <div className="flex justify-center items-center mt-8 lg:mt-0">
           <Carousel images={images} interval={4000} />
         </div>

@@ -39,9 +39,9 @@ const Hero: React.FC = () => {
                 </h1>
                 <img
             src={logoImage}
-            alt="UBC BOLT Logo"
+            alt="BOLT UBC Logo - UBC's Largest Data Club"
             className="w-20 sm:w-28 md:w-36 h-auto object-contain -ml-10"
-            loading="lazy"
+            loading="eager"
             decoding="async"
             width="200"
             height="200"

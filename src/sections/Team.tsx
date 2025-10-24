@@ -61,7 +61,7 @@ const Team: React.FC = () => {
                       }`}>
                         <img
                           src={getProfileUrl(member.profilepic || '')}
-                          alt={member.name}
+                          alt={`${member.name} - ${member.title} at BOLT UBC`}
                           loading="lazy"
                           decoding="async"
                           onLoad={() => handleImageLoad(index)}
@@ -101,7 +101,7 @@ const Team: React.FC = () => {
                       }`}>
                         <img
                           src={getProfileUrl(member.profilepic || '')}
-                          alt={member.name}
+                          alt={`${member.name} - ${member.title} at BOLT UBC`}
                           loading="lazy"
                           decoding="async"
                           onLoad={() => handleImageLoad(index + firstHalf.length)}

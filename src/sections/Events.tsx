@@ -43,7 +43,7 @@ const Events: React.FC = () => {
               <div className="w-56 h-56 overflow-hidden rounded-lg mb-2 mx-auto">
                 <img
                   src={getEventImageUrl(event.image)}
-                  alt={event.name}
+                  alt={`${event.name} - BOLT UBC data analytics event`}
                   className="w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"
