@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 
 interface SpaceSceneRef {
   createExplosion: (x: number, y: number) => void;
@@ -8,7 +8,7 @@ interface WindowWithSpaceScene extends Window {
   spaceSceneExplosion?: (x: number, y: number) => void;
 }
 
-const SpaceScene = forwardRef<SpaceSceneRef>((props, ref) => {
+const SpaceScene = forwardRef<SpaceSceneRef>((_, ref) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const isVisibleRef = useRef(true);
 

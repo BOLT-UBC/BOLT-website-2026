@@ -18,6 +18,13 @@ const Events: React.FC = () => {
     "/events/bolt-bootcamp"
   ];
 
+  const eventMonths = {
+    "First Byte": "October",
+    "BOLT Connect": "November",
+    "BOLT Circuit": "March",
+    "BOLT Bootcamp": "April"
+  };
+
   return (
     <div className="w-full py-16 md:py-20 bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7]" id="Events">
       <div className="w-full max-w-6xl mx-auto px-6 sm:px-6 md:px-8">
@@ -58,7 +65,7 @@ const Events: React.FC = () => {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">
-                    {index === 0 ? "January" : index === 1 ? "February" : index === 2 ? "March" : "April"}
+                    {eventMonths[event.name as keyof typeof eventMonths]}
                   </span>
                 </div>
                 <div className="flex justify-center pt-1">

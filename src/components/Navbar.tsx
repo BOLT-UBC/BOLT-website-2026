@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { NAVIGATION } from "../constants";
 import { scrollToElement } from "../lib/dom";
 
 const Navbar: React.FC = () => {
-  const sections = ["Home", "About", "Partners", "Events", "Services", "Team"];
+  const sections = useMemo(() => ["Home", "About", "Partners", "Events", "Solutions", "Team"], []);
   const [activeSection, setActiveSection] = useState("Home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [sliderStyle, setSliderStyle] = useState({ width: 0, left: 0 });
