@@ -21,14 +21,56 @@ export interface AuthUser extends User {
 }
 
 export const authService = {
+  // Input validation helper
+  validateEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email) && email.length <= 255
+  },
+
+  validatePassword(password: string): { valid: boolean; message?: string } {
+    if (password.length < 8) {
+      return { valid: false, message: 'Password must be at least 8 characters long' }
+    }
+    if (password.length > 128) {
+      return { valid: false, message: 'Password must be less than 128 characters' }
+    }
+    if (!/(?=.*[a-z])/.test(password)) {
+      return { valid: false, message: 'Password must contain at least one lowercase letter' }
+    }
+    if (!/(?=.*[A-Z])/.test(password)) {
+      return { valid: false, message: 'Password must contain at least one uppercase letter' }
+    }
+    if (!/(?=.*\d)/.test(password)) {
+      return { valid: false, message: 'Password must contain at least one number' }
+    }
+    return { valid: true }
+  },
+
+  sanitizeInput(input: string): string {
+    return input.trim().replace(/[<>]/g, '')
+  },
+
   // Sign up with email and password
   async signUp(email: string, password: string, fullName?: string) {
+    // Input validation
+    if (!this.validateEmail(email)) {
+      throw new Error('Invalid email format')
+    }
+
+    const passwordValidation = this.validatePassword(password)
+    if (!passwordValidation.valid) {
+      throw new Error(passwordValidation.message)
+    }
+
+    const sanitizedEmail = email.toLowerCase().trim()
+    const sanitizedFullName = fullName ? this.sanitizeInput(fullName) : undefined
+
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: sanitizedEmail,
       password,
       options: {
         data: {
-          full_name: fullName
+          full_name: sanitizedFullName
         }
       }
     })
@@ -39,8 +81,15 @@ export const authService = {
 
   // Sign in with email and password
   async signIn(email: string, password: string) {
+    // Input validation
+    if (!this.validateEmail(email)) {
+      throw new Error('Invalid email format')
+    }
+
+    const sanitizedEmail = email.toLowerCase().trim()
+
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: sanitizedEmail,
       password
     })
 
@@ -120,9 +169,48 @@ export const authService = {
     phone?: string
     linkedin_url?: string
   }) {
+    // Input validation and sanitization
+    const sanitizedUpdates: Record<string, string | number | null> = {}
+
+    if (updates.full_name) {
+      sanitizedUpdates.full_name = this.sanitizeInput(updates.full_name)
+    }
+    if (updates.major) {
+      sanitizedUpdates.major = this.sanitizeInput(updates.major)
+    }
+    if (updates.phone) {
+      // Basic phone validation
+      const phoneRegex = /^[+]?[1-9][\d]{0,15}$/
+      if (!phoneRegex.test(updates.phone.replace(/[\s\-()]/g, ''))) {
+        throw new Error('Invalid phone number format')
+      }
+      sanitizedUpdates.phone = updates.phone.replace(/[^\d+()\s]/g, '')
+    }
+    if (updates.linkedin_url) {
+      // Basic URL validation
+      try {
+        new URL(updates.linkedin_url)
+        sanitizedUpdates.linkedin_url = updates.linkedin_url
+      } catch {
+        throw new Error('Invalid LinkedIn URL format')
+      }
+    }
+    if (updates.year !== undefined) {
+      if (updates.year < 1 || updates.year > 5) {
+        throw new Error('Year must be between 1 and 5')
+      }
+      sanitizedUpdates.year = updates.year
+    }
+    if (updates.team_id) {
+      sanitizedUpdates.team_id = updates.team_id
+    }
+    if (updates.avatar_url) {
+      sanitizedUpdates.avatar_url = updates.avatar_url
+    }
+
     const { data, error } = await supabase
       .from('profiles')
-      .update(updates)
+      .update(sanitizedUpdates)
       .eq('id', userId)
       .select()
       .single()
@@ -133,7 +221,13 @@ export const authService = {
 
   // Reset password
   async resetPassword(email: string) {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    if (!this.validateEmail(email)) {
+      throw new Error('Invalid email format')
+    }
+
+    const sanitizedEmail = email.toLowerCase().trim()
+
+    const { error } = await supabase.auth.resetPasswordForEmail(sanitizedEmail, {
       redirectTo: `${window.location.origin}/reset-password`
     })
 
@@ -142,6 +236,11 @@ export const authService = {
 
   // Update password
   async updatePassword(newPassword: string) {
+    const passwordValidation = this.validatePassword(newPassword)
+    if (!passwordValidation.valid) {
+      throw new Error(passwordValidation.message)
+    }
+
     const { error } = await supabase.auth.updateUser({
       password: newPassword
     })
@@ -181,8 +280,34 @@ export const useAuth = () => {
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user as AuthUser || null)
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        try {
+          const profile = await authService.getUserProfile(session.user.id)
+          setUser({
+            ...session.user,
+            profile
+          } as AuthUser)
+        } catch (error) {
+          void error
+          // If profile doesn't exist, create one (for OAuth users)
+          try {
+            const newProfile = await authService.createProfile(session.user, {
+              full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
+              role: 'non_member'
+            })
+            setUser({
+              ...session.user,
+              profile: newProfile
+            } as AuthUser)
+          } catch (createError) {
+            void createError
+            setUser(session.user as AuthUser)
+          }
+        }
+      } else {
+        setUser(null)
+      }
       setLoading(false)
     })
 
@@ -198,8 +323,25 @@ export const useAuth = () => {
               profile
             } as AuthUser)
           } catch (error) {
-            console.error('Error fetching user profile:', error)
-            setUser(session.user as AuthUser)
+            void error
+            // If profile doesn't exist, create one (for OAuth users)
+            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+              try {
+                const newProfile = await authService.createProfile(session.user, {
+                  full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
+                  role: 'non_member'
+                })
+                setUser({
+                  ...session.user,
+                  profile: newProfile
+                } as AuthUser)
+              } catch (createError) {
+                void createError
+                setUser(session.user as AuthUser)
+              }
+            } else {
+              setUser(session.user as AuthUser)
+            }
           }
         } else {
           setUser(null)

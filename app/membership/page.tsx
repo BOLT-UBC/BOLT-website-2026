@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import ResumeUpload from '@/components/ResumeUpload'
-import { useAuth } from '@/lib/auth'
+import { useAuth, authService } from '@/lib/auth'
 import { profileService, eventService, teamService } from '@/lib/database'
 
 interface UserProfile {
@@ -45,6 +46,7 @@ interface Team {
 
 export default function MembershipPortal() {
   const { user, loading } = useAuth()
+  const router = useRouter()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [events, setEvents] = useState<Event[]>([])
   const [teams, setTeams] = useState<Team[]>([])
@@ -445,6 +447,20 @@ export default function MembershipPortal() {
                     </button>
                     <button className="w-full text-left px-4 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
                       Download My Data
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          await authService.signOut()
+                          router.push('/')
+                        } catch (error) {
+                          // Logout failed
+                          void error
+                        }
+                      }}
+                      className="w-full text-left px-4 py-3 bg-orange-500/20 text-orange-300 rounded-lg hover:bg-orange-500/30 transition-colors"
+                    >
+                      Sign Out
                     </button>
                     <button className="w-full text-left px-4 py-3 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors">
                       Delete Account

@@ -193,39 +193,9 @@ const scrollToElement = (elementId)=>{
     const element = undefined;
 };
 }),
-"[externals]/stream [external] (stream, cjs)", ((__turbopack_context__, module, exports) => {
+"[externals]/@supabase/supabase-js [external] (@supabase/supabase-js, cjs)", ((__turbopack_context__, module, exports) => {
 
-const mod = __turbopack_context__.x("stream", () => require("stream"));
-
-module.exports = mod;
-}),
-"[externals]/http [external] (http, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("http", () => require("http"));
-
-module.exports = mod;
-}),
-"[externals]/url [external] (url, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("url", () => require("url"));
-
-module.exports = mod;
-}),
-"[externals]/punycode [external] (punycode, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("punycode", () => require("punycode"));
-
-module.exports = mod;
-}),
-"[externals]/https [external] (https, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("https", () => require("https"));
-
-module.exports = mod;
-}),
-"[externals]/zlib [external] (zlib, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("zlib", () => require("zlib"));
+const mod = __turbopack_context__.x("@supabase/supabase-js", () => require("@supabase/supabase-js"));
 
 module.exports = mod;
 }),
@@ -236,11 +206,11 @@ __turbopack_context__.s([
     "supabase",
     ()=>supabase
 ]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@supabase/supabase-js/dist/module/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$externals$5d2f40$supabase$2f$supabase$2d$js__$5b$external$5d$__$2840$supabase$2f$supabase$2d$js$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/@supabase/supabase-js [external] (@supabase/supabase-js, cjs)");
 ;
 const supabaseUrl = ("TURBOPACK compile-time value", "https://xbpivmnufaprxrdlbbjq.supabase.co") || '';
 const supabaseAnonKey = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhicGl2bW51ZmFwcnhyZGxiYmpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjYwMjAsImV4cCI6MjA3NjkwMjAyMH0.acR_9qwTCgxNUY1u0vPOaY36M5qF86r8WUxfZeFUQMM") || '';
-const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(supabaseUrl, supabaseAnonKey);
+const supabase = (0, __TURBOPACK__imported__module__$5b$externals$5d2f40$supabase$2f$supabase$2d$js__$5b$external$5d$__$2840$supabase$2f$supabase$2d$js$2c$__cjs$29$__["createClient"])(supabaseUrl, supabaseAnonKey);
 }),
 "[project]/lib/auth.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
@@ -395,11 +365,11 @@ const authService = {
         }
         if (updates.phone) {
             // Basic phone validation
-            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-            if (!phoneRegex.test(updates.phone.replace(/[\s\-\(\)]/g, ''))) {
+            const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+            if (!phoneRegex.test(updates.phone.replace(/[\s\-()]/g, ''))) {
                 throw new Error('Invalid phone number format');
             }
-            sanitizedUpdates.phone = updates.phone.replace(/[^\d\+\-\(\)\s]/g, '');
+            sanitizedUpdates.phone = updates.phone.replace(/[^\d+()\s]/g, '');
         }
         if (updates.linkedin_url) {
             // Basic URL validation
@@ -2583,4 +2553,4 @@ const __TURBOPACK__default__export__ = /*#__PURE__*/ (0, __TURBOPACK__imported__
 }),
 ];
 
-//# sourceMappingURL=%5Broot-of-the-server%5D__66a6aa5e._.js.map
+//# sourceMappingURL=%5Broot-of-the-server%5D__ad6fe406._.js.map

@@ -23,39 +23,9 @@ const mod = __turbopack_context__.x("next/dist/server/app-render/work-async-stor
 
 module.exports = mod;
 }),
-"[externals]/stream [external] (stream, cjs)", ((__turbopack_context__, module, exports) => {
+"[externals]/@supabase/supabase-js [external] (@supabase/supabase-js, cjs)", ((__turbopack_context__, module, exports) => {
 
-const mod = __turbopack_context__.x("stream", () => require("stream"));
-
-module.exports = mod;
-}),
-"[externals]/http [external] (http, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("http", () => require("http"));
-
-module.exports = mod;
-}),
-"[externals]/url [external] (url, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("url", () => require("url"));
-
-module.exports = mod;
-}),
-"[externals]/punycode [external] (punycode, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("punycode", () => require("punycode"));
-
-module.exports = mod;
-}),
-"[externals]/https [external] (https, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("https", () => require("https"));
-
-module.exports = mod;
-}),
-"[externals]/zlib [external] (zlib, cjs)", ((__turbopack_context__, module, exports) => {
-
-const mod = __turbopack_context__.x("zlib", () => require("zlib"));
+const mod = __turbopack_context__.x("@supabase/supabase-js", () => require("@supabase/supabase-js"));
 
 module.exports = mod;
 }),
@@ -66,11 +36,11 @@ __turbopack_context__.s([
     "supabase",
     ()=>supabase
 ]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@supabase/supabase-js/dist/module/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$externals$5d2f40$supabase$2f$supabase$2d$js__$5b$external$5d$__$2840$supabase$2f$supabase$2d$js$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/@supabase/supabase-js [external] (@supabase/supabase-js, cjs)");
 ;
 const supabaseUrl = ("TURBOPACK compile-time value", "https://xbpivmnufaprxrdlbbjq.supabase.co") || '';
 const supabaseAnonKey = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhicGl2bW51ZmFwcnhyZGxiYmpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjYwMjAsImV4cCI6MjA3NjkwMjAyMH0.acR_9qwTCgxNUY1u0vPOaY36M5qF86r8WUxfZeFUQMM") || '';
-const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(supabaseUrl, supabaseAnonKey);
+const supabase = (0, __TURBOPACK__imported__module__$5b$externals$5d2f40$supabase$2f$supabase$2d$js__$5b$external$5d$__$2840$supabase$2f$supabase$2d$js$2c$__cjs$29$__["createClient"])(supabaseUrl, supabaseAnonKey);
 }),
 "[project]/lib/auth.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
@@ -86,14 +56,67 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 ;
 const authService = {
+    // Input validation helper
+    validateEmail (email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email) && email.length <= 255;
+    },
+    validatePassword (password) {
+        if (password.length < 8) {
+            return {
+                valid: false,
+                message: 'Password must be at least 8 characters long'
+            };
+        }
+        if (password.length > 128) {
+            return {
+                valid: false,
+                message: 'Password must be less than 128 characters'
+            };
+        }
+        if (!/(?=.*[a-z])/.test(password)) {
+            return {
+                valid: false,
+                message: 'Password must contain at least one lowercase letter'
+            };
+        }
+        if (!/(?=.*[A-Z])/.test(password)) {
+            return {
+                valid: false,
+                message: 'Password must contain at least one uppercase letter'
+            };
+        }
+        if (!/(?=.*\d)/.test(password)) {
+            return {
+                valid: false,
+                message: 'Password must contain at least one number'
+            };
+        }
+        return {
+            valid: true
+        };
+    },
+    sanitizeInput (input) {
+        return input.trim().replace(/[<>]/g, '');
+    },
     // Sign up with email and password
     async signUp (email, password, fullName) {
+        // Input validation
+        if (!this.validateEmail(email)) {
+            throw new Error('Invalid email format');
+        }
+        const passwordValidation = this.validatePassword(password);
+        if (!passwordValidation.valid) {
+            throw new Error(passwordValidation.message);
+        }
+        const sanitizedEmail = email.toLowerCase().trim();
+        const sanitizedFullName = fullName ? this.sanitizeInput(fullName) : undefined;
         const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.signUp({
-            email,
+            email: sanitizedEmail,
             password,
             options: {
                 data: {
-                    full_name: fullName
+                    full_name: sanitizedFullName
                 }
             }
         });
@@ -105,8 +128,13 @@ const authService = {
     },
     // Sign in with email and password
     async signIn (email, password) {
+        // Input validation
+        if (!this.validateEmail(email)) {
+            throw new Error('Invalid email format');
+        }
+        const sanitizedEmail = email.toLowerCase().trim();
         const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.signInWithPassword({
-            email,
+            email: sanitizedEmail,
             password
         });
         if (error) throw error;
@@ -157,19 +185,64 @@ const authService = {
     },
     // Update user profile
     async updateProfile (userId, updates) {
-        const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('profiles').update(updates).eq('id', userId).select().single();
+        // Input validation and sanitization
+        const sanitizedUpdates = {};
+        if (updates.full_name) {
+            sanitizedUpdates.full_name = this.sanitizeInput(updates.full_name);
+        }
+        if (updates.major) {
+            sanitizedUpdates.major = this.sanitizeInput(updates.major);
+        }
+        if (updates.phone) {
+            // Basic phone validation
+            const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+            if (!phoneRegex.test(updates.phone.replace(/[\s\-()]/g, ''))) {
+                throw new Error('Invalid phone number format');
+            }
+            sanitizedUpdates.phone = updates.phone.replace(/[^\d+()\s]/g, '');
+        }
+        if (updates.linkedin_url) {
+            // Basic URL validation
+            try {
+                new URL(updates.linkedin_url);
+                sanitizedUpdates.linkedin_url = updates.linkedin_url;
+            } catch  {
+                throw new Error('Invalid LinkedIn URL format');
+            }
+        }
+        if (updates.year !== undefined) {
+            if (updates.year < 1 || updates.year > 5) {
+                throw new Error('Year must be between 1 and 5');
+            }
+            sanitizedUpdates.year = updates.year;
+        }
+        if (updates.team_id) {
+            sanitizedUpdates.team_id = updates.team_id;
+        }
+        if (updates.avatar_url) {
+            sanitizedUpdates.avatar_url = updates.avatar_url;
+        }
+        const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('profiles').update(sanitizedUpdates).eq('id', userId).select().single();
         if (error) throw error;
         return data;
     },
     // Reset password
     async resetPassword (email) {
-        const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.resetPasswordForEmail(email, {
+        if (!this.validateEmail(email)) {
+            throw new Error('Invalid email format');
+        }
+        const sanitizedEmail = email.toLowerCase().trim();
+        const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.resetPasswordForEmail(sanitizedEmail, {
             redirectTo: `${window.location.origin}/reset-password`
         });
         if (error) throw error;
     },
     // Update password
     async updatePassword (newPassword) {
+        const passwordValidation = this.validatePassword(newPassword);
+        if (!passwordValidation.valid) {
+            throw new Error(passwordValidation.message);
+        }
         const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.updateUser({
             password: newPassword
         });
@@ -798,4 +871,4 @@ function LoginPage() {
 }),
 ];
 
-//# sourceMappingURL=%5Broot-of-the-server%5D__5b66317b._.js.map
+//# sourceMappingURL=%5Broot-of-the-server%5D__2c016dad._.js.map

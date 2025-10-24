@@ -2,6 +2,54 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { profileService } from '@/lib/database'
 
+// Simple in-memory rate limiting (for production, use Redis or similar)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+
+function checkRateLimit(identifier: string, limit: number = 10, windowMs: number = 60000): boolean {
+  const now = Date.now()
+  const record = rateLimitMap.get(identifier)
+
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(identifier, { count: 1, resetTime: now + windowMs })
+    return true
+  }
+
+  if (record.count >= limit) {
+    return false
+  }
+
+  record.count++
+  return true
+}
+
+// Validate file upload
+function validateFile(file: File): { valid: boolean; error?: string } {
+  // Check file type
+  const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+  if (!allowedTypes.includes(file.type)) {
+    return { valid: false, error: 'Only PDF and Word documents are allowed' }
+  }
+
+  // Check file size (5MB limit)
+  const maxSize = 5 * 1024 * 1024 // 5MB
+  if (file.size > maxSize) {
+    return { valid: false, error: 'File size must be less than 5MB' }
+  }
+
+  // Check file name
+  if (file.name.length > 255) {
+    return { valid: false, error: 'File name too long' }
+  }
+
+  // Check for suspicious file names
+  const suspiciousPatterns = /[<>:"/\\|?*]|\.\.|script|javascript|vbscript/i
+  if (suspiciousPatterns.test(file.name)) {
+    return { valid: false, error: 'Invalid file name' }
+  }
+
+  return { valid: true }
+}
+
 // Get user's resume info from profile
 export async function GET(request: NextRequest) {
   try {
@@ -11,6 +59,15 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { error: 'User ID is required' },
+        { status: 400 }
+      )
+    }
+
+    // Basic UUID validation
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(userId)) {
+      return NextResponse.json(
+        { error: 'Invalid user ID format' },
         { status: 400 }
       )
     }
@@ -47,6 +104,33 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Rate limiting
+    const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    if (!checkRateLimit(`upload:${clientIP}`, 5, 60000)) { // 5 uploads per minute
+      return NextResponse.json(
+        { error: 'Too many upload attempts. Please try again later.' },
+        { status: 429 }
+      )
+    }
+
+    // UUID validation
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(userId)) {
+      return NextResponse.json(
+        { error: 'Invalid user ID format' },
+        { status: 400 }
+      )
+    }
+
+    // File validation
+    const fileValidation = validateFile(file)
+    if (!fileValidation.valid) {
+      return NextResponse.json(
+        { error: fileValidation.error },
+        { status: 400 }
+      )
+    }
+
     // Check if user is allowed to upload resume (not admin)
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -63,27 +147,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate file type
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        { error: 'Only PDF and Word documents are allowed' },
-        { status: 400 }
-      )
-    }
+    // Upload file to Supabase Storage with secure naming
+    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const fileName = `${userId}/${Date.now()}-${sanitizedFileName}`
 
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024 // 5MB
-    if (file.size > maxSize) {
-      return NextResponse.json(
-        { error: 'File size must be less than 5MB' },
-        { status: 400 }
-      )
-    }
-
-    // Upload file to Supabase Storage
-    const fileName = `${userId}/${Date.now()}-${file.name}`
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('bolt-resumes-2025')
       .upload(fileName, file)
 
@@ -127,6 +195,24 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: 'User ID is required' },
         { status: 400 }
+      )
+    }
+
+    // UUID validation
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(userId)) {
+      return NextResponse.json(
+        { error: 'Invalid user ID format' },
+        { status: 400 }
+      )
+    }
+
+    // Rate limiting
+    const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    if (!checkRateLimit(`delete:${clientIP}`, 10, 60000)) { // 10 deletions per minute
+      return NextResponse.json(
+        { error: 'Too many delete attempts. Please try again later.' },
+        { status: 429 }
       )
     }
 
