@@ -1,6 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 
-const SpaceScene: React.FC = () => {
+interface SpaceSceneRef {
+  createExplosion: (x: number, y: number) => void;
+}
+
+interface WindowWithSpaceScene extends Window {
+  spaceSceneExplosion?: (x: number, y: number) => void;
+}
+
+const SpaceScene = forwardRef<SpaceSceneRef>((props, ref) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const isVisibleRef = useRef(true);
 
@@ -517,6 +525,9 @@ const SpaceScene: React.FC = () => {
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('click', handleClick);
 
+    // Expose createExplosion function globally for parent components
+    (window as WindowWithSpaceScene).spaceSceneExplosion = createExplosion;
+
     // Start animation
     animate();
 
@@ -532,15 +543,26 @@ const SpaceScene: React.FC = () => {
         currentMount.removeChild(canvas);
       }
       window.removeEventListener('resize', resizeCanvas);
+      // Clean up global function
+      delete (window as WindowWithSpaceScene).spaceSceneExplosion;
     };
   }, []);
+
+  useImperativeHandle(ref, () => ({
+    createExplosion: (x: number, y: number) => {
+      // This will be set up in useEffect
+      if ((window as WindowWithSpaceScene).spaceSceneExplosion) {
+        (window as WindowWithSpaceScene).spaceSceneExplosion!(x, y);
+      }
+    }
+  }));
 
   return (
     <div
       ref={mountRef}
-      className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none bg-transparent overflow-hidden"
+      className="absolute top-0 left-0 w-full h-full z-10 bg-transparent overflow-hidden"
     />
   );
-};
+});
 
 export default SpaceScene;
