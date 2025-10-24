@@ -9,6 +9,7 @@ const Carousel: React.FC<{ images: string[]; interval?: number; onImageLoad?: ()
 
   useEffect(() => {
     if (images.length <= 1) return;
+    if (typeof window === 'undefined') return; // SSR Guard
     timerRef.current = window.setInterval(() => {
       setIndex((i) => (i + 1) % images.length);
     }, interval);

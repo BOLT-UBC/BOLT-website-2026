@@ -1179,6 +1179,9 @@ const Carousel = ({ images, interval = 4000, onImageLoad })=>{
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Carousel.useEffect": ()=>{
             if (images.length <= 1) return;
+            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+            ;
+             // SSR Guard
             timerRef.current = window.setInterval({
                 "Carousel.useEffect": ()=>{
                     setIndex({
@@ -1214,12 +1217,12 @@ const Carousel = ({ images, interval = 4000, onImageLoad })=>{
                         height: 720
                     }, i, false, {
                         fileName: "[project]/components/About.tsx",
-                        lineNumber: 28,
+                        lineNumber: 29,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)))
             }, void 0, false, {
                 fileName: "[project]/components/About.tsx",
-                lineNumber: 26,
+                lineNumber: 27,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1230,12 +1233,12 @@ const Carousel = ({ images, interval = 4000, onImageLoad })=>{
                         className: `w-3.5 h-3.5 rounded-full ${i === index ? "bg-white" : "bg-white/40"}`
                     }, i, false, {
                         fileName: "[project]/components/About.tsx",
-                        lineNumber: 45,
+                        lineNumber: 46,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)))
             }, void 0, false, {
                 fileName: "[project]/components/About.tsx",
-                lineNumber: 43,
+                lineNumber: 44,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             images.length > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -1247,7 +1250,7 @@ const Carousel = ({ images, interval = 4000, onImageLoad })=>{
                         children: "‹"
                     }, void 0, false, {
                         fileName: "[project]/components/About.tsx",
-                        lineNumber: 57,
+                        lineNumber: 58,
                         columnNumber: 5
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1257,7 +1260,7 @@ const Carousel = ({ images, interval = 4000, onImageLoad })=>{
                         children: "›"
                     }, void 0, false, {
                         fileName: "[project]/components/About.tsx",
-                        lineNumber: 64,
+                        lineNumber: 65,
                         columnNumber: 5
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
@@ -1265,7 +1268,7 @@ const Carousel = ({ images, interval = 4000, onImageLoad })=>{
         ]
     }, void 0, true, {
         fileName: "[project]/components/About.tsx",
-        lineNumber: 24,
+        lineNumber: 25,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0)));
 };
@@ -1293,7 +1296,7 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                             children: "About us"
                         }, void 0, false, {
                             fileName: "[project]/components/About.tsx",
-                            lineNumber: 91,
+                            lineNumber: 92,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -1301,7 +1304,7 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                             children: "Growth and Community"
                         }, void 0, false, {
                             fileName: "[project]/components/About.tsx",
-                            lineNumber: 92,
+                            lineNumber: 93,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1316,7 +1319,7 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                                             children: "stimulating challenges"
                                         }, void 0, false, {
                                             fileName: "[project]/components/About.tsx",
-                                            lineNumber: 96,
+                                            lineNumber: 97,
                                             columnNumber: 39
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         ", and facilitates",
@@ -1325,14 +1328,14 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                                             children: "hands-on experiences"
                                         }, void 0, false, {
                                             fileName: "[project]/components/About.tsx",
-                                            lineNumber: 97,
+                                            lineNumber: 98,
                                             columnNumber: 15
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         ". This unique opportunity is open to students from diverse backgrounds, inviting them to immerse themselves in the dynamic realm of business analytics."
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/About.tsx",
-                                    lineNumber: 94,
+                                    lineNumber: 95,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1344,7 +1347,7 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                                             children: "foster a growth mindset"
                                         }, void 0, false, {
                                             fileName: "[project]/components/About.tsx",
-                                            lineNumber: 102,
+                                            lineNumber: 103,
                                             columnNumber: 33
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         " in the community and help students",
@@ -1353,26 +1356,26 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                                             children: "develop data analytics skills"
                                         }, void 0, false, {
                                             fileName: "[project]/components/About.tsx",
-                                            lineNumber: 103,
+                                            lineNumber: 104,
                                             columnNumber: 15
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         " to be successful in their careers. Anyone with a interest for data, analytics, or tech is invited to join us on our journey."
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/About.tsx",
-                                    lineNumber: 101,
+                                    lineNumber: 102,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/About.tsx",
-                            lineNumber: 93,
+                            lineNumber: 94,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/About.tsx",
-                    lineNumber: 90,
+                    lineNumber: 91,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1383,23 +1386,23 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                         onImageLoad: handleImageLoad
                     }, void 0, false, {
                         fileName: "[project]/components/About.tsx",
-                        lineNumber: 110,
+                        lineNumber: 111,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/components/About.tsx",
-                    lineNumber: 109,
+                    lineNumber: 110,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/components/About.tsx",
-            lineNumber: 89,
+            lineNumber: 90,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/components/About.tsx",
-        lineNumber: 88,
+        lineNumber: 89,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 });
@@ -1423,13 +1426,10 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-;
-var _s = __turbopack_context__.k.signature();
 "use client";
 ;
-const Partners = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["memo"])(_c = _s(()=>{
-    _s();
-    const carouselRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+;
+const Partners = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["memo"])(_c = ()=>{
     // Partner logos
     const partners = [
         {
@@ -1466,75 +1466,6 @@ const Partners = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$project
         ...partners,
         ...partners
     ];
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "Partners.useEffect": ()=>{
-            const carouselContainer = carouselRef.current;
-            if (!carouselContainer) return;
-            const carousel = carouselContainer.querySelector('.flex');
-            if (!carousel) return;
-            let animationId;
-            let position = 0;
-            // Function to get responsive dimensions and speed
-            const getDimensions = {
-                "Partners.useEffect.getDimensions": ()=>{
-                    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-                    ;
-                    const width = window.innerWidth;
-                    const partnerWidth = width < 640 ? 120 : width < 768 ? 160 : 200;
-                    const gap = width < 640 ? 16 : width < 768 ? 24 : 32;
-                    // Slower, more stable speed on mobile for better iPhone compatibility
-                    const speed = width < 640 ? 1.0 : width < 768 ? 1.5 : 1.5;
-                    return {
-                        partnerWidth,
-                        gap,
-                        totalWidth: partnerWidth + gap,
-                        speed
-                    };
-                }
-            }["Partners.useEffect.getDimensions"];
-            let dimensions = getDimensions();
-            const animate = {
-                "Partners.useEffect.animate": ()=>{
-                    position -= dimensions.speed;
-                    // Reset position when we've scrolled one full set
-                    if (Math.abs(position) >= partners.length * dimensions.totalWidth) {
-                        position = 0;
-                    }
-                    carousel.style.transform = `translate3d(${position}px, 0, 0)`;
-                    carousel.style.willChange = 'transform';
-                    animationId = requestAnimationFrame(animate);
-                }
-            }["Partners.useEffect.animate"];
-            // Start animation with a small delay for better iPhone compatibility
-            setTimeout({
-                "Partners.useEffect": ()=>{
-                    animationId = requestAnimationFrame(animate);
-                }
-            }["Partners.useEffect"], 100);
-            // Handle window resize
-            const handleResize = {
-                "Partners.useEffect.handleResize": ()=>{
-                    dimensions = getDimensions();
-                }
-            }["Partners.useEffect.handleResize"];
-            if ("TURBOPACK compile-time truthy", 1) {
-                window.addEventListener('resize', handleResize);
-            }
-            // No hover pause functionality - let carousel run continuously
-            return ({
-                "Partners.useEffect": ()=>{
-                    if (animationId) {
-                        cancelAnimationFrame(animationId);
-                    }
-                    if ("TURBOPACK compile-time truthy", 1) {
-                        window.removeEventListener('resize', handleResize);
-                    }
-                }
-            })["Partners.useEffect"];
-        }
-    }["Partners.useEffect"], [
-        partners.length
-    ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: "w-full py-12 md:py-14 bg-gradient-to-r from-[#614ea5] to-[#493b7b] flex flex-col items-center justify-center overflow-hidden",
         id: "Partners",
@@ -1546,37 +1477,33 @@ const Partners = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$project
                     children: "Collaborating with leading organizations to bring real-world data experiences to our community"
                 }, void 0, false, {
                     fileName: "[project]/components/Partners.tsx",
-                    lineNumber: 89,
+                    lineNumber: 24,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Partners.tsx",
-                lineNumber: 88,
+                lineNumber: 23,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "relative w-full overflow-hidden",
-                ref: carouselRef,
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#614ea5] to-transparent z-10 pointer-events-none"
                     }, void 0, false, {
                         fileName: "[project]/components/Partners.tsx",
-                        lineNumber: 97,
+                        lineNumber: 32,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#493b7b] to-transparent z-10 pointer-events-none"
                     }, void 0, false, {
                         fileName: "[project]/components/Partners.tsx",
-                        lineNumber: 99,
+                        lineNumber: 34,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex gap-3 sm:gap-4 md:gap-6 will-change-transform py-1",
-                        style: {
-                            transform: 'translate3d(0, 0, 0)'
-                        },
+                        className: "flex gap-3 sm:gap-4 md:gap-6 scroll-right py-1",
                         children: duplicatedPartners.map((partner, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex-shrink-0 p-1.5 sm:p-3 md:p-4 min-w-[100px] sm:min-w-[140px] md:min-w-[180px] hover:-translate-y-2 transition-transform duration-300 cursor-pointer active:scale-95 active:-translate-y-1",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -1592,32 +1519,32 @@ const Partners = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$project
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/components/Partners.tsx",
-                                    lineNumber: 103,
+                                    lineNumber: 38,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, `${partner.name}-${index}`, false, {
                                 fileName: "[project]/components/Partners.tsx",
-                                lineNumber: 102,
+                                lineNumber: 37,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)))
                     }, void 0, false, {
                         fileName: "[project]/components/Partners.tsx",
-                        lineNumber: 100,
+                        lineNumber: 35,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/Partners.tsx",
-                lineNumber: 95,
+                lineNumber: 30,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/components/Partners.tsx",
-        lineNumber: 86,
+        lineNumber: 21,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
-}, "tqI5RslTGVDAuq9aDlmVCnZoZD8=")), "tqI5RslTGVDAuq9aDlmVCnZoZD8=");
+});
 _c1 = Partners;
 Partners.displayName = 'Partners';
 const __TURBOPACK__default__export__ = Partners;
@@ -2106,7 +2033,6 @@ const Team = ()=>{
     _s();
     const [allMembers, setAllMembers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [loadedImages, setLoadedImages] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(new Set());
-    const carouselRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const navigate = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Team.useEffect": ()=>{
@@ -2140,7 +2066,7 @@ const Team = ()=>{
                         children: "Team"
                     }, void 0, false, {
                         fileName: "[project]/components/Team.tsx",
-                        lineNumber: 40,
+                        lineNumber: 39,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2148,13 +2074,13 @@ const Team = ()=>{
                         children: "Meet Our Team"
                     }, void 0, false, {
                         fileName: "[project]/components/Team.tsx",
-                        lineNumber: 41,
+                        lineNumber: 40,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/Team.tsx",
-                lineNumber: 39,
+                lineNumber: 38,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2169,27 +2095,20 @@ const Team = ()=>{
                                     className: "absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#f8f7f3] to-transparent z-10 pointer-events-none"
                                 }, void 0, false, {
                                     fileName: "[project]/components/Team.tsx",
-                                    lineNumber: 49,
+                                    lineNumber: 48,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#f0ede7] to-transparent z-10 pointer-events-none"
                                 }, void 0, false, {
                                     fileName: "[project]/components/Team.tsx",
-                                    lineNumber: 51,
+                                    lineNumber: 50,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-full overflow-x-auto",
-                                    style: {
-                                        cursor: 'grab'
-                                    },
+                                    className: "w-full overflow-hidden",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex gap-8 py-4 will-change-transform",
-                                        style: {
-                                            animation: 'scroll-right 20s linear infinite',
-                                            transform: 'translate3d(0, 0, 0)'
-                                        },
+                                        className: "flex gap-8 py-4 scroll-right",
                                         children: [
                                             ...firstHalf,
                                             ...firstHalf
@@ -2211,17 +2130,17 @@ const Team = ()=>{
                                                                 height: "80"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/Team.tsx",
-                                                                lineNumber: 64,
+                                                                lineNumber: 59,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/Team.tsx",
-                                                            lineNumber: 61,
+                                                            lineNumber: 56,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/Team.tsx",
-                                                        lineNumber: 60,
+                                                        lineNumber: 55,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2232,7 +2151,7 @@ const Team = ()=>{
                                                                 children: member.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/Team.tsx",
-                                                                lineNumber: 77,
+                                                                lineNumber: 72,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2240,35 +2159,35 @@ const Team = ()=>{
                                                                 children: member.title
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/Team.tsx",
-                                                                lineNumber: 78,
+                                                                lineNumber: 73,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/Team.tsx",
-                                                        lineNumber: 76,
+                                                        lineNumber: 71,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, `first-${index}`, true, {
                                                 fileName: "[project]/components/Team.tsx",
-                                                lineNumber: 59,
+                                                lineNumber: 54,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/components/Team.tsx",
-                                        lineNumber: 53,
+                                        lineNumber: 52,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/components/Team.tsx",
-                                    lineNumber: 52,
+                                    lineNumber: 51,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/Team.tsx",
-                            lineNumber: 47,
+                            lineNumber: 46,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2278,28 +2197,20 @@ const Team = ()=>{
                                     className: "absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#f8f7f3] to-transparent z-10 pointer-events-none"
                                 }, void 0, false, {
                                     fileName: "[project]/components/Team.tsx",
-                                    lineNumber: 89,
+                                    lineNumber: 84,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#f0ede7] to-transparent z-10 pointer-events-none"
                                 }, void 0, false, {
                                     fileName: "[project]/components/Team.tsx",
-                                    lineNumber: 91,
+                                    lineNumber: 86,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-full overflow-x-auto",
-                                    ref: carouselRef,
-                                    style: {
-                                        cursor: 'grab'
-                                    },
+                                    className: "w-full overflow-hidden",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex gap-8 py-4 will-change-transform",
-                                        style: {
-                                            animation: 'scroll-left 20s linear infinite',
-                                            transform: 'translate3d(0, 0, 0)'
-                                        },
+                                        className: "flex gap-8 py-4 scroll-left",
                                         children: [
                                             ...secondHalf,
                                             ...secondHalf
@@ -2321,17 +2232,17 @@ const Team = ()=>{
                                                                 height: "80"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/Team.tsx",
-                                                                lineNumber: 104,
+                                                                lineNumber: 95,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/Team.tsx",
-                                                            lineNumber: 101,
+                                                            lineNumber: 92,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/Team.tsx",
-                                                        lineNumber: 100,
+                                                        lineNumber: 91,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2342,7 +2253,7 @@ const Team = ()=>{
                                                                 children: member.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/Team.tsx",
-                                                                lineNumber: 117,
+                                                                lineNumber: 108,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2350,35 +2261,35 @@ const Team = ()=>{
                                                                 children: member.title
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/Team.tsx",
-                                                                lineNumber: 118,
+                                                                lineNumber: 109,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/Team.tsx",
-                                                        lineNumber: 116,
+                                                        lineNumber: 107,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, `second-${index}`, true, {
                                                 fileName: "[project]/components/Team.tsx",
-                                                lineNumber: 99,
+                                                lineNumber: 90,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/components/Team.tsx",
-                                        lineNumber: 93,
+                                        lineNumber: 88,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/components/Team.tsx",
-                                    lineNumber: 92,
+                                    lineNumber: 87,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/Team.tsx",
-                            lineNumber: 87,
+                            lineNumber: 82,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2402,44 +2313,44 @@ const Team = ()=>{
                                             d: "M7 17L17 7M17 7H7M17 7V17"
                                         }, void 0, false, {
                                             fileName: "[project]/components/Team.tsx",
-                                            lineNumber: 144,
+                                            lineNumber: 135,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/components/Team.tsx",
-                                        lineNumber: 133,
+                                        lineNumber: 124,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/Team.tsx",
-                                lineNumber: 128,
+                                lineNumber: 119,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Team.tsx",
-                            lineNumber: 127,
+                            lineNumber: 118,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Team.tsx",
-                    lineNumber: 45,
+                    lineNumber: 44,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Team.tsx",
-                lineNumber: 44,
+                lineNumber: 43,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/components/Team.tsx",
-        lineNumber: 38,
+        lineNumber: 37,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(Team, "z5S0oP9p1Uhc8mKZFpwWsPVHLSQ=", false, function() {
+_s(Team, "1DTBLsEBa9x2lc0PfgE5Paq/hJE=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];

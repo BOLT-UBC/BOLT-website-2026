@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Member, TeamData } from "../types/types";
 import { getProfileUrl } from "../lib/assets";
@@ -12,7 +12,6 @@ const teamData = teamDataJson as unknown as TeamData;
 const Team: React.FC = () => {
   const [allMembers, setAllMembers] = useState<Member[]>([]);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
-  const carouselRef = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
 
   useEffect(() => {
@@ -49,12 +48,8 @@ const Team: React.FC = () => {
             <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#f8f7f3] to-transparent z-10 pointer-events-none"></div>
             {/* Right fade */}
             <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#f0ede7] to-transparent z-10 pointer-events-none"></div>
-            <div className="w-full overflow-x-auto" style={{ cursor: 'grab' }}>
-              <div className="flex gap-8 py-4 will-change-transform"
-                   style={{
-                     animation: 'scroll-right 20s linear infinite',
-                     transform: 'translate3d(0, 0, 0)'
-                   }}>
+            <div className="w-full overflow-hidden">
+              <div className="flex gap-8 py-4 scroll-right">
                 {[...firstHalf, ...firstHalf].map((member, index) => (
                   <div key={`first-${index}`} className="flex-shrink-0 flex flex-col items-center hover:-translate-y-2 transition-all duration-300 cursor-pointer group active:scale-95 active:-translate-y-1">
                     <div className="relative">
@@ -89,12 +84,8 @@ const Team: React.FC = () => {
             <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#f8f7f3] to-transparent z-10 pointer-events-none"></div>
             {/* Right fade */}
             <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#f0ede7] to-transparent z-10 pointer-events-none"></div>
-            <div className="w-full overflow-x-auto" ref={carouselRef} style={{ cursor: 'grab' }}>
-              <div className="flex gap-8 py-4 will-change-transform"
-                   style={{
-                     animation: 'scroll-left 20s linear infinite',
-                     transform: 'translate3d(0, 0, 0)'
-                   }}>
+            <div className="w-full overflow-hidden">
+              <div className="flex gap-8 py-4 scroll-left">
                 {[...secondHalf, ...secondHalf].map((member, index) => (
                   <div key={`second-${index}`} className="flex-shrink-0 flex flex-col items-center hover:-translate-y-2 transition-all duration-300 cursor-pointer group active:scale-95 active:-translate-y-1">
                     <div className="relative">
