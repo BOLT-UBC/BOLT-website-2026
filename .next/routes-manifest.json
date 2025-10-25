@@ -1,0 +1,153 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "origin-when-cross-origin"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        }
+      ],
+      "regex": "^(?:/(.*))(?:/)?$"
+    }
+  ],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/account/delete",
+      "regex": "^/api/account/delete(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/account/delete(?:/)?$"
+    },
+    {
+      "page": "/api/admin/resumes",
+      "regex": "^/api/admin/resumes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/resumes(?:/)?$"
+    },
+    {
+      "page": "/api/resume",
+      "regex": "^/api/resume(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/resume(?:/)?$"
+    },
+    {
+      "page": "/events/bolt-bootcamp",
+      "regex": "^/events/bolt\\-bootcamp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/events/bolt\\-bootcamp(?:/)?$"
+    },
+    {
+      "page": "/events/bolt-circuit",
+      "regex": "^/events/bolt\\-circuit(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/events/bolt\\-circuit(?:/)?$"
+    },
+    {
+      "page": "/events/bolt-connect",
+      "regex": "^/events/bolt\\-connect(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/events/bolt\\-connect(?:/)?$"
+    },
+    {
+      "page": "/events/first-byte",
+      "regex": "^/events/first\\-byte(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/events/first\\-byte(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/membership",
+      "regex": "^/membership(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/membership(?:/)?$"
+    },
+    {
+      "page": "/team",
+      "regex": "^/team(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/team(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

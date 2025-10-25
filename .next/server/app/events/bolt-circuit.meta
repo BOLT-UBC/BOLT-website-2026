@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/events/layout,_N_T_/events/bolt-circuit/layout,_N_T_/events/bolt-circuit/page,_N_T_/events/bolt-circuit"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/events/bolt-circuit/__PAGE__",
+    "/events/bolt-circuit",
+    "/events",
+    "/_index"
+  ]
+}
