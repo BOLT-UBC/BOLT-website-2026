@@ -375,6 +375,10 @@ img, video {
   z-index: 30;
 }
 
+.z-50 {
+  z-index: 50;
+}
+
 .z-\[1000\] {
   z-index: 1000;
 }
@@ -822,6 +826,10 @@ img, video {
   overflow-wrap: break-word;
 }
 
+.rounded {
+  border-radius: .25rem;
+}
+
 .rounded-2xl {
   border-radius: 1rem;
 }
@@ -1208,6 +1216,10 @@ img, video {
 
 .font-inter {
   font-family: Inter, sans-serif;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
 }
 
 .font-roboto-mono {
@@ -1745,6 +1757,10 @@ button:focus-visible, a:focus-visible {
 
 .focus\:border-transparent:focus {
   border-color: #0000;
+}
+
+.focus\:border-white\/40:focus {
+  border-color: #fff6;
 }
 
 .focus\:outline-none:focus {

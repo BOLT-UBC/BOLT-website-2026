@@ -248,6 +248,24 @@ export const authService = {
     if (error) throw error
   },
 
+  // Delete user account
+  async deleteAccount(userId: string) {
+    // First, delete the user's profile (this will cascade to related data)
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', userId)
+
+    if (profileError) throw profileError
+
+    // Then delete the auth user
+    const { error: authError } = await supabase.auth.admin.deleteUser(userId)
+
+    if (authError) throw authError
+
+    return { success: true }
+  },
+
   // Check if user is admin
   async isAdmin(userId: string) {
     const { data, error } = await supabase

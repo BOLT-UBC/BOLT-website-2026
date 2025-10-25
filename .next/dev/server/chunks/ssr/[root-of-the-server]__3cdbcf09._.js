@@ -287,6 +287,18 @@ const authService = {
         });
         if (error) throw error;
     },
+    // Delete user account
+    async deleteAccount (userId) {
+        // First, delete the user's profile (this will cascade to related data)
+        const { error: profileError } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('profiles').delete().eq('id', userId);
+        if (profileError) throw profileError;
+        // Then delete the auth user
+        const { error: authError } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.admin.deleteUser(userId);
+        if (authError) throw authError;
+        return {
+            success: true
+        };
+    },
     // Check if user is admin
     async isAdmin (userId) {
         const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from('profiles').select('role').eq('id', userId).single();
@@ -1427,6 +1439,10 @@ function MembershipPortal() {
     const [teams, setTeams] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('profile');
     const [isEditing, setIsEditing] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [updating, setUpdating] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [deleting, setDeleting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [deleteConfirmText, setDeleteConfirmText] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [editForm, setEditForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
         full_name: '',
         year: '',
@@ -1442,6 +1458,31 @@ function MembershipPortal() {
     }, [
         user?.id
     ]);
+    const handleDeleteAccount = async ()=>{
+        if (deleteConfirmText !== 'DELETE') {
+            alert('Please type "DELETE" to confirm account deletion');
+            return;
+        }
+        setDeleting(true);
+        try {
+            const response = await fetch(`/api/account/delete?userId=${user?.id}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to delete account');
+            }
+            // Sign out and redirect
+            await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["authService"].signOut();
+            router.push('/');
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Failed to delete account');
+        } finally{
+            setDeleting(false);
+            setShowDeleteConfirm(false);
+            setDeleteConfirmText('');
+        }
+    };
     const loadUserData = async ()=>{
         try {
             if (user?.id) {
@@ -1520,12 +1561,12 @@ function MembershipPortal() {
                 children: "Loading..."
             }, void 0, false, {
                 fileName: "[project]/app/membership/page.tsx",
-                lineNumber: 141,
+                lineNumber: 175,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/membership/page.tsx",
-            lineNumber: 140,
+            lineNumber: 174,
             columnNumber: 7
         }, this);
     }
@@ -1540,7 +1581,7 @@ function MembershipPortal() {
                         children: "Access Denied"
                     }, void 0, false, {
                         fileName: "[project]/app/membership/page.tsx",
-                        lineNumber: 150,
+                        lineNumber: 184,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1548,18 +1589,18 @@ function MembershipPortal() {
                         children: "Please log in to access the membership portal."
                     }, void 0, false, {
                         fileName: "[project]/app/membership/page.tsx",
-                        lineNumber: 151,
+                        lineNumber: 185,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/membership/page.tsx",
-                lineNumber: 149,
+                lineNumber: 183,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/membership/page.tsx",
-            lineNumber: 148,
+            lineNumber: 182,
             columnNumber: 7
         }, this);
     }
@@ -1568,7 +1609,7 @@ function MembershipPortal() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Navbar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/membership/page.tsx",
-                lineNumber: 159,
+                lineNumber: 193,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1582,7 +1623,7 @@ function MembershipPortal() {
                                 children: "Membership Portal"
                             }, void 0, false, {
                                 fileName: "[project]/app/membership/page.tsx",
-                                lineNumber: 164,
+                                lineNumber: 198,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1590,13 +1631,13 @@ function MembershipPortal() {
                                 children: "Welcome to your BOLT UBC membership dashboard"
                             }, void 0, false, {
                                 fileName: "[project]/app/membership/page.tsx",
-                                lineNumber: 167,
+                                lineNumber: 201,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/membership/page.tsx",
-                        lineNumber: 163,
+                        lineNumber: 197,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1614,19 +1655,19 @@ function MembershipPortal() {
                                         className: "rounded-full"
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 177,
+                                        lineNumber: 211,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "text-2xl font-bold text-white",
                                         children: profile?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 185,
+                                        lineNumber: 219,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/membership/page.tsx",
-                                    lineNumber: 175,
+                                    lineNumber: 209,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1637,7 +1678,7 @@ function MembershipPortal() {
                                             children: profile?.full_name || 'Member'
                                         }, void 0, false, {
                                             fileName: "[project]/app/membership/page.tsx",
-                                            lineNumber: 192,
+                                            lineNumber: 226,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1645,7 +1686,7 @@ function MembershipPortal() {
                                             children: user.email
                                         }, void 0, false, {
                                             fileName: "[project]/app/membership/page.tsx",
-                                            lineNumber: 195,
+                                            lineNumber: 229,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1656,7 +1697,7 @@ function MembershipPortal() {
                                                     children: getRoleDisplayName(profile?.role || 'non_member')
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/membership/page.tsx",
-                                                    lineNumber: 197,
+                                                    lineNumber: 231,
                                                     columnNumber: 17
                                                 }, this),
                                                 profile?.team_id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1664,30 +1705,30 @@ function MembershipPortal() {
                                                     children: teams.find((t)=>t.id === profile.team_id)?.name || 'Team Member'
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/membership/page.tsx",
-                                                    lineNumber: 201,
+                                                    lineNumber: 235,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/membership/page.tsx",
-                                            lineNumber: 196,
+                                            lineNumber: 230,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/membership/page.tsx",
-                                    lineNumber: 191,
+                                    lineNumber: 225,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/membership/page.tsx",
-                            lineNumber: 174,
+                            lineNumber: 208,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/membership/page.tsx",
-                        lineNumber: 173,
+                        lineNumber: 207,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1722,19 +1763,19 @@ function MembershipPortal() {
                                         children: tab.icon
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 227,
+                                        lineNumber: 261,
                                         columnNumber: 15
                                     }, this),
                                     tab.label
                                 ]
                             }, tab.id, true, {
                                 fileName: "[project]/app/membership/page.tsx",
-                                lineNumber: 218,
+                                lineNumber: 252,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/membership/page.tsx",
-                        lineNumber: 211,
+                        lineNumber: 245,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1751,7 +1792,7 @@ function MembershipPortal() {
                                                 children: "Profile Information"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 238,
+                                                lineNumber: 272,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1760,13 +1801,13 @@ function MembershipPortal() {
                                                 children: isEditing ? 'Cancel' : 'Edit Profile'
                                             }, void 0, false, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 239,
+                                                lineNumber: 273,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 237,
+                                        lineNumber: 271,
                                         columnNumber: 15
                                     }, this),
                                     isEditing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1779,7 +1820,7 @@ function MembershipPortal() {
                                                         children: "Full Name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 250,
+                                                        lineNumber: 284,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1793,13 +1834,13 @@ function MembershipPortal() {
                                                         placeholder: "Enter your full name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 251,
+                                                        lineNumber: 285,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 249,
+                                                lineNumber: 283,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1809,7 +1850,7 @@ function MembershipPortal() {
                                                         children: "Year"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 261,
+                                                        lineNumber: 295,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1825,7 +1866,7 @@ function MembershipPortal() {
                                                                 children: "Select year"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 267,
+                                                                lineNumber: 301,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1833,7 +1874,7 @@ function MembershipPortal() {
                                                                 children: "1st Year"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 268,
+                                                                lineNumber: 302,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1841,7 +1882,7 @@ function MembershipPortal() {
                                                                 children: "2nd Year"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 269,
+                                                                lineNumber: 303,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1849,7 +1890,7 @@ function MembershipPortal() {
                                                                 children: "3rd Year"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 270,
+                                                                lineNumber: 304,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1857,7 +1898,7 @@ function MembershipPortal() {
                                                                 children: "4th Year"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 271,
+                                                                lineNumber: 305,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1865,19 +1906,19 @@ function MembershipPortal() {
                                                                 children: "5th Year"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 272,
+                                                                lineNumber: 306,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 262,
+                                                        lineNumber: 296,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 260,
+                                                lineNumber: 294,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1887,7 +1928,7 @@ function MembershipPortal() {
                                                         children: "Major"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 277,
+                                                        lineNumber: 311,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1901,13 +1942,13 @@ function MembershipPortal() {
                                                         placeholder: "Enter your major"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 278,
+                                                        lineNumber: 312,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 276,
+                                                lineNumber: 310,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1917,7 +1958,7 @@ function MembershipPortal() {
                                                         children: "Phone"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 288,
+                                                        lineNumber: 322,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1931,13 +1972,13 @@ function MembershipPortal() {
                                                         placeholder: "Enter your phone number"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 289,
+                                                        lineNumber: 323,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 287,
+                                                lineNumber: 321,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1948,7 +1989,7 @@ function MembershipPortal() {
                                                         children: "LinkedIn URL"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 299,
+                                                        lineNumber: 333,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1962,13 +2003,13 @@ function MembershipPortal() {
                                                         placeholder: "https://linkedin.com/in/yourprofile"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 300,
+                                                        lineNumber: 334,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 298,
+                                                lineNumber: 332,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1980,7 +2021,7 @@ function MembershipPortal() {
                                                         children: "Save Changes"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 310,
+                                                        lineNumber: 344,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1989,19 +2030,19 @@ function MembershipPortal() {
                                                         children: "Cancel"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 316,
+                                                        lineNumber: 350,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 309,
+                                                lineNumber: 343,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 248,
+                                        lineNumber: 282,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "grid grid-cols-1 md:grid-cols-2 gap-6",
@@ -2013,7 +2054,7 @@ function MembershipPortal() {
                                                         children: "Full Name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 327,
+                                                        lineNumber: 361,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2021,13 +2062,13 @@ function MembershipPortal() {
                                                         children: profile?.full_name || 'Not provided'
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 328,
+                                                        lineNumber: 362,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 326,
+                                                lineNumber: 360,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2037,7 +2078,7 @@ function MembershipPortal() {
                                                         children: "Year"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 332,
+                                                        lineNumber: 366,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2045,13 +2086,13 @@ function MembershipPortal() {
                                                         children: profile?.year ? `${profile.year}${profile.year === 1 ? 'st' : profile.year === 2 ? 'nd' : profile.year === 3 ? 'rd' : 'th'} Year` : 'Not provided'
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 333,
+                                                        lineNumber: 367,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 331,
+                                                lineNumber: 365,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2061,7 +2102,7 @@ function MembershipPortal() {
                                                         children: "Major"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 337,
+                                                        lineNumber: 371,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2069,13 +2110,13 @@ function MembershipPortal() {
                                                         children: profile?.major || 'Not provided'
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 338,
+                                                        lineNumber: 372,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 336,
+                                                lineNumber: 370,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2085,7 +2126,7 @@ function MembershipPortal() {
                                                         children: "Phone"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 342,
+                                                        lineNumber: 376,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2093,13 +2134,13 @@ function MembershipPortal() {
                                                         children: profile?.phone || 'Not provided'
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 343,
+                                                        lineNumber: 377,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 341,
+                                                lineNumber: 375,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2109,7 +2150,7 @@ function MembershipPortal() {
                                                         children: "LinkedIn"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 347,
+                                                        lineNumber: 381,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2122,18 +2163,18 @@ function MembershipPortal() {
                                                             children: "View Profile"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/membership/page.tsx",
-                                                            lineNumber: 350,
+                                                            lineNumber: 384,
                                                             columnNumber: 25
                                                         }, this) : 'Not provided'
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 348,
+                                                        lineNumber: 382,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 346,
+                                                lineNumber: 380,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2143,7 +2184,7 @@ function MembershipPortal() {
                                                         children: "Member Since"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 358,
+                                                        lineNumber: 392,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2151,25 +2192,25 @@ function MembershipPortal() {
                                                         children: profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : 'Unknown'
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 359,
+                                                        lineNumber: 393,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 357,
+                                                lineNumber: 391,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 325,
+                                        lineNumber: 359,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/membership/page.tsx",
-                                lineNumber: 236,
+                                lineNumber: 270,
                                 columnNumber: 13
                             }, this),
                             activeTab === 'resume' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2179,7 +2220,7 @@ function MembershipPortal() {
                                         children: "Resume Management"
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 370,
+                                        lineNumber: 404,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ResumeUpload$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -2193,13 +2234,13 @@ function MembershipPortal() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 371,
+                                        lineNumber: 405,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/membership/page.tsx",
-                                lineNumber: 369,
+                                lineNumber: 403,
                                 columnNumber: 13
                             }, this),
                             activeTab === 'events' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2209,7 +2250,7 @@ function MembershipPortal() {
                                         children: "Upcoming Events"
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 386,
+                                        lineNumber: 420,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2222,7 +2263,7 @@ function MembershipPortal() {
                                                         children: event.name
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 390,
+                                                        lineNumber: 424,
                                                         columnNumber: 21
                                                     }, this),
                                                     event.description && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2230,7 +2271,7 @@ function MembershipPortal() {
                                                         children: event.description
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 392,
+                                                        lineNumber: 426,
                                                         columnNumber: 23
                                                     }, this),
                                                     event.date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2241,7 +2282,7 @@ function MembershipPortal() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 395,
+                                                        lineNumber: 429,
                                                         columnNumber: 23
                                                     }, this),
                                                     event.location && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2252,7 +2293,7 @@ function MembershipPortal() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 400,
+                                                        lineNumber: 434,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2263,7 +2304,7 @@ function MembershipPortal() {
                                                                 children: event.registration_open ? 'Open' : 'Closed'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 403,
+                                                                lineNumber: 437,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2271,30 +2312,30 @@ function MembershipPortal() {
                                                                 children: "Register"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 410,
+                                                                lineNumber: 444,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 402,
+                                                        lineNumber: 436,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, event.id, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 389,
+                                                lineNumber: 423,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 387,
+                                        lineNumber: 421,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/membership/page.tsx",
-                                lineNumber: 385,
+                                lineNumber: 419,
                                 columnNumber: 13
                             }, this),
                             activeTab === 'settings' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2304,7 +2345,7 @@ function MembershipPortal() {
                                         children: "Account Settings"
                                     }, void 0, false, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 422,
+                                        lineNumber: 456,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2318,7 +2359,7 @@ function MembershipPortal() {
                                                         children: "Account Information"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 425,
+                                                        lineNumber: 459,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2331,7 +2372,7 @@ function MembershipPortal() {
                                                                         children: "Email"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/membership/page.tsx",
-                                                                        lineNumber: 428,
+                                                                        lineNumber: 462,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2339,13 +2380,13 @@ function MembershipPortal() {
                                                                         children: user.email
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/membership/page.tsx",
-                                                                        lineNumber: 429,
+                                                                        lineNumber: 463,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 427,
+                                                                lineNumber: 461,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2355,7 +2396,7 @@ function MembershipPortal() {
                                                                         children: "Role"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/membership/page.tsx",
-                                                                        lineNumber: 432,
+                                                                        lineNumber: 466,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2363,13 +2404,13 @@ function MembershipPortal() {
                                                                         children: getRoleDisplayName(profile?.role || 'non_member')
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/membership/page.tsx",
-                                                                        lineNumber: 433,
+                                                                        lineNumber: 467,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 431,
+                                                                lineNumber: 465,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2379,7 +2420,7 @@ function MembershipPortal() {
                                                                         children: "Account Status"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/membership/page.tsx",
-                                                                        lineNumber: 436,
+                                                                        lineNumber: 470,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2387,25 +2428,25 @@ function MembershipPortal() {
                                                                         children: "Active"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/app/membership/page.tsx",
-                                                                        lineNumber: 437,
+                                                                        lineNumber: 471,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 435,
+                                                                lineNumber: 469,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 426,
+                                                        lineNumber: 460,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 424,
+                                                lineNumber: 458,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2416,7 +2457,7 @@ function MembershipPortal() {
                                                         children: "Privacy & Security"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 443,
+                                                        lineNumber: 477,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2427,7 +2468,7 @@ function MembershipPortal() {
                                                                 children: "Change Password"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 445,
+                                                                lineNumber: 479,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2435,7 +2476,7 @@ function MembershipPortal() {
                                                                 children: "Download My Data"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 448,
+                                                                lineNumber: 482,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2452,57 +2493,152 @@ function MembershipPortal() {
                                                                 children: "Sign Out"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 451,
+                                                                lineNumber: 485,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: ()=>setShowDeleteConfirm(true),
                                                                 className: "w-full text-left px-4 py-3 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors",
                                                                 children: "Delete Account"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/membership/page.tsx",
-                                                                lineNumber: 465,
+                                                                lineNumber: 499,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/membership/page.tsx",
-                                                        lineNumber: 444,
+                                                        lineNumber: 478,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/membership/page.tsx",
-                                                lineNumber: 442,
+                                                lineNumber: 476,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/membership/page.tsx",
-                                        lineNumber: 423,
+                                        lineNumber: 457,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/membership/page.tsx",
-                                lineNumber: 421,
+                                lineNumber: 455,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/membership/page.tsx",
-                        lineNumber: 234,
+                        lineNumber: 268,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/membership/page.tsx",
-                lineNumber: 161,
+                lineNumber: 195,
                 columnNumber: 7
+            }, this),
+            showDeleteConfirm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "fixed inset-0 bg-black/50 flex items-center justify-center z-50",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "bg-white/10 backdrop-blur-lg rounded-lg p-6 max-w-md w-full mx-4 border border-white/20",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                            className: "text-xl font-bold text-white mb-4",
+                            children: "Delete Account"
+                        }, void 0, false, {
+                            fileName: "[project]/app/membership/page.tsx",
+                            lineNumber: 517,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-white/80 mb-4",
+                            children: "This action cannot be undone. All your data, including your profile, resume, and event registrations will be permanently deleted."
+                        }, void 0, false, {
+                            fileName: "[project]/app/membership/page.tsx",
+                            lineNumber: 518,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-white/60 text-sm mb-4",
+                            children: [
+                                "Type ",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "font-mono bg-white/20 px-2 py-1 rounded",
+                                    children: "DELETE"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/membership/page.tsx",
+                                    lineNumber: 522,
+                                    columnNumber: 20
+                                }, this),
+                                " to confirm:"
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/membership/page.tsx",
+                            lineNumber: 521,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                            type: "text",
+                            value: deleteConfirmText,
+                            onChange: (e)=>setDeleteConfirmText(e.target.value),
+                            placeholder: "Type DELETE here",
+                            className: "w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 mb-4 focus:outline-none focus:border-white/40"
+                        }, void 0, false, {
+                            fileName: "[project]/app/membership/page.tsx",
+                            lineNumber: 524,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex gap-3",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>{
+                                        setShowDeleteConfirm(false);
+                                        setDeleteConfirmText('');
+                                    },
+                                    className: "flex-1 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors",
+                                    disabled: deleting,
+                                    children: "Cancel"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/membership/page.tsx",
+                                    lineNumber: 532,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: handleDeleteAccount,
+                                    disabled: deleting || deleteConfirmText !== 'DELETE',
+                                    className: "flex-1 px-4 py-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+                                    children: deleting ? 'Deleting...' : 'Delete Account'
+                                }, void 0, false, {
+                                    fileName: "[project]/app/membership/page.tsx",
+                                    lineNumber: 542,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/membership/page.tsx",
+                            lineNumber: 531,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/membership/page.tsx",
+                    lineNumber: 516,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/membership/page.tsx",
+                lineNumber: 515,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/membership/page.tsx",
-        lineNumber: 158,
+        lineNumber: 192,
         columnNumber: 5
     }, this);
 }

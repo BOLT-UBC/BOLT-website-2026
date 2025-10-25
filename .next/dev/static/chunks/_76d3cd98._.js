@@ -223,6 +223,18 @@ const authService = {
         });
         if (error) throw error;
     },
+    // Delete user account
+    async deleteAccount (userId) {
+        // First, delete the user's profile (this will cascade to related data)
+        const { error: profileError } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('profiles').delete().eq('id', userId);
+        if (profileError) throw profileError;
+        // Then delete the auth user
+        const { error: authError } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.admin.deleteUser(userId);
+        if (authError) throw authError;
+        return {
+            success: true
+        };
+    },
     // Check if user is admin
     async isAdmin (userId) {
         const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from('profiles').select('role').eq('id', userId).single();

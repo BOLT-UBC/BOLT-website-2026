@@ -52,6 +52,10 @@ export default function MembershipPortal() {
   const [teams, setTeams] = useState<Team[]>([])
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditing, setIsEditing] = useState(false)
+  const [updating, setUpdating] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [editForm, setEditForm] = useState({
     full_name: '',
     year: '',
@@ -66,6 +70,36 @@ export default function MembershipPortal() {
       loadUserData()
     }
   }, [user?.id])
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'DELETE') {
+      alert('Please type "DELETE" to confirm account deletion')
+      return
+    }
+
+    setDeleting(true)
+    try {
+      const response = await fetch(`/api/account/delete?userId=${user?.id}`, {
+        method: 'DELETE'
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to delete account')
+      }
+
+      // Sign out and redirect
+      await authService.signOut()
+      router.push('/')
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to delete account')
+    } finally {
+      setDeleting(false)
+      setShowDeleteConfirm(false)
+      setDeleteConfirmText('')
+    }
+  }
 
   const loadUserData = async () => {
     try {
@@ -462,7 +496,10 @@ export default function MembershipPortal() {
                     >
                       Sign Out
                     </button>
-                    <button className="w-full text-left px-4 py-3 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors">
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="w-full text-left px-4 py-3 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors"
+                    >
                       Delete Account
                     </button>
                   </div>
@@ -472,6 +509,47 @@ export default function MembershipPortal() {
           )}
         </div>
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white/10 backdrop-blur-lg rounded-lg p-6 max-w-md w-full mx-4 border border-white/20">
+            <h3 className="text-xl font-bold text-white mb-4">Delete Account</h3>
+            <p className="text-white/80 mb-4">
+              This action cannot be undone. All your data, including your profile, resume, and event registrations will be permanently deleted.
+            </p>
+            <p className="text-white/60 text-sm mb-4">
+              Type <span className="font-mono bg-white/20 px-2 py-1 rounded">DELETE</span> to confirm:
+            </p>
+            <input
+              type="text"
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="Type DELETE here"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 mb-4 focus:outline-none focus:border-white/40"
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  setDeleteConfirmText('')
+                }}
+                className="flex-1 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleting || deleteConfirmText !== 'DELETE'}
+                className="flex-1 px-4 py-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deleting ? 'Deleting...' : 'Delete Account'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
