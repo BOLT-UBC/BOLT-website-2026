@@ -18,7 +18,7 @@ CREATE TABLE profiles (
     avatar_url TEXT,
     role VARCHAR(50) DEFAULT 'non_member' CHECK (role IN ('non_member', 'platinum_member', 'executive_member', 'admin')),
     team_id UUID REFERENCES teams(id) ON DELETE SET NULL,
-    year INTEGER CHECK (year >= 1 AND year <= 5),
+    graduation_year INTEGER CHECK (graduation_year >= 2020 AND graduation_year <= 2030),
     major VARCHAR(255),
     phone VARCHAR(20),
     linkedin_url TEXT,

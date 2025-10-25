@@ -9,7 +9,7 @@ export interface AuthUser extends User {
     avatar_url: string | null
     role: 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
     team_id: string | null
-    year: number | null
+    graduation_year: number | null
     major: string | null
     phone: string | null
     linkedin_url: string | null
@@ -132,7 +132,7 @@ export const authService = {
     full_name?: string
     role?: 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
     team_id?: string
-    year?: number
+    graduation_year?: number
     major?: string
     phone?: string
     linkedin_url?: string
@@ -163,7 +163,7 @@ export const authService = {
     full_name?: string
     avatar_url?: string
     team_id?: string
-    year?: number
+    graduation_year?: number
     major?: string
     phone?: string
     linkedin_url?: string
@@ -194,11 +194,11 @@ export const authService = {
         throw new Error('Invalid LinkedIn URL format')
       }
     }
-    if (updates.year !== undefined) {
-      if (updates.year < 1 || updates.year > 5) {
-        throw new Error('Year must be between 1 and 5')
+    if (updates.graduation_year !== undefined) {
+      if (updates.graduation_year < 2020 || updates.graduation_year > 2030) {
+        throw new Error('Graduation year must be between 2020 and 2030')
       }
-      sanitizedUpdates.year = updates.year
+      sanitizedUpdates.graduation_year = updates.graduation_year
     }
     if (updates.team_id) {
       sanitizedUpdates.team_id = updates.team_id
@@ -242,6 +242,21 @@ export const authService = {
 
     const { error } = await supabase.auth.updateUser({
       password: newPassword
+    })
+
+    if (error) throw error
+  },
+
+  // Update email
+  async updateEmail(newEmail: string) {
+    if (!this.validateEmail(newEmail)) {
+      throw new Error('Invalid email format')
+    }
+
+    const sanitizedEmail = newEmail.toLowerCase().trim()
+
+    const { error } = await supabase.auth.updateUser({
+      email: sanitizedEmail
     })
 
     if (error) throw error

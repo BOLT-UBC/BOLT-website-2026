@@ -17,7 +17,7 @@ export interface Database {
           avatar_url: string | null
           role: 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
           team_id: string | null
-          year: number | null
+          graduation_year: number | null
           major: string | null
           phone: string | null
           linkedin_url: string | null
@@ -34,7 +34,7 @@ export interface Database {
           avatar_url?: string | null
           role?: 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
           team_id?: string | null
-          year?: number | null
+          graduation_year?: number | null
           major?: string | null
           phone?: string | null
           linkedin_url?: string | null
@@ -51,7 +51,7 @@ export interface Database {
           avatar_url?: string | null
           role?: 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
           team_id?: string | null
-          year?: number | null
+          graduation_year?: number | null
           major?: string | null
           phone?: string | null
           linkedin_url?: string | null
