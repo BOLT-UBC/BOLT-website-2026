@@ -59,7 +59,7 @@ export async function DELETE(request: NextRequest) {
           .remove([`${userId}/${fileName}`])
       } catch (storageError) {
         // Log error but don't fail the deletion
-        console.warn('Failed to delete resume file:', storageError)
+        // Note: Resume file deletion failed, but user deletion continues
       }
     }
 

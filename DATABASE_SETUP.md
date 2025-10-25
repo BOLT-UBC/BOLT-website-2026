@@ -77,7 +77,7 @@ Run the SQL schema in `supabase-schema.sql` in your Supabase SQL editor:
 - Fields: id, user_id, file_name, file_url, file_size, file_type, uploaded_at, is_active
 - Only non-admin users can upload resumes
 - One active resume per user
-- **Note**: Resume functionality now uses profile fields instead
+- **Note**: Resume functionality now uses profile fields (resume_url, resume_file_name, resume_uploaded_at) instead
 
 ### Relationships
 

@@ -19,7 +19,7 @@ const Newsletter: React.FC = memo(() => {
       setIsSubscribed(true);
       setEmail("");
     } catch (error) {
-      console.error("Subscription failed:", error);
+      // Subscription failed - error is handled by the catch block
     } finally {
       setIsLoading(false);
     }
