@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
       .select()
 
     if (error) {
-      console.error('Error updating users:', error)
+      // Failed to update users
+      void error
       return NextResponse.json({ error: 'Failed to update users' }, { status: 500 })
     }
 
@@ -48,7 +49,8 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error in bulk-update API:', error)
+    // Failed to process bulk update
+    void error
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

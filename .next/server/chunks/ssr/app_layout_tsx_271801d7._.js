@@ -1,0 +1,3 @@
+module.exports=[33290,a=>{"use strict";var b=a.i(7997);function c({children:a}){return(0,b.jsx)("html",{lang:"en",children:(0,b.jsx)("body",{suppressHydrationWarning:!0,children:a})})}a.s(["default",()=>c],20370),a.i(20370),a.s(["default",()=>c,"metadata",0,{title:"BOLT UBC - UBC's Largest Data Club",description:"Empowering UBC students to harness the power of data through hands-on workshops, case competitions, and networking events."}],33290)}];
+
+//# sourceMappingURL=app_layout_tsx_271801d7._.js.map

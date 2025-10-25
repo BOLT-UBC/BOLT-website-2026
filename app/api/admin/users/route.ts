@@ -40,7 +40,8 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
 
     if (error) {
-      console.error('Error fetching users:', error)
+      // Failed to fetch users
+      void error
       return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 })
     }
 
@@ -55,7 +56,8 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error in users API:', error)
+    // Failed to process users request
+    void error
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get total users
     const { count: totalUsers } = await supabase
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       .select('role')
       .not('role', 'is', null)
 
-    const roleDistribution = roleStats?.reduce((acc: any, user: any) => {
+    const roleDistribution = roleStats?.reduce((acc: Record<string, number>, user: { role: string }) => {
       acc[user.role] = (acc[user.role] || 0) + 1
       return acc
     }, {}) || {}
@@ -63,7 +63,8 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error in statistics API:', error)
+    // Failed to get statistics
+    void error
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

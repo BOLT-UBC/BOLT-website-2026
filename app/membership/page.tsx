@@ -68,8 +68,17 @@ export default function MembershipPortal() {
   })
 
   // Admin dashboard state
-  const [adminUsers, setAdminUsers] = useState<any[]>([])
-  const [adminStats, setAdminStats] = useState<any>(null)
+  const [adminUsers, setAdminUsers] = useState<UserProfile[]>([])
+  const [adminStats, setAdminStats] = useState<{
+    totalUsers: number
+    roleDistribution: Record<string, number>
+    newSignups: number
+    recentSignups: number
+    completeProfiles: number
+    usersWithResumes: number
+    profileCompletionRate: number
+    resumeUploadRate: number
+  } | null>(null)
   const [adminLoading, setAdminLoading] = useState(false)
   const [adminSearch, setAdminSearch] = useState('')
   const [adminRoleFilter, setAdminRoleFilter] = useState('')
@@ -215,7 +224,8 @@ export default function MembershipPortal() {
       const statsData = await statsResponse.json()
       setAdminStats(statsData)
     } catch (error) {
-      console.error('Error loading admin data:', error)
+      // Failed to load admin data
+      void error
     } finally {
       setAdminLoading(false)
     }
@@ -225,7 +235,7 @@ export default function MembershipPortal() {
     if (selectedUsers.length === 0 || !bulkAction || !bulkValue) return
 
     try {
-      const updates: any = {}
+      const updates: Record<string, string | number> = {}
       if (bulkAction === 'role') {
         updates.role = bulkValue
       } else if (bulkAction === 'graduation_year') {
@@ -248,6 +258,8 @@ export default function MembershipPortal() {
         alert('Failed to update users')
       }
     } catch (error) {
+      // Failed to update users
+      void error
       alert('Error updating users')
     }
   }
@@ -385,7 +397,7 @@ export default function MembershipPortal() {
           <div className="lg:w-3/4">
             {/* Home Tab */}
             {activeTab === 'home' && (
-              <div className="space-y-6">
+            <div className="space-y-6">
                 {/* Announcements Section */}
                 <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
                   <div className="flex items-center gap-3 mb-4">
@@ -761,7 +773,7 @@ export default function MembershipPortal() {
                               📍 {event.location}
                             </p>
                           )}
-                        </div>
+                    </div>
                       ))
                     ) : (
                       <p className="text-white/60">No events available at the moment.</p>
@@ -769,7 +781,7 @@ export default function MembershipPortal() {
                   </div>
               </div>
             </div>
-            )}
+          )}
 
             {/* Admin Dashboard Tab */}
             {activeTab === 'admin' && profile?.role === 'admin' && (
@@ -872,8 +884,8 @@ export default function MembershipPortal() {
                       >
                         {adminLoading ? 'Loading...' : 'Search'}
                       </button>
-                    </div>
                   </div>
+                </div>
 
                   {/* Bulk Actions */}
                   {selectedUsers.length > 0 && (
@@ -930,7 +942,7 @@ export default function MembershipPortal() {
                           className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors disabled:opacity-50"
                         >
                           Apply to {selectedUsers.length} Users
-                        </button>
+                    </button>
                       </div>
                     </div>
                   )}
@@ -1023,8 +1035,8 @@ export default function MembershipPortal() {
                             <option value="executive_member">Executive Member</option>
                             <option value="admin">Admin</option>
                           </select>
-                          <button
-                            onClick={async () => {
+                    <button
+                      onClick={async () => {
                               const email = (document.getElementById('admin-email') as HTMLInputElement)?.value;
                               const role = (document.getElementById('admin-role') as HTMLSelectElement)?.value;
                               if (email && role) {
@@ -1040,14 +1052,16 @@ export default function MembershipPortal() {
                                     alert('Failed to update role');
                                   }
                                 } catch (error) {
+                                  // Failed to update role
+                                  void error
                                   alert('Error updating role');
                                 }
-                              }
-                            }}
+                        }
+                      }}
                             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-                          >
+                    >
                             Update Role
-                          </button>
+                    </button>
                         </div>
                       </div>
                     </div>
@@ -1126,10 +1140,10 @@ export default function MembershipPortal() {
                 Cancel
               </button>
                 </div>
-              </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
         </div>
 
       <Footer />

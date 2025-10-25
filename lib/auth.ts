@@ -146,7 +146,7 @@ export const authService = {
         avatar_url: user.user_metadata?.avatar_url,
         role: additionalData?.role || 'non_member',
         team_id: additionalData?.team_id,
-        year: additionalData?.year,
+        graduation_year: additionalData?.graduation_year,
         major: additionalData?.major,
         phone: additionalData?.phone,
         linkedin_url: additionalData?.linkedin_url
