@@ -128,6 +128,7 @@ ALTER TABLE resume_uploads ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view all profiles" ON profiles FOR SELECT USING (true);
 CREATE POLICY "Users can update their own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Admins can insert profiles" ON profiles FOR INSERT WITH CHECK (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
+CREATE POLICY "Allow profile creation for new users" ON profiles FOR INSERT WITH CHECK (true);
 
 -- Teams policies
 CREATE POLICY "Anyone can view teams" ON teams FOR SELECT USING (true);
@@ -180,6 +181,27 @@ INSERT INTO events (name, description, image_url, registration_open) VALUES
 ('BOLT Connect', 'Networking event with industry professionals', 'bolt-connect.webp', true),
 ('BOLT Circuit', 'Technical workshops and competitions', 'bolt-circuit.webp', true),
 ('BOLT Bootcamp', 'Intensive learning program', 'bootcamp.webp', true);
+
+-- Create function to handle new user creation
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, email, full_name, avatar_url, role)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name'),
+    NEW.raw_user_meta_data->>'avatar_url',
+    'non_member'
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Create trigger to automatically create profile when user signs up
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Insert initial partners data
 INSERT INTO partners (name, logo_url, tier) VALUES

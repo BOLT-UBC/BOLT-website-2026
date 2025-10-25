@@ -27,8 +27,7 @@
     "disableStaticImages": false,
     "minimumCacheTTL": 14400,
     "formats": [
-      "image/webp",
-      "image/avif"
+      "image/webp"
     ],
     "maximumRedirects": 3,
     "dangerouslyAllowLocalIP": false,
@@ -41,11 +40,30 @@
         "search": ""
       }
     ],
-    "remotePatterns": [],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "^(?:^(?:lh3\\.googleusercontent\\.com)$)$",
+        "port": "",
+        "pathname": "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$"
+      },
+      {
+        "protocol": "https",
+        "hostname": "^(?:^(?:avatars\\.githubusercontent\\.com)$)$",
+        "port": "",
+        "pathname": "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$"
+      },
+      {
+        "protocol": "https",
+        "hostname": "^(?:(?!\\.)(?=.)[^/]*?\\.supabase\\.co\\/?)$",
+        "port": "",
+        "pathname": "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$"
+      }
+    ],
     "qualities": [
       75
     ],
-    "unoptimized": true,
+    "unoptimized": false,
     "sizes": [
       640,
       750,

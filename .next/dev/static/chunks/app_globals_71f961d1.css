@@ -822,6 +822,10 @@ img, video {
   white-space: nowrap;
 }
 
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
 .break-words {
   overflow-wrap: break-word;
 }
@@ -1008,6 +1012,10 @@ img, video {
 
 .bg-white\/40 {
   background-color: #fff6;
+}
+
+.bg-white\/5 {
+  background-color: #ffffff0d;
 }
 
 .bg-yellow-100 {

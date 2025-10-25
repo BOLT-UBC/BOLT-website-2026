@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/useAuth'
 
 interface ResumeUploadProps {
   onUploadSuccess?: (resume: any) => void

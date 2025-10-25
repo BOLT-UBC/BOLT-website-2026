@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { NAVIGATION } from "../lib/constants";
 import { scrollToElement } from "../lib/dom";
-import { useAuth, authService } from "../lib/auth";
+import { useAuth } from "../lib/useAuth";
+import { authService } from "../lib/auth";
 
 const Navbar: React.FC = () => {
   const sections = useMemo(() => ["Home", "About", "Partners", "Events", "Solutions", "Team"], []);

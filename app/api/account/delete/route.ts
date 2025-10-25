@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest) {
     // Verify the user exists and get their profile
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('id, email, role')
+      .select('id, email, role, resume_url')
       .eq('id', userId)
       .single()
 

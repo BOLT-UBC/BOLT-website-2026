@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { authService } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/useAuth'
 
 export default function LoginPage() {
   const router = useRouter()

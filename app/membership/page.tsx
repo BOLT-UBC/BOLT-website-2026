@@ -5,7 +5,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import ResumeUpload from '@/components/ResumeUpload'
-import { useAuth, authService } from '@/lib/auth'
+import { useAuth } from '@/lib/useAuth'
+import { authService } from '@/lib/auth'
 import { profileService, eventService, teamService } from '@/lib/database'
 
 interface UserProfile {

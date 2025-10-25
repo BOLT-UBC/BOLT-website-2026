@@ -20,7 +20,7 @@
       "jsx",
       "js"
     ],
-    "poweredByHeader": true,
+    "poweredByHeader": false,
     "compress": true,
     "images": {
       "deviceSizes": [
@@ -49,8 +49,7 @@
       "disableStaticImages": false,
       "minimumCacheTTL": 14400,
       "formats": [
-        "image/webp",
-        "image/avif"
+        "image/webp"
       ],
       "maximumRedirects": 3,
       "dangerouslyAllowLocalIP": false,
@@ -63,11 +62,30 @@
           "search": ""
         }
       ],
-      "remotePatterns": [],
+      "remotePatterns": [
+        {
+          "protocol": "https",
+          "hostname": "lh3.googleusercontent.com",
+          "port": "",
+          "pathname": "/**"
+        },
+        {
+          "protocol": "https",
+          "hostname": "avatars.githubusercontent.com",
+          "port": "",
+          "pathname": "/**"
+        },
+        {
+          "protocol": "https",
+          "hostname": "*.supabase.co",
+          "port": "",
+          "pathname": "/**"
+        }
+      ],
       "qualities": [
         75
       ],
-      "unoptimized": true
+      "unoptimized": false
     },
     "devIndicators": {
       "position": "bottom-left"
@@ -290,6 +308,9 @@
     "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight",
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.js",
+    "serverExternalPackages": [
+      "@supabase/supabase-js"
+    ],
     "turbopack": {
       "root": "/Users/jessicazhou/BOLT-website-2025"
     },
