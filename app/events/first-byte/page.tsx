@@ -110,6 +110,7 @@ const FirstBytePage: React.FC = () => {
               Participants will then work in teams to build meaningful insights
               and present their findings to a panel of judges.
               <br />
+              <br />
               Last Year's Numbers:
               <br />
               ● 250+ total enrolments (workshops + competition)
