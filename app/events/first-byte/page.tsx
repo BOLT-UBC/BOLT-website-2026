@@ -70,10 +70,10 @@ const FirstBytePage: React.FC = () => {
             transform: `translate(${offset.x}px, ${offset.y}px)`,
           }}
         >
-          <h1 className="font-inter text-3xl sm:text-4xl md:text-5xl font-bold text-gray-100 mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-100 mb-4">
             First Byte
           </h1>
-          <p className="font-inter text-base sm:text-lg text-gray-200 mb-6">
+          <p className="text-base sm:text-lg text-gray-200 mb-6">
             An introductory workshop series for beginners covering fundamental
             data analysis tools, Excel, SQL, and data visualization basics.
           </p>
