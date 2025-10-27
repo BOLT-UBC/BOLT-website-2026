@@ -18,7 +18,7 @@ const Newsletter: React.FC = memo(() => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setIsSubscribed(true);
       setEmail("");
-    } catch (error) {
+    } catch {
       // Subscription failed - error is handled by the catch block
     } finally {
       setIsLoading(false);

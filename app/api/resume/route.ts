@@ -1,54 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { profileService } from '@/lib/database'
-
-// Simple in-memory rate limiting (for production, use Redis or similar)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-
-function checkRateLimit(identifier: string, limit: number = 10, windowMs: number = 60000): boolean {
-  const now = Date.now()
-  const record = rateLimitMap.get(identifier)
-
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(identifier, { count: 1, resetTime: now + windowMs })
-    return true
-  }
-
-  if (record.count >= limit) {
-    return false
-  }
-
-  record.count++
-  return true
-}
-
-// Validate file upload
-function validateFile(file: File): { valid: boolean; error?: string } {
-  // Check file type
-  const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
-  if (!allowedTypes.includes(file.type)) {
-    return { valid: false, error: 'Only PDF and Word documents are allowed' }
-  }
-
-  // Check file size (5MB limit)
-  const maxSize = 5 * 1024 * 1024 // 5MB
-  if (file.size > maxSize) {
-    return { valid: false, error: 'File size must be less than 5MB' }
-  }
-
-  // Check file name
-  if (file.name.length > 255) {
-    return { valid: false, error: 'File name too long' }
-  }
-
-  // Check for suspicious file names
-  const suspiciousPatterns = /[<>:"/\\|?*]|\.\.|script|javascript|vbscript/i
-  if (suspiciousPatterns.test(file.name)) {
-    return { valid: false, error: 'Invalid file name' }
-  }
-
-  return { valid: true }
-}
+import { isValidUUID, validateFile, checkRateLimit } from '@/lib/validation'
 
 // Get user's resume info from profile
 export async function GET(request: NextRequest) {
@@ -64,8 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Basic UUID validation
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-    if (!uuidRegex.test(userId)) {
+    if (!isValidUUID(userId)) {
       return NextResponse.json(
         { error: 'Invalid user ID format' },
         { status: 400 }
@@ -114,8 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     // UUID validation
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-    if (!uuidRegex.test(userId)) {
+    if (!isValidUUID(userId)) {
       return NextResponse.json(
         { error: 'Invalid user ID format' },
         { status: 400 }
@@ -199,8 +150,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // UUID validation
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-    if (!uuidRegex.test(userId)) {
+    if (!isValidUUID(userId)) {
       return NextResponse.json(
         { error: 'Invalid user ID format' },
         { status: 400 }

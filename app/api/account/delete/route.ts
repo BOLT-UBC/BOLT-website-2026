@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { isValidUUID } from '@/lib/validation'
 
 // Delete user account
 export async function DELETE(request: NextRequest) {
@@ -15,8 +16,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // UUID validation
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-    if (!uuidRegex.test(userId)) {
+    if (!isValidUUID(userId)) {
       return NextResponse.json(
         { error: 'Invalid user ID format' },
         { status: 400 }
@@ -51,13 +51,12 @@ export async function DELETE(request: NextRequest) {
         // Extract file path from URL
         const url = new URL(profile.resume_url)
         const pathParts = url.pathname.split('/')
-        const bucketName = pathParts[pathParts.length - 2] // Get bucket name
         const fileName = pathParts[pathParts.length - 1] // Get file name
 
         await supabase.storage
           .from('bolt-resumes-2025')
           .remove([`${userId}/${fileName}`])
-      } catch (storageError) {
+      } catch {
         // Log error but don't fail the deletion
         // Note: Resume file deletion failed, but user deletion continues
       }

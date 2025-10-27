@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
       .select()
 
     if (error) {
-      console.error('Error updating role:', error)
       return NextResponse.json({ error: 'Failed to update role' }, { status: 500 })
     }
 
@@ -37,8 +36,7 @@ export async function POST(request: NextRequest) {
       user: data[0]
     })
 
-  } catch (error) {
-    console.error('Error in update-role API:', error)
+  } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

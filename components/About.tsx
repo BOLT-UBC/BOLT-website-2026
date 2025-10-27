@@ -53,24 +53,24 @@ const Carousel: React.FC<{ images: string[]; interval?: number; onImageLoad?: ()
       </div>
 
       {/* prev / next */}
-{images.length > 1 && (
-  <>
-    <button
-      onClick={() => goTo(index - 1)}
-      aria-label="Previous"
-      className="absolute left-3 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 sm:p-3 rounded-full z-30 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center"
-    >
-      ‹
-    </button>
-    <button
-      onClick={() => goTo(index + 1)}
-      aria-label="Next"
-      className="absolute right-3 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 sm:p-3 rounded-full z-30 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center"
-    >
-      ›
-    </button>
-  </>
-)}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={() => goTo(index - 1)}
+            aria-label="Previous"
+            className="absolute left-3 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 sm:p-3 rounded-full z-30 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center"
+          >
+            ‹
+          </button>
+          <button
+            onClick={() => goTo(index + 1)}
+            aria-label="Next"
+            className="absolute right-3 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 sm:p-3 rounded-full z-30 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center"
+          >
+            ›
+          </button>
+        </>
+      )}
     </div>
   );
 };

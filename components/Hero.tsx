@@ -9,7 +9,7 @@ import { SITE_URLS } from "../lib/config";
 
 
 const Hero: React.FC = () => {
-  const spaceSceneRef = useRef<{ createExplosion: (x: number, y: number) => void }>(null);
+  const spaceSceneRef = useRef<{ createExplosion: (_x: number, _y: number) => void }>(null);
 
   const handleHeroClick = (e: React.MouseEvent) => {
     // Don't trigger explosion if clicking on buttons or interactive elements
@@ -75,8 +75,6 @@ const Hero: React.FC = () => {
                  />
         </div>
       </div>
-
-
     </div>
     </div>
   );

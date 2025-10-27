@@ -3,11 +3,11 @@
 import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 
 interface SpaceSceneRef {
-  createExplosion: (x: number, y: number) => void;
+  createExplosion: (_x: number, _y: number) => void;
 }
 
 interface WindowWithSpaceScene extends Window {
-  spaceSceneExplosion?: (x: number, y: number) => void;
+  spaceSceneExplosion?: (_x: number, _y: number) => void;
 }
 
 const SpaceScene = forwardRef<SpaceSceneRef>((_, ref) => {

@@ -441,11 +441,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navi
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$constants$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/constants.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$dom$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/dom.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$useAuth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/useAuth.ts [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/auth.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
-;
 ;
 ;
 ;
@@ -556,15 +554,6 @@ const Navbar = ()=>{
         isTeamPage,
         isEventPage
     ]);
-    const handleLogout = async ()=>{
-        try {
-            await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].signOut();
-            router.push('/');
-        } catch (error) {
-            // Logout failed
-            void error;
-        }
-    };
     const scrollToSection = (sectionId)=>{
         // If we're on a non-home page and clicking any section, navigate to home first
         if (isNotHomePage) {
@@ -605,7 +594,7 @@ const Navbar = ()=>{
                     d: "M 2 2.5 L 20 2.5"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 139,
+                    lineNumber: 129,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -616,7 +605,7 @@ const Navbar = ()=>{
                     d: "M 2 9.423 L 20 9.423"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 146,
+                    lineNumber: 136,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -627,13 +616,13 @@ const Navbar = ()=>{
                     d: "M 2 16.346 L 20 16.346"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 153,
+                    lineNumber: 143,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/components/Navbar.tsx",
-            lineNumber: 138,
+            lineNumber: 128,
             columnNumber: 5
         }, ("TURBOPACK compile-time value", void 0));
     const CloseIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -648,7 +637,7 @@ const Navbar = ()=>{
                     d: "M 2 2 L 21 21"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 165,
+                    lineNumber: 155,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -658,13 +647,13 @@ const Navbar = ()=>{
                     d: "M 21 2 L 2 21"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 171,
+                    lineNumber: 161,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/components/Navbar.tsx",
-            lineNumber: 164,
+            lineNumber: 154,
             columnNumber: 5
         }, ("TURBOPACK compile-time value", void 0));
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -683,7 +672,7 @@ const Navbar = ()=>{
                             }
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 183,
+                            lineNumber: 173,
                             columnNumber: 9
                         }, ("TURBOPACK compile-time value", void 0)),
                         sections.map((section)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -696,12 +685,12 @@ const Navbar = ()=>{
                                     children: section
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.tsx",
-                                    lineNumber: 192,
+                                    lineNumber: 182,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, section, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 191,
+                                lineNumber: 181,
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -710,7 +699,7 @@ const Navbar = ()=>{
                                 children: "Loading..."
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 209,
+                                lineNumber: 199,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)) : user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>router.push('/membership'),
@@ -718,7 +707,7 @@ const Navbar = ()=>{
                                 children: "Members"
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 211,
+                                lineNumber: 201,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>router.push('/login'),
@@ -726,23 +715,23 @@ const Navbar = ()=>{
                                 children: "Login"
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 218,
+                                lineNumber: 208,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 207,
+                            lineNumber: 197,
                             columnNumber: 9
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 182,
+                    lineNumber: 172,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 181,
+                lineNumber: 171,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -750,16 +739,16 @@ const Navbar = ()=>{
                 onClick: ()=>setMenuOpen(!menuOpen),
                 children: menuOpen ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(CloseIcon, {}, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 231,
+                    lineNumber: 221,
                     columnNumber: 21
                 }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(HamburgerIcon, {}, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 231,
+                    lineNumber: 221,
                     columnNumber: 37
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 230,
+                lineNumber: 220,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             menuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -773,7 +762,7 @@ const Navbar = ()=>{
                                 children: section
                             }, section, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 238,
+                                lineNumber: 228,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))),
                         loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -781,7 +770,7 @@ const Navbar = ()=>{
                             children: "Loading..."
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 251,
+                            lineNumber: 241,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0)) : user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: ()=>{
@@ -792,7 +781,7 @@ const Navbar = ()=>{
                             children: "Members"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 253,
+                            lineNumber: 243,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: ()=>{
@@ -803,18 +792,18 @@ const Navbar = ()=>{
                             children: "Login"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 263,
+                            lineNumber: 253,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 236,
+                    lineNumber: 226,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 235,
+                lineNumber: 225,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
@@ -1288,7 +1277,7 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                     children: "Resume Upload"
                 }, void 0, false, {
                     fileName: "[project]/components/ResumeUpload.tsx",
-                    lineNumber: 36,
+                    lineNumber: 42,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1296,13 +1285,13 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                     children: "Resume uploads are not available for your account type."
                 }, void 0, false, {
                     fileName: "[project]/components/ResumeUpload.tsx",
-                    lineNumber: 37,
+                    lineNumber: 43,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/ResumeUpload.tsx",
-            lineNumber: 35,
+            lineNumber: 41,
             columnNumber: 7
         }, this);
     }
@@ -1379,7 +1368,7 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                 children: "Resume Upload"
             }, void 0, false, {
                 fileName: "[project]/components/ResumeUpload.tsx",
-                lineNumber: 123,
+                lineNumber: 129,
                 columnNumber: 7
             }, this),
             currentResume?.resume_url ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1404,17 +1393,17 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                             d: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                         }, void 0, false, {
                                             fileName: "[project]/components/ResumeUpload.tsx",
-                                            lineNumber: 131,
+                                            lineNumber: 137,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ResumeUpload.tsx",
-                                        lineNumber: 130,
+                                        lineNumber: 136,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/ResumeUpload.tsx",
-                                    lineNumber: 129,
+                                    lineNumber: 135,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1424,7 +1413,7 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                             children: currentResume.resume_file_name
                                         }, void 0, false, {
                                             fileName: "[project]/components/ResumeUpload.tsx",
-                                            lineNumber: 135,
+                                            lineNumber: 141,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1435,19 +1424,19 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/ResumeUpload.tsx",
-                                            lineNumber: 136,
+                                            lineNumber: 142,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/ResumeUpload.tsx",
-                                    lineNumber: 134,
+                                    lineNumber: 140,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/ResumeUpload.tsx",
-                            lineNumber: 128,
+                            lineNumber: 134,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1461,7 +1450,7 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                     children: "View"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ResumeUpload.tsx",
-                                    lineNumber: 142,
+                                    lineNumber: 148,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1470,24 +1459,24 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                     children: "Delete"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ResumeUpload.tsx",
-                                    lineNumber: 150,
+                                    lineNumber: 156,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/ResumeUpload.tsx",
-                            lineNumber: 141,
+                            lineNumber: 147,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/ResumeUpload.tsx",
-                    lineNumber: 127,
+                    lineNumber: 133,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/ResumeUpload.tsx",
-                lineNumber: 126,
+                lineNumber: 132,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: `border-2 border-dashed rounded-lg p-8 text-center transition-colors ${dragActive ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}`,
@@ -1513,17 +1502,17 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                         d: "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ResumeUpload.tsx",
-                                        lineNumber: 174,
+                                        lineNumber: 180,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/ResumeUpload.tsx",
-                                    lineNumber: 173,
+                                    lineNumber: 179,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/ResumeUpload.tsx",
-                                lineNumber: 172,
+                                lineNumber: 178,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1533,7 +1522,7 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                         children: uploading ? 'Uploading...' : 'Upload your resume'
                                     }, void 0, false, {
                                         fileName: "[project]/components/ResumeUpload.tsx",
-                                        lineNumber: 179,
+                                        lineNumber: 185,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1541,7 +1530,7 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                         children: "Drag and drop your resume here, or click to select"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ResumeUpload.tsx",
-                                        lineNumber: 182,
+                                        lineNumber: 188,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1549,13 +1538,13 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                         children: "PDF or Word documents only • Max 5MB"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ResumeUpload.tsx",
-                                        lineNumber: 185,
+                                        lineNumber: 191,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ResumeUpload.tsx",
-                                lineNumber: 178,
+                                lineNumber: 184,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1565,13 +1554,13 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                                 children: uploading ? 'Uploading...' : 'Choose File'
                             }, void 0, false, {
                                 fileName: "[project]/components/ResumeUpload.tsx",
-                                lineNumber: 190,
+                                lineNumber: 196,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ResumeUpload.tsx",
-                        lineNumber: 171,
+                        lineNumber: 177,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1582,19 +1571,19 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
                         className: "hidden"
                     }, void 0, false, {
                         fileName: "[project]/components/ResumeUpload.tsx",
-                        lineNumber: 199,
+                        lineNumber: 205,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ResumeUpload.tsx",
-                lineNumber: 160,
+                lineNumber: 166,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/ResumeUpload.tsx",
-        lineNumber: 122,
+        lineNumber: 128,
         columnNumber: 5
     }, this);
 }

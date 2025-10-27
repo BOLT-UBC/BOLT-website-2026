@@ -4,15 +4,21 @@ import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '@/lib/useAuth'
 
 interface ResumeUploadProps {
-  onUploadSuccess?: (resume: any) => void
+  onUploadSuccess?: (resume: ResumeData) => void
   onUploadError?: (error: string) => void
+}
+
+interface ResumeData {
+  resume_url: string | null
+  resume_file_name: string | null
+  resume_uploaded_at: string | null
 }
 
 export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeUploadProps) {
   const { user } = useAuth()
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
-  const [currentResume, setCurrentResume] = useState<any>(null)
+  const [currentResume, setCurrentResume] = useState<ResumeData | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Check if user can upload resume

@@ -5,7 +5,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { NAVIGATION } from "../lib/constants";
 import { scrollToElement } from "../lib/dom";
 import { useAuth } from "../lib/useAuth";
-import { authService } from "../lib/auth";
 
 const Navbar: React.FC = () => {
   const sections = useMemo(() => ["Home", "About", "Partners", "Events", "Solutions", "Team"], []);
@@ -93,15 +92,6 @@ const Navbar: React.FC = () => {
     }
   }, [sections, isNotHomePage, isTeamPage, isEventPage]);
 
-  const handleLogout = async () => {
-    try {
-      await authService.signOut()
-      router.push('/')
-    } catch (error) {
-      // Logout failed
-      void error
-    }
-  }
 
   const scrollToSection = (sectionId: string) => {
     // If we're on a non-home page and clicking any section, navigate to home first
