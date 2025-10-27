@@ -1,8 +1,11 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../sections/Footer";
-import Button from "../components/Button";
-import ByteImage from "../assets/images/Byte.webp"; // Import your gliding image
+import Navbar from "../../../components/Navbar";
+import Footer from "../../../components/Footer";
+import Button from "../../../components/Button";
+import Image from "next/image";
+import ByteImage from "../../../public/images/Byte.webp"; // Import your gliding image
 
 const FirstBytePage: React.FC = () => {
   // Scroll to top on mount
@@ -37,7 +40,7 @@ const FirstBytePage: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col"
+      className="min-h-screen flex flex-col bg-[#150033] "
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -49,7 +52,7 @@ const FirstBytePage: React.FC = () => {
       {/* Main Content */}
       <div className="flex flex-col md:flex-row items-center justify-center pt-24 md:pt-28 pb-12 md:pb-16 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto flex-1 relative">
         {/* Gliding Image */}
-        <img
+        <Image
           src={ByteImage}
           alt="Gliding Image"
           className={`absolute bottom-10 left-1/2 w-[20rem] h-auto transition-transform duration-[2500ms] ${
