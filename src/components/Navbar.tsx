@@ -16,6 +16,7 @@ const Navbar: React.FC = () => {
 
   // Check if we're on the team page
   const isTeamPage = location.pathname === '/team';
+  const isFirstBytePage = location.pathname === '/events/first-byte';
 
   // Function to update slider position
   const updateSliderPosition = (sectionName: string) => {
@@ -52,6 +53,10 @@ const Navbar: React.FC = () => {
       setActiveSection("Team");
       return;
     }
+    if (isFirstBytePage) {
+      setActiveSection("Events");
+      return;
+    }
 
     const handleScroll = () => {
       if (isScrolling.current) return;
@@ -77,7 +82,7 @@ const Navbar: React.FC = () => {
 
   const scrollToSection = (sectionId: string) => {
     // If we're on the team page and clicking any section, navigate to home first
-    if (isTeamPage) {
+    if (isTeamPage || isFirstBytePage) {
       if (sectionId === "Home") {
         navigate('/');
       } else {

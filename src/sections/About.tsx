@@ -11,8 +11,8 @@ const About: React.FC = memo(() => {
           <div className="max-w-lg">
             <p className="font-inter text-sm leading-relaxed text-gray-800 mb-6 font-normal">
               Bolt provides an enriching platform that fosters collaboration,
-              presents intellectually <strong className="font-bold text-black">stimulating challenges</strong>, and facilitates
-              <strong className="font-bold text-black">hands-on experiences</strong>. This unique opportunity is open to students from
+              presents intellectually <strong className="font-bold text-black">stimulating challenges</strong>, and facilitates 
+              <strong className="font-bold text-black"> hands-on experiences</strong>. This unique opportunity is open to students from
               diverse backgrounds, inviting them to immerse themselves in the
               dynamic realm of business analytics.
             </p>
