@@ -58,7 +58,7 @@ const DataBridge: React.FC = memo(() => {
           </p>
           <div className="flex justify-center">
             <a
-              href="mailto:databridge@ubcbolt.com"
+              href="mailto:boltubc@gmail.com"
               className="bg-black/20 backdrop-blur-lg text-white font-inter font-semibold px-8 py-3 rounded-full transition-all duration-200 hover:bg-black/30 shadow-lg hover:shadow-xl hover:shadow-purple-500/25 flex items-center gap-2 group"
             >
               Contact Us

@@ -7,57 +7,57 @@
           "name": "Nav Thukral",
           "title": "President",
           "profilepic": "NavThukral.webp",
-          "linkedin": "",
+          "linkedin": "https://linkedin.com/in/navthukral",
           "personalEmail": "thukral.nav@boltubc.com",
-          "clubEmail": "president@boltubc.com"
+          "clubEmail": ""
         },
         {
           "name": "Eleanor Lam",
           "title": "VP Ops & VP Case Dev",
           "profilepic": "EleanorLam.webp",
-          "linkedin": "",
+          "linkedin": "https://linkedin.com/in/placeholder",
           "personalEmail": "lam.eleanor@boltubc.com",
-          "clubEmail": "vpinternal@boltubc.com"
+          "clubEmail": "events@boltubc.com"
         },
         {
           "name": "Kiwi Mottahed",
           "title": "VP Events",
           "profilepic": "KiwiMottahed.webp",
-          "linkedin": "",
+          "linkedin": "https://linkedin.com/in/placeholder",
           "personalEmail": "mottahed.kiwi@boltubc.com",
-          "clubEmail": "vpevents@boltubc.com"
+          "clubEmail": "events@boltubc.com"
         },
         {
           "name": "Aadeesh Nargotra",
           "title": "VP CR",
           "profilepic": "AadeeshNargotra.webp",
-          "linkedin": "",
+          "linkedin": "https://linkedin.com/in/placeholder",
           "personalEmail": "nargotra.aadeesh@boltubc.com",
-          "clubEmail": "vpcr@boltubc.com"
-        },
-        {
-          "name": "Raghav Awasthi",
-          "title": "VP Marketing",
-          "profilepic": "RaghavAwasthi.webp",
-          "linkedin": "",
-          "personalEmail": "awasthi.raghav@boltubc.com",
-          "clubEmail": "marketing@boltubc.com"
-        },
-        {
-          "name": "Jessica Zhou",
-          "title": "VP Technology",
-          "profilepic": "JessicaZhou.webp",
-          "linkedin": "",
-          "personalEmail": "zhou.jessica@boltubc.com",
-          "clubEmail": "technology@boltubc.com"
+          "clubEmail": "cr@boltubc.com"
         },
         {
           "name": "Chloe Lee",
           "title": "VP Finance",
           "profilepic": "ChloeLee.webp",
-          "linkedin": "",
+          "linkedin": "https://linkedin.com/in/placeholder",
           "personalEmail": "lee.chloe@boltubc.com",
           "clubEmail": "finance@boltubc.com"
+        },
+        {
+          "name": "Jessica Zhou",
+          "title": "VP Technology",
+          "profilepic": "JessicaZhou.webp",
+          "linkedin": "https://linkedin.com/in/placeholder",
+          "personalEmail": "zhou.jessica@boltubc.com",
+          "clubEmail": "developer@boltubc.com"
+        },
+        {
+          "name": "Raghav Awasthi",
+          "title": "VP Marketing",
+          "profilepic": "RaghavAwasthi.webp",
+          "linkedin": "https://linkedin.com/in/placeholder",
+          "personalEmail": "awasthi.raghav@boltubc.com",
+          "clubEmail": "marketing@boltubc.com"
         }
       ]
     },
@@ -68,25 +68,25 @@
           "name": "Antarip Kashyap",
           "title": "Advising Director",
           "profilepic": "AntaripKashyap.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Bradley Wong",
           "title": "Advising Director",
           "profilepic": "BradleyWong.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Alexy Lamoot",
           "title": "Advising Director",
           "profilepic": "AlexyLamoot.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Kyle Gomez",
           "title": "Advisor (Finance)",
           "profilepic": "KyleGomez.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -97,43 +97,43 @@
           "name": "Calista Budi",
           "title": "CR Director",
           "profilepic": "CalistaValencia.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Harshit Sethi",
           "title": "CR Director",
           "profilepic": "HarshitSethi.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Nevan Leo",
           "title": "CR Executive",
           "profilepic": "NevanLeo.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Ethan Le",
           "title": "CR Executive",
           "profilepic": "EthanLe.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Sophia Huang",
           "title": "CR Executive",
           "profilepic": "SophiaHuang.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Manya Garg",
           "title": "CR Executive",
           "profilepic": "ManyaGarg.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Kai Wu",
           "title": "CR Executive",
           "profilepic": "KaiWu.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -144,25 +144,25 @@
           "name": "Prashant Chopra",
           "title": "Case Dev Executive",
           "profilepic": "PrashantChopra.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Lucas Ho",
           "title": "Case Dev Executive",
           "profilepic": "LucasHo.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Ruhani Mittal",
           "title": "Case Dev Executive",
           "profilepic": "RuhaniMittal.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Arnav Dhablania",
           "title": "Case Dev Executive",
           "profilepic": "ArnavDhablania.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -173,19 +173,19 @@
           "name": "Aarav Alaric Bhatia",
           "title": "Events Executive",
           "profilepic": "AaravAlaricBhatia.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Hannah Goharian",
           "title": "Events Executive",
           "profilepic": "HannahGoharian.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Owen Chan",
           "title": "Events Executive",
           "profilepic": "OwenChan.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -196,31 +196,31 @@
           "name": "Leo Shang",
           "title": "Marketing Executive",
           "profilepic": "LeoShang.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Jove Wan",
           "title": "Marketing Executive",
           "profilepic": "JoveWan.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Divjot Virdi",
           "title": "Marketing Executive",
           "profilepic": "DivjotVirdi.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Anne Nguyen",
           "title": "Marketing Executive",
           "profilepic": "AnneNguyen.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Felicia Amelia",
           "title": "Marketing Executive",
           "profilepic": "FeliciaAmelia.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -231,19 +231,19 @@
           "name": "Chirag Raisingh",
           "title": "Developer",
           "profilepic": "ChiragRaisingh.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Chloe Sepulveda",
           "title": "Developer",
           "profilepic": "ChloeSepulveda.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Harmanjeet Singh",
           "title": "Developer",
           "profilepic": "HarmanjeetSingh.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -254,13 +254,13 @@
           "name": "Nicole Li",
           "title": "Club Ops Executive",
           "profilepic": "NicoleLi.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Jacob O'Callaghan",
           "title": "Club Ops Executive",
           "profilepic": "JacobOCallaghan.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -271,7 +271,7 @@
           "name": "Andrew Andrew",
           "title": "Finance Executive",
           "profilepic": "AndrewAndrew.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     },
@@ -282,19 +282,19 @@
           "name": "Natania Huang",
           "title": "First Year Rep (CR)",
           "profilepic": "NataniaHuang.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Julianna Huang",
           "title": "First Year Rep",
           "profilepic": "JuliannaHuang.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         },
         {
           "name": "Carys Fong",
           "title": "First Year Rep",
           "profilepic": "CarysFong.webp",
-          "linkedin": ""
+          "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
     }
