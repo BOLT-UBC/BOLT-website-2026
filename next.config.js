@@ -31,10 +31,6 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
@@ -59,11 +55,11 @@ const nextConfig = {
               "img-src 'self' data: https: blob:",
               "font-src 'self'",
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
-              "frame-src 'none'",
+              "frame-src 'self' *", // Allow all frames from all domains
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors 'none'",
+              "frame-ancestors 'self' *",
             ].join('; '),
           },
         ],
