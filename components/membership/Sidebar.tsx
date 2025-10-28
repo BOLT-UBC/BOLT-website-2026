@@ -12,7 +12,7 @@ export interface SidebarProfile {
   team_id: string | null
 }
 
-export type RoleView = 'admin' | 'executive_member' | 'platinum_member' | 'non_member'
+export type RoleView = 'admin' | 'executive_member' | 'bolt_member' | 'non_member'
 
 export function Sidebar({
   profile,
@@ -97,7 +97,7 @@ export function Sidebar({
             >
               <option value="admin">Admin</option>
               <option value="executive_member">Executive</option>
-              <option value="platinum_member">Platinum</option>
+              <option value="bolt_member">Bolt Member</option>
               <option value="non_member">Non-Member</option>
             </select>
           </div>

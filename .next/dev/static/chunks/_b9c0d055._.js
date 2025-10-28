@@ -1250,8 +1250,8 @@ function getRoleDisplayName(role) {
     switch(role){
         case 'non_member':
             return 'Non-Member';
-        case 'platinum_member':
-            return 'Platinum Member';
+        case 'bolt_member':
+            return 'Bolt Member';
         case 'executive_member':
             return 'Executive Member';
         case 'admin':
@@ -1262,7 +1262,7 @@ function getRoleColor(role) {
     switch(role){
         case 'non_member':
             return 'bg-gray-100 text-gray-800';
-        case 'platinum_member':
+        case 'bolt_member':
             return 'bg-yellow-100 text-yellow-800';
         case 'executive_member':
             return 'bg-blue-100 text-blue-800';
@@ -1604,8 +1604,8 @@ function Sidebar({ profile, email, teams, activeTab, setActiveTab, roleView, set
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                    value: "platinum_member",
-                                    children: "Platinum"
+                                    value: "bolt_member",
+                                    children: "Bolt Member"
                                 }, void 0, false, {
                                     fileName: "[project]/components/membership/Sidebar.tsx",
                                     lineNumber: 100,
@@ -3500,7 +3500,7 @@ function ResumeUpload({ onUploadSuccess, onUploadError }) {
     // Check if user can upload resume
     const canUploadResume = user?.profile?.role && [
         'non_member',
-        'platinum_member',
+        'bolt_member',
         'executive_member'
     ].includes(user.profile.role);
     // Load current resume info from user profile
@@ -4398,8 +4398,8 @@ function AdminPanel({ adminUsers, adminLoading, adminSearch, adminRoleFilter, ad
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                            value: "platinum_member",
-                                            children: "Platinum Member"
+                                            value: "bolt_member",
+                                            children: "Bolt Member"
                                         }, void 0, false, {
                                             fileName: "[project]/components/membership/panels/AdminPanel.tsx",
                                             lineNumber: 71,
@@ -4602,8 +4602,8 @@ function AdminPanel({ adminUsers, adminLoading, adminSearch, adminRoleFilter, ad
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "platinum_member",
-                                                    children: "Platinum Member"
+                                                    value: "bolt_member",
+                                                    children: "Bolt Member"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/membership/panels/AdminPanel.tsx",
                                                     lineNumber: 133,
@@ -4973,8 +4973,8 @@ function AccountPanel({ user, profile, setShowDeleteConfirm }) {
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "platinum_member",
-                                                    children: "Platinum Member"
+                                                    value: "bolt_member",
+                                                    children: "Bolt Member"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/membership/panels/AccountPanel.tsx",
                                                     lineNumber: 53,

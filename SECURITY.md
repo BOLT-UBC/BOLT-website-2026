@@ -4,7 +4,7 @@
 
 ### 1. Authentication & Authorization
 - ✅ Supabase Auth with Row Level Security (RLS)
-- ✅ Role-based access control (non_member, platinum_member, executive_member, admin)
+- ✅ Role-based access control (non_member, bolt_member, executive_member, admin)
 - ✅ Password validation (8+ chars, uppercase, lowercase, numbers)
 - ✅ Email validation and sanitization
 - ✅ Google OAuth integration with secure redirects

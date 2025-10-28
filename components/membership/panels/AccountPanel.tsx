@@ -50,7 +50,7 @@ export function AccountPanel({ user, profile, setShowDeleteConfirm }: AccountPan
                 />
                 <select className="px-3 py-2 bg-white/10 border border-red-300/30 rounded text-white" id="admin-role">
                   <option value="non_member">Non-Member</option>
-                  <option value="platinum_member">Platinum Member</option>
+                  <option value="bolt_member">Bolt Member</option>
                   <option value="executive_member">Executive Member</option>
                   <option value="admin">Admin</option>
                 </select>

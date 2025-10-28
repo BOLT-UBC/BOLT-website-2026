@@ -53,7 +53,7 @@ Run the SQL schema in `supabase-schema.sql` in your Supabase SQL editor:
 #### `profiles`
 - Extends Supabase auth.users with additional profile information
 - Fields: id (FK to auth.users), email, full_name, avatar_url, role, team_id, year, major, phone, linkedin_url, resume_url, resume_file_name, resume_uploaded_at
-- Roles: `non_member`, `platinum_member`, `executive_member`, `admin`
+- Roles: `non_member`, `bolt_member`, `executive_member`, `admin`
 - Resume fields: Only non-admin users can upload resumes
 
 #### `events`

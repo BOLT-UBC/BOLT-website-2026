@@ -16,7 +16,7 @@ CREATE TABLE profiles (
     email VARCHAR(255) NOT NULL UNIQUE,
     full_name VARCHAR(255),
     avatar_url TEXT,
-    role VARCHAR(50) DEFAULT 'non_member' CHECK (role IN ('non_member', 'platinum_member', 'executive_member', 'admin')),
+    role VARCHAR(50) DEFAULT 'non_member' CHECK (role IN ('non_member', 'bolt_member', 'executive_member', 'admin')),
     team_id UUID REFERENCES teams(id) ON DELETE SET NULL,
     graduation_year INTEGER CHECK (graduation_year >= 2020 AND graduation_year <= 2030),
     major VARCHAR(255),
@@ -156,7 +156,7 @@ CREATE POLICY "Admins can view newsletter subscribers" ON newsletter_subscribers
 CREATE POLICY "Users can view their own resume" ON resume_uploads FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Non-admin users can upload resume" ON resume_uploads FOR INSERT WITH CHECK (
     auth.uid() = user_id AND
-    auth.uid() IN (SELECT id FROM profiles WHERE role IN ('non_member', 'platinum_member', 'executive_member'))
+    auth.uid() IN (SELECT id FROM profiles WHERE role IN ('non_member', 'bolt_member', 'executive_member'))
 );
 CREATE POLICY "Users can update their own resume" ON resume_uploads FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "Users can delete their own resume" ON resume_uploads FOR DELETE USING (auth.uid() = user_id);

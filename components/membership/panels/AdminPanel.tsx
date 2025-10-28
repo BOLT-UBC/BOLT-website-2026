@@ -68,7 +68,7 @@ export function AdminPanel({
             >
               <option value="">All Roles</option>
               <option value="non_member">Non-Member</option>
-              <option value="platinum_member">Platinum Member</option>
+              <option value="bolt_member">Bolt Member</option>
               <option value="executive_member">Executive Member</option>
               <option value="admin">Admin</option>
             </select>
@@ -130,7 +130,7 @@ export function AdminPanel({
                     >
                       <option value="">Select Role</option>
                       <option value="non_member">Non-Member</option>
-                      <option value="platinum_member">Platinum Member</option>
+                      <option value="bolt_member">Bolt Member</option>
                       <option value="executive_member">Executive Member</option>
                       <option value="admin">Admin</option>
                     </select>

@@ -111,7 +111,7 @@ export default function MembershipPortal() {
     email: profile.email,
     full_name: profile.full_name,
     avatar_url: profile.avatar_url,
-    role: profile.role as 'non_member' | 'platinum_member' | 'executive_member' | 'admin',
+    role: profile.role as 'non_member' | 'bolt_member' | 'executive_member' | 'admin',
     team_id: profile.team_id,
   } : null
 

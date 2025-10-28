@@ -1,11 +1,11 @@
 import React from 'react'
 
-export type UserRole = 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
+export type UserRole = 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
 
 function getRoleDisplayName(role: UserRole) {
   switch (role) {
     case 'non_member': return 'Non-Member'
-    case 'platinum_member': return 'Platinum Member'
+    case 'bolt_member': return 'Bolt Member'
     case 'executive_member': return 'Executive Member'
     case 'admin': return 'Admin'
   }
@@ -14,7 +14,7 @@ function getRoleDisplayName(role: UserRole) {
 function getRoleColor(role: UserRole) {
   switch (role) {
     case 'non_member': return 'bg-gray-100 text-gray-800'
-    case 'platinum_member': return 'bg-yellow-100 text-yellow-800'
+    case 'bolt_member': return 'bg-yellow-100 text-yellow-800'
     case 'executive_member': return 'bg-blue-100 text-blue-800'
     case 'admin': return 'bg-red-100 text-red-800'
   }

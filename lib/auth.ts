@@ -7,7 +7,7 @@ export interface AuthUser extends User {
     email: string
     full_name: string | null
     avatar_url: string | null
-    role: 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
+    role: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
     team_id: string | null
     graduation_year: number | null
     major: string | null
@@ -130,7 +130,7 @@ export const authService = {
   // Create user profile after signup
   async createProfile(user: User, additionalData?: {
     full_name?: string
-    role?: 'non_member' | 'platinum_member' | 'executive_member' | 'admin'
+    role?: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
     team_id?: string
     graduation_year?: number
     major?: string

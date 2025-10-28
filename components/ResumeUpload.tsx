@@ -23,7 +23,7 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
 
   // Check if user can upload resume
   const canUploadResume = user?.profile?.role &&
-    ['non_member', 'platinum_member', 'executive_member'].includes(user.profile.role)
+    ['non_member', 'bolt_member', 'executive_member'].includes(user.profile.role)
 
   // Load current resume info from user profile
   useEffect(() => {
