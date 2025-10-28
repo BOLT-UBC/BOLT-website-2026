@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,8 +29,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Update all users
-    const { data, error } = await supabase
+    // Check if service role client is available
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+      }, { status: 500 })
+    }
+
+    // Update all users using service role (bypasses RLS)
+    const { data, error } = await supabaseAdmin
       .from('profiles')
       .update(updates)
       .in('id', userIds)

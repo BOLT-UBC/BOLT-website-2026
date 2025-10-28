@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,14 +15,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 })
     }
 
-    // Update the user's role in the profiles table
-    const { data, error } = await supabase
+    // Check if service role client is available
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+      }, { status: 500 })
+    }
+
+    // Update the user's role in the profiles table using service role (bypasses RLS)
+    const { data, error } = await supabaseAdmin
       .from('profiles')
       .update({ role })
       .eq('email', email.toLowerCase().trim())
       .select()
 
     if (error) {
+      console.error('Supabase error:', error)
       return NextResponse.json({ error: 'Failed to update role' }, { status: 500 })
     }
 
@@ -36,7 +44,8 @@ export async function POST(request: NextRequest) {
       user: data[0]
     })
 
-  } catch {
+  } catch (error) {
+    console.error('API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

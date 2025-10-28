@@ -101,6 +101,23 @@ export default function MembershipPortal() {
     }
   }, [activeTab, profile?.role])
 
+  // Load statistics when Statistics tab is selected
+  useEffect(() => {
+    if (activeTab === 'statistics' && profile?.role === 'admin') {
+      (async () => {
+        try {
+          setAdminLoading(true)
+          const res = await fetch('/api/admin/statistics')
+          if (!res.ok) return
+          const data = await res.json()
+          setAdminStats(data)
+        } finally {
+          setAdminLoading(false)
+        }
+      })()
+    }
+  }, [activeTab, profile?.role])
+
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'DELETE') {
       alert('Please type "DELETE" to confirm account deletion')
@@ -296,12 +313,9 @@ export default function MembershipPortal() {
       <div className="pt-20 px-6 sm:px-6 md:px-16 pb-16">
         {/* Header - moved lower */}
         <div className="text-center mb-16 mt-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
-            Membership Portal
+          <h1 className="text-xl md:text-xl font-bold text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
+            Welcome to your BOLT membership dashboard
           </h1>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
-            Welcome to your BOLT UBC membership dashboard
-          </p>
         </div>
 
         {/* Main Layout - Sidebar + Content */}
@@ -369,6 +383,10 @@ export default function MembershipPortal() {
                     id: 'admin',
                     label: 'Admin',
                     icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                  }, {
+                    id: 'statistics',
+                    label: 'Statistics',
+                    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3v18h18M7 13v5m5-10v10m5-7v7" /></svg>
                   }] : []),
                   {
                     id: 'account',
@@ -559,6 +577,59 @@ export default function MembershipPortal() {
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Statistics Tab (Admin only) */}
+            {activeTab === 'statistics' && profile?.role === 'admin' && (
+              <div className="space-y-6">
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-6m4 6V7m4 10v-3M3 3v18h18" />
+                    </svg>
+                    <h2 className="text-2xl font-bold text-white">Statistics</h2>
+                  </div>
+
+                  {adminLoading ? (
+                    <p className="text-white/70">Loading statistics...</p>
+                  ) : adminStats ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="bg-white/5 rounded-lg p-4">
+                        <div className="text-white/70 text-sm">Total Users</div>
+                        <div className="text-white text-2xl font-bold">{adminStats.totalUsers}</div>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-4">
+                        <div className="text-white/70 text-sm">New This Month</div>
+                        <div className="text-white text-2xl font-bold">{adminStats.newSignups}</div>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-4">
+                        <div className="text-white/70 text-sm">Complete Profiles</div>
+                        <div className="text-white text-2xl font-bold">{adminStats.completeProfiles}</div>
+                        <div className="text-white/60 text-xs mt-1">{adminStats.profileCompletionRate}% completion</div>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-4">
+                        <div className="text-white/70 text-sm">Resume Uploads</div>
+                        <div className="text-white text-2xl font-bold">{adminStats.usersWithResumes}</div>
+                        <div className="text-white/60 text-xs mt-1">{adminStats.resumeUploadRate}% uploaded</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-white/70">No statistics available.</p>
+                  )}
+
+                  {/* Role distribution */}
+                  {adminStats && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                      {Object.entries(adminStats.roleDistribution || {}).map(([role, count]) => (
+                        <div key={role} className="bg-white/5 rounded-lg p-4">
+                          <div className="text-white/70 text-sm capitalize">{role.replace('_', ' ')}</div>
+                          <div className="text-white text-2xl font-bold">{count as number}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -786,51 +857,6 @@ export default function MembershipPortal() {
             {/* Admin Dashboard Tab */}
             {activeTab === 'admin' && profile?.role === 'admin' && (
               <div className="space-y-6">
-                {/* Statistics Cards */}
-                {adminStats && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <svg className="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <h3 className="text-lg font-semibold text-white">Total Users</h3>
-                      </div>
-                      <p className="text-3xl font-bold text-white">{adminStats.totalUsers}</p>
-                    </div>
-
-                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <svg className="w-6 h-6 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3 className="text-lg font-semibold text-white">New This Month</h3>
-                      </div>
-                      <p className="text-3xl font-bold text-white">{adminStats.newSignups}</p>
-                    </div>
-
-                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <svg className="w-6 h-6 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3 className="text-lg font-semibold text-white">Complete Profiles</h3>
-                      </div>
-                      <p className="text-3xl font-bold text-white">{adminStats.profileCompletionRate}%</p>
-                    </div>
-
-                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <svg className="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <h3 className="text-lg font-semibold text-white">Resume Uploads</h3>
-                      </div>
-                      <p className="text-3xl font-bold text-white">{adminStats.resumeUploadRate}%</p>
-                    </div>
-                  </div>
-                )}
-
                 {/* Search and Filters */}
                 <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
                   <h2 className="text-2xl font-bold text-white mb-4">User Management</h2>

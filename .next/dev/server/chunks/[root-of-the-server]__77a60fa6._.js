@@ -69,69 +69,87 @@ const supabaseAdmin = supabaseServiceRoleKey ? (0, __TURBOPACK__imported__module
     }
 }) : null;
 }),
-"[project]/app/api/admin/users/route.ts [app-route] (ecmascript)", ((__turbopack_context__) => {
+"[project]/app/api/admin/bulk-update/route.ts [app-route] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
 __turbopack_context__.s([
-    "GET",
-    ()=>GET
+    "POST",
+    ()=>POST
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/server.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/supabase.ts [app-route] (ecmascript)");
 ;
 ;
-async function GET(request) {
+async function POST(request) {
     try {
-        const { searchParams } = new URL(request.url);
-        const search = searchParams.get('search') || '';
-        const role = searchParams.get('role') || '';
-        const graduationYear = searchParams.get('graduation_year') || '';
-        const page = parseInt(searchParams.get('page') || '1');
-        const limit = parseInt(searchParams.get('limit') || '20');
-        // Build the query
-        let query = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["supabase"].from('profiles').select('*').order('created_at', {
-            ascending: false
-        });
-        // Apply filters
-        if (search) {
-            query = query.or(`full_name.ilike.%${search}%,email.ilike.%${search}%`);
+        const { userIds, updates } = await request.json();
+        if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: 'User IDs are required'
+            }, {
+                status: 400
+            });
         }
-        if (role) {
-            query = query.eq('role', role);
+        if (!updates || Object.keys(updates).length === 0) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: 'Updates are required'
+            }, {
+                status: 400
+            });
         }
-        if (graduationYear) {
-            query = query.eq('graduation_year', parseInt(graduationYear));
+        // Validate role if provided
+        if (updates.role) {
+            const validRoles = [
+                'non_member',
+                'platinum_member',
+                'executive_member',
+                'admin'
+            ];
+            if (!validRoles.includes(updates.role)) {
+                return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                    error: 'Invalid role'
+                }, {
+                    status: 400
+                });
+            }
         }
-        // Get total count for pagination
-        const { count } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["supabase"].from('profiles').select('*', {
-            count: 'exact',
-            head: true
-        });
-        // Apply pagination
-        const from = (page - 1) * limit;
-        const to = from + limit - 1;
-        query = query.range(from, to);
-        const { data, error } = await query;
+        // Validate graduation year if provided
+        if (updates.graduation_year) {
+            const year = parseInt(updates.graduation_year);
+            if (year < 2020 || year > 2030) {
+                return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                    error: 'Graduation year must be between 2020 and 2030'
+                }, {
+                    status: 400
+                });
+            }
+        }
+        // Check if service role client is available
+        if (!__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["supabaseAdmin"]) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+            }, {
+                status: 500
+            });
+        }
+        // Update all users using service role (bypasses RLS)
+        const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["supabaseAdmin"].from('profiles').update(updates).in('id', userIds).select();
         if (error) {
-            // Failed to fetch users
+            // Failed to update users
             void error;
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-                error: 'Failed to fetch users'
+                error: 'Failed to update users'
             }, {
                 status: 500
             });
         }
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            users: data || [],
-            pagination: {
-                page,
-                limit,
-                total: count || 0,
-                pages: Math.ceil((count || 0) / limit)
-            }
+            success: true,
+            message: `Updated ${data?.length || 0} users successfully`,
+            updatedUsers: data
         });
     } catch (error) {
-        // Failed to process users request
+        // Failed to process bulk update
         void error;
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             error: 'Internal server error'
@@ -143,4 +161,4 @@ async function GET(request) {
 }),
 ];
 
-//# sourceMappingURL=%5Broot-of-the-server%5D__24980328._.js.map
+//# sourceMappingURL=%5Broot-of-the-server%5D__77a60fa6._.js.map
