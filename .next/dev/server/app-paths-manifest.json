@@ -3,6 +3,7 @@
   "/api/admin/bulk-update/route": "app/api/admin/bulk-update/route.js",
   "/api/admin/statistics/route": "app/api/admin/statistics/route.js",
   "/api/admin/users/route": "app/api/admin/users/route.js",
+  "/events/bolt-connect/page": "app/events/bolt-connect/page.js",
   "/membership/page": "app/membership/page.js",
   "/page": "app/page.js"
 }
