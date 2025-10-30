@@ -2,10 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { profileService } from '@/lib/database'
 import { isValidUUID, validateFile, checkRateLimit } from '@/lib/validation'
+import { getAuthContext } from '@/lib/serverAuth'
 
 // Get user's resume info from profile
 export async function GET(request: NextRequest) {
   try {
+    // AuthN required
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
 
@@ -21,6 +30,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { error: 'Invalid user ID format' },
         { status: 400 }
+      )
+    }
+
+    // Authorization: only owner or admin can view
+    const isOwner = auth.userId === userId
+    const isAdmin = auth.role === 'admin'
+    if (!isOwner && !isAdmin) {
+      return NextResponse.json(
+        { error: 'Forbidden' },
+        { status: 403 }
       )
     }
 
@@ -45,6 +64,14 @@ export async function GET(request: NextRequest) {
 // Upload or update resume
 export async function POST(request: NextRequest) {
   try {
+    // AuthN required
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
     const formData = await request.formData()
     const userId = formData.get('userId') as string
     const file = formData.get('file') as File
@@ -79,6 +106,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: fileValidation.error },
         { status: 400 }
+      )
+    }
+
+    // Authorization: only owner can upload their resume; admins cannot upload resumes
+    const isOwner = auth.userId === userId
+    if (!isOwner) {
+      return NextResponse.json(
+        { error: 'Forbidden' },
+        { status: 403 }
       )
     }
 
@@ -139,6 +175,14 @@ export async function POST(request: NextRequest) {
 // Delete resume
 export async function DELETE(request: NextRequest) {
   try {
+    // AuthN required
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
 
@@ -154,6 +198,15 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: 'Invalid user ID format' },
         { status: 400 }
+      )
+    }
+
+    // Authorization: only owner can delete their resume
+    const isOwner = auth.userId === userId
+    if (!isOwner) {
+      return NextResponse.json(
+        { error: 'Forbidden' },
+        { status: 403 }
       )
     }
 

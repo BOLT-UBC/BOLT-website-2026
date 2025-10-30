@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 import type { UserProfile, AdminStats } from '../types'
 
 export function useAdminData(profileRole: string | undefined, activeTab: string, roleView: string) {
@@ -19,13 +20,23 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
 
     setAdminLoading(true)
     try {
+      // Get current access token for Authorization header
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+
       // Load users
-      const usersResponse = await fetch(`/api/admin/users?search=${adminSearch}&role=${adminRoleFilter}&graduation_year=${adminYearFilter}`)
+      const usersResponse = await fetch(`/api/admin/users?search=${adminSearch}&role=${adminRoleFilter}&graduation_year=${adminYearFilter}`,
+        {
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        }
+      )
       const usersData = await usersResponse.json()
       setAdminUsers(usersData.users || [])
 
       // Load statistics
-      const statsResponse = await fetch('/api/admin/statistics')
+      const statsResponse = await fetch('/api/admin/statistics', {
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      })
       const statsData = await statsResponse.json()
       setAdminStats(statsData)
     } catch (error) {
@@ -41,7 +52,11 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
     if (activeTab === 'statistics' && (effectiveRole === 'admin' || effectiveRole === 'executive_member')) {
       try {
         setAdminLoading(true)
-        const res = await fetch('/api/admin/statistics')
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+        const res = await fetch('/api/admin/statistics', {
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        })
         if (!res.ok) return
         const data = await res.json()
         setAdminStats(data)
@@ -65,9 +80,14 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
         updates.graduation_year = parseInt(bulkValue)
       }
 
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
       const response = await fetch('/api/admin/bulk-update', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify({ userIds: selectedUsers, updates })
       })
 

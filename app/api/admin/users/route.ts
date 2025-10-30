@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
+import { getAuthContext } from '@/lib/serverAuth'
 
 export async function GET(request: NextRequest) {
   try {
+    // AuthN / AuthZ: require admin
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (auth.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const { searchParams } = new URL(request.url)
     const search = searchParams.get('search') || ''
     const role = searchParams.get('role') || ''
@@ -10,8 +20,13 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
 
+    // Ensure service role client is available (bypasses RLS for admin operations)
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: 'Service role key not configured' }, { status: 500 })
+    }
+
     // Build the query
-    let query = supabase
+    let query = supabaseAdmin
       .from('profiles')
       .select('*')
       .order('created_at', { ascending: false })
@@ -28,7 +43,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get total count for pagination
-    const { count } = await supabase
+    const { count } = await supabaseAdmin
       .from('profiles')
       .select('*', { count: 'exact', head: true })
 

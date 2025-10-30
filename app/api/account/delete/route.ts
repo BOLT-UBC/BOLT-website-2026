@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { isValidUUID } from '@/lib/validation'
+import { getAuthContext } from '@/lib/serverAuth'
 
 // Delete user account
 export async function DELETE(request: NextRequest) {
   try {
+    // AuthN required
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
 
@@ -34,6 +44,15 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
+      )
+    }
+
+    // Authorization: only the owner can delete their account; admins cannot be deleted via this endpoint
+    const isOwner = auth.userId === userId
+    if (!isOwner) {
+      return NextResponse.json(
+        { error: 'Forbidden' },
+        { status: 403 }
       )
     }
 

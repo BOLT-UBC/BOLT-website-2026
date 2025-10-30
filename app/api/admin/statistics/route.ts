@@ -1,15 +1,30 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase'
+import { getAuthContext } from '@/lib/serverAuth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // AuthN / AuthZ: require admin
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (auth.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    // Ensure service role client is available (bypasses RLS for admin operations)
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: 'Service role key not configured' }, { status: 500 })
+    }
+
     // Get total users
-    const { count: totalUsers } = await supabase
+    const { count: totalUsers } = await supabaseAdmin
       .from('profiles')
       .select('*', { count: 'exact', head: true })
 
     // Get role distribution
-    const { data: roleStats } = await supabase
+    const { data: roleStats } = await supabaseAdmin
       .from('profiles')
       .select('role')
       .not('role', 'is', null)
@@ -23,7 +38,7 @@ export async function GET() {
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const { count: newSignups } = await supabase
+    const { count: newSignups } = await supabaseAdmin
       .from('profiles')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', thirtyDaysAgo.toISOString())
@@ -32,13 +47,13 @@ export async function GET() {
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
-    const { count: recentSignups } = await supabase
+    const { count: recentSignups } = await supabaseAdmin
       .from('profiles')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', sevenDaysAgo.toISOString())
 
     // Get users with complete profiles (have most fields filled)
-    const { data: completeProfiles } = await supabase
+    const { data: completeProfiles } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .not('full_name', 'is', null)
@@ -46,7 +61,7 @@ export async function GET() {
       .not('major', 'is', null)
 
     // Get users with resumes uploaded
-    const { count: usersWithResumes } = await supabase
+    const { count: usersWithResumes } = await supabaseAdmin
       .from('profiles')
       .select('*', { count: 'exact', head: true })
       .not('resume_url', 'is', null)

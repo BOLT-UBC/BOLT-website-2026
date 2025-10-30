@@ -2082,7 +2082,9 @@ __turbopack_context__.s([
     ()=>useAdminData
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/supabase.ts [app-client] (ecmascript)");
 var _s = __turbopack_context__.k.signature();
+;
 ;
 function useAdminData(profileRole, activeTab, roleView) {
     _s();
@@ -2100,12 +2102,23 @@ function useAdminData(profileRole, activeTab, roleView) {
         if (profileRole !== 'admin') return;
         setAdminLoading(true);
         try {
+            // Get current access token for Authorization header
+            const { data: sessionData } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.getSession();
+            const accessToken = sessionData.session?.access_token;
             // Load users
-            const usersResponse = await fetch(`/api/admin/users?search=${adminSearch}&role=${adminRoleFilter}&graduation_year=${adminYearFilter}`);
+            const usersResponse = await fetch(`/api/admin/users?search=${adminSearch}&role=${adminRoleFilter}&graduation_year=${adminYearFilter}`, {
+                headers: accessToken ? {
+                    Authorization: `Bearer ${accessToken}`
+                } : undefined
+            });
             const usersData = await usersResponse.json();
             setAdminUsers(usersData.users || []);
             // Load statistics
-            const statsResponse = await fetch('/api/admin/statistics');
+            const statsResponse = await fetch('/api/admin/statistics', {
+                headers: accessToken ? {
+                    Authorization: `Bearer ${accessToken}`
+                } : undefined
+            });
             const statsData = await statsResponse.json();
             setAdminStats(statsData);
         } catch (error) {
@@ -2120,7 +2133,13 @@ function useAdminData(profileRole, activeTab, roleView) {
         if (activeTab === 'statistics' && (effectiveRole === 'admin' || effectiveRole === 'executive_member')) {
             try {
                 setAdminLoading(true);
-                const res = await fetch('/api/admin/statistics');
+                const { data: sessionData } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.getSession();
+                const accessToken = sessionData.session?.access_token;
+                const res = await fetch('/api/admin/statistics', {
+                    headers: accessToken ? {
+                        Authorization: `Bearer ${accessToken}`
+                    } : undefined
+                });
                 if (!res.ok) return;
                 const data = await res.json();
                 setAdminStats(data);
@@ -2141,10 +2160,15 @@ function useAdminData(profileRole, activeTab, roleView) {
             } else if (bulkAction === 'graduation_year') {
                 updates.graduation_year = parseInt(bulkValue);
             }
+            const { data: sessionData } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.getSession();
+            const accessToken = sessionData.session?.access_token;
             const response = await fetch('/api/admin/bulk-update', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    ...accessToken ? {
+                        Authorization: `Bearer ${accessToken}`
+                    } : {}
                 },
                 body: JSON.stringify({
                     userIds: selectedUsers,

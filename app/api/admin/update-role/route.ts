@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getAuthContext } from '@/lib/serverAuth'
 
 export async function POST(request: NextRequest) {
   try {
+    // AuthN / AuthZ: require admin
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (auth.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const { email, role } = await request.json()
 
     if (!email || !role) {
