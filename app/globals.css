@@ -51,6 +51,15 @@ html {
   }
 }
 
+@keyframes scroll-right-continuous {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
 @keyframes scroll-left {
   0% {
     transform: translateX(-50%);
@@ -62,6 +71,10 @@ html {
 
 .scroll-right {
   animation: scroll-right 20s linear infinite;
+}
+
+.scroll-right-continuous {
+  animation: scroll-right-continuous 30s linear infinite;
 }
 
 .scroll-left {
