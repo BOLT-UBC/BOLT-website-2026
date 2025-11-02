@@ -20,7 +20,10 @@ jobs:
           fi
 
           SITE_URL="${{ secrets.SITE_URL }}"
-          echo "Pinging: ${SITE_URL}/api/ping"
+          # Remove trailing slash if present to avoid double slashes
+          SITE_URL="${SITE_URL%/}"
+          PING_URL="${SITE_URL}/api/ping"
+          echo "Pinging: ${PING_URL}"
           echo "Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
           # Retry logic for cold starts (serverless platforms may need warm-up time)
@@ -32,13 +35,32 @@ jobs:
           while [ $ATTEMPT -le $MAX_RETRIES ]; do
             echo "Attempt $ATTEMPT of $MAX_RETRIES..."
 
-            # Use curl with proper timeout handling
-            HTTP_CODE=$(curl -s -o /tmp/ping_response.json -w "%{http_code}" \
+            # Use curl with proper timeout handling and capture errors
+            CURL_ERROR=$(mktemp)
+            echo "Making request to: ${PING_URL}"
+
+            # Try curl and capture both HTTP code and errors
+            HTTP_CODE=$(curl -v -s -o /tmp/ping_response.json -w "%{http_code}" \
               --max-time 60 \
               --connect-timeout 30 \
-              --retry 2 \
-              --retry-delay 5 \
-              "${SITE_URL}/api/ping" 2>/dev/null || echo "000")
+              --retry 0 \
+              -H "User-Agent: GitHub-Actions-Keep-Alive/1.0" \
+              "${PING_URL}" 2>"$CURL_ERROR" || echo "000")
+
+            # Show curl errors if any (limit to first 20 lines to avoid huge output)
+            if [ -s "$CURL_ERROR" ]; then
+              echo "Curl diagnostic info:"
+              head -20 "$CURL_ERROR"
+            fi
+
+            # Normalize HTTP_CODE (in case of weird formatting)
+            HTTP_CODE=$(echo "$HTTP_CODE" | tr -d '\n\r' | sed 's/^0*\([^0]\)/\1/' || echo "$HTTP_CODE")
+            if [ -z "$HTTP_CODE" ] || [ "$HTTP_CODE" = "000" ] || [ "$HTTP_CODE" = "000000" ]; then
+              HTTP_CODE="000"
+            fi
+
+            echo "HTTP Status Code: ${HTTP_CODE}"
+            rm -f "$CURL_ERROR"
 
             if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
               echo "Ping successful! HTTP Status: $HTTP_CODE"
@@ -48,9 +70,16 @@ jobs:
               break
             else
               echo "Attempt $ATTEMPT failed with HTTP Status: $HTTP_CODE"
+              if [ "$HTTP_CODE" = "000" ]; then
+                echo "Connection failed - possible causes:"
+                echo "  - DNS resolution failed"
+                echo "  - Connection timeout"
+                echo "  - Site unreachable from GitHub Actions"
+                echo "  - SSL/TLS handshake failed"
+              fi
               if [ -f /tmp/ping_response.json ]; then
-                echo "Response:"
-                cat /tmp/ping_response.json | head -20
+                echo "Response body (if any):"
+                cat /tmp/ping_response.json | head -20 || echo "(Empty)"
               fi
 
               if [ $ATTEMPT -lt $MAX_RETRIES ]; then
