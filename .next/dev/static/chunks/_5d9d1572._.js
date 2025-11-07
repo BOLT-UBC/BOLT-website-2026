@@ -637,7 +637,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@supabase/supabase-js/dist/module/index.js [app-client] (ecmascript) <locals>");
 ;
-const supabaseUrl = ("TURBOPACK compile-time value", "https://xbpivmnufaprxrdlbbjq.supabase.co") || '';
+const supabaseUrl = ("TURBOPACK compile-time value", "https://xbpivmnufaprxrdlbbjq.supabase.co/") || '';
 const supabaseAnonKey = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhicGl2bW51ZmFwcnhyZGxiYmpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjYwMjAsImV4cCI6MjA3NjkwMjAyMH0.acR_9qwTCgxNUY1u0vPOaY36M5qF86r8WUxfZeFUQMM") || '';
 const supabaseServiceRoleKey = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.SUPABASE_SERVICE_ROLE_KEY || '';
 const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(supabaseUrl, supabaseAnonKey);
@@ -900,9 +900,9 @@ __turbopack_context__.s([
     "useAuth",
     ()=>useAuth
 ]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/supabase.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/auth.ts [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var _s = __turbopack_context__.k.signature();
 'use client';
 ;
@@ -914,79 +914,121 @@ const useAuth = ()=>{
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useAuth.useEffect": ()=>{
-            // Get initial session
-            __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.getSession().then({
-                "useAuth.useEffect": async ({ data: { session } })=>{
-                    if (session?.user) {
-                        try {
-                            const profile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].getUserProfile(session.user.id);
-                            setUser({
-                                ...session.user,
-                                profile
-                            });
-                        } catch (error) {
-                            void error;
-                            // If profile doesn't exist, create one (for OAuth users)
-                            try {
-                                const newProfile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].createProfile(session.user, {
-                                    full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
-                                    role: 'non_member'
-                                });
-                                setUser({
-                                    ...session.user,
-                                    profile: newProfile
-                                });
-                            } catch (createError) {
-                                void createError;
-                                setUser(session.user);
+            let isMounted = true;
+            const initializeAuth = {
+                "useAuth.useEffect.initializeAuth": async ()=>{
+                    try {
+                        if ("TURBOPACK compile-time truthy", 1) {
+                            const url = new URL(window.location.href);
+                            const authCode = url.searchParams.get('code');
+                            const errorDescription = url.searchParams.get('error_description');
+                            if (errorDescription) {
+                                // eslint-disable-next-line no-console
+                                console.error('Supabase OAuth error:', decodeURIComponent(errorDescription));
+                            }
+                            if (authCode) {
+                                const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.exchangeCodeForSession(authCode);
+                                if (error) {
+                                    // eslint-disable-next-line no-console
+                                    console.error('Failed to exchange OAuth code for session:', error);
+                                } else {
+                                    url.searchParams.delete('code');
+                                    url.searchParams.delete('state');
+                                    url.searchParams.delete('scope');
+                                    url.searchParams.delete('auth_type');
+                                    url.searchParams.delete('provider');
+                                    url.searchParams.delete('provider_token');
+                                    const cleanedUrl = `${url.pathname}${url.search}${url.hash}`;
+                                    window.history.replaceState(window.history.state, '', cleanedUrl);
+                                }
                             }
                         }
-                    } else {
-                        setUser(null);
+                        const { data: { session } } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.getSession();
+                        if (!isMounted) return;
+                        if (session?.user) {
+                            try {
+                                const profile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].getUserProfile(session.user.id);
+                                if (!isMounted) return;
+                                setUser({
+                                    ...session.user,
+                                    profile
+                                });
+                            } catch (error) {
+                                void error;
+                                if (session.user) {
+                                    try {
+                                        const newProfile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].createProfile(session.user, {
+                                            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
+                                            role: 'non_member'
+                                        });
+                                        if (!isMounted) return;
+                                        setUser({
+                                            ...session.user,
+                                            profile: newProfile
+                                        });
+                                    } catch (createError) {
+                                        void createError;
+                                        if (!isMounted) return;
+                                        setUser(session.user);
+                                    }
+                                }
+                            }
+                        } else {
+                            setUser(null);
+                        }
+                    } finally{
+                        if (isMounted) {
+                            setLoading(false);
+                        }
                     }
-                    setLoading(false);
                 }
-            }["useAuth.useEffect"]);
-            // Listen for auth changes
+            }["useAuth.useEffect.initializeAuth"];
+            void initializeAuth();
             const { data: { subscription } } = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.onAuthStateChange({
                 "useAuth.useEffect": async (event, session)=>{
                     if (session?.user) {
-                        // Get user profile
                         try {
                             const profile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].getUserProfile(session.user.id);
+                            if (!isMounted) return;
                             setUser({
                                 ...session.user,
                                 profile
                             });
                         } catch (error) {
                             void error;
-                            // If profile doesn't exist, create one (for OAuth users)
                             if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
                                 try {
                                     const newProfile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].createProfile(session.user, {
                                         full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
                                         role: 'non_member'
                                     });
+                                    if (!isMounted) return;
                                     setUser({
                                         ...session.user,
                                         profile: newProfile
                                     });
                                 } catch (createError) {
                                     void createError;
+                                    if (!isMounted) return;
                                     setUser(session.user);
                                 }
-                            } else {
+                            } else if (isMounted) {
                                 setUser(session.user);
                             }
                         }
-                    } else {
+                    } else if (isMounted) {
                         setUser(null);
                     }
-                    setLoading(false);
+                    if (isMounted) {
+                        setLoading(false);
+                    }
                 }
             }["useAuth.useEffect"]);
             return ({
-                "useAuth.useEffect": ()=>subscription.unsubscribe()
+                "useAuth.useEffect": ()=>{
+                    isMounted = false;
+                    subscription.unsubscribe();
+                }
             })["useAuth.useEffect"];
         }
     }["useAuth.useEffect"], []);
