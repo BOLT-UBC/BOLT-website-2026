@@ -50,12 +50,12 @@ export default function BoltConnectPage() {
       <main className="pt-28 sm:pt-32 pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,40rem)_minmax(320px,1fr)] items-start">
-            <div className="w-full text-left space-y-6">
+            <div className="w-full text-left space-y-6"> 
               <div>
                 <h1 className="font-inter font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight">
                   BOLT <span className="font-bold inline-block relative isolation-isolate bg-gradient-to-r from-[#46198f] via-[#46198f] to-[#a53802] bg-clip-text text-transparent [text-shadow:0_0_1px_#fff,0_0_2px_#fff,0_0_16px_#fff]">Connect</span>
                 </h1>
-                <h2 className="mt-2 text-2xl sm:text-[32px] lg:text-[40px] font-extrabold leading-snug">
+                <h2 className="mt-0 text-1xl sm:text-[36px] lg:text-[44px] font-extrabold leading-snug">
                   <span className="bg-gradient-to-r from-purple-700 to-purple-700 bg-clip-text text-transparent [text-shadow:0_0_15px_rgba(158,142,255,0.2)]">
                     Networking
                   </span>{" "}
@@ -63,7 +63,7 @@ export default function BoltConnectPage() {
                 </h2>
               </div>
 
-              <div className="space-y-4 text-sm sm:text-base lg:text-lg leading-relaxed text-white/90">
+              <div className="space-y-4 text-sm sm:text-base lg:text-lg leading-relaxed text-white/90 text-justify lg: max-w-[31.5rem]">
                 <p className="font-semibold">
                   Connect with like-minded data enthusiasts, industry professionals, and alumni. Network and discover career opportunities in analytics.
                 </p>
