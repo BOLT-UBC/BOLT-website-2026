@@ -7,7 +7,10 @@ import { scrollToElement } from "../lib/dom";
 import { useAuth } from "../lib/useAuth";
 
 const Navbar: React.FC = () => {
-  const sections = useMemo(() => ["Home", "About", "Partners", "Events", "Solutions", "Team"], []);
+  const sections = useMemo(
+    () => ["Home", "About", "Partners", "Events", "Solutions", "Team"],
+    []
+  );
   const [activeSection, setActiveSection] = useState("Home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [sliderStyle, setSliderStyle] = useState({ width: 0, left: 0 });
@@ -19,8 +22,8 @@ const Navbar: React.FC = () => {
   const { user, loading } = useAuth();
 
   // Check if we're on the team page or event page
-  const isTeamPage = pathname === '/team';
-  const isEventPage = pathname.startsWith('/events/');
+  const isTeamPage = pathname === "/team";
+  const isEventPage = pathname.startsWith("/events/");
   const isNotHomePage = isTeamPage || isEventPage;
 
   // Function to update slider position
@@ -48,9 +51,9 @@ const Navbar: React.FC = () => {
       updateSliderPosition(activeSection);
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
     }
   }, [activeSection]);
 
@@ -64,21 +67,26 @@ const Navbar: React.FC = () => {
       }
       return;
     }
+    if (isEventPage) {
+      setActiveSection("Events");
+      return;
+    }
 
     const handleScroll = () => {
       if (isScrolling.current) return;
-      if (typeof window === 'undefined') return;
+      if (typeof window === "undefined") return;
 
       const scrollPosition = window.scrollY;
 
       sections.forEach((section) => {
-        if (typeof document === 'undefined') return;
+        if (typeof document === "undefined") return;
         const element = document.getElementById(section);
         if (element) {
           const { offsetTop, offsetHeight } = element;
           if (
             scrollPosition >= offsetTop - NAVIGATION.SECTION_DETECTION_OFFSET &&
-            scrollPosition < offsetTop + offsetHeight - NAVIGATION.SECTION_DETECTION_OFFSET
+            scrollPosition <
+              offsetTop + offsetHeight - NAVIGATION.SECTION_DETECTION_OFFSET
           ) {
             setActiveSection(section);
           }
@@ -86,21 +94,20 @@ const Navbar: React.FC = () => {
       });
     };
 
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
     }
   }, [sections, isNotHomePage, isTeamPage, isEventPage]);
 
-
   const scrollToSection = (sectionId: string) => {
     // If we're on a non-home page and clicking any section, navigate to home first
     if (isNotHomePage) {
       if (sectionId === "Home") {
-        router.push('/');
+        router.push("/");
       } else {
         // Navigate to home and scroll to section after a short delay
-        router.push('/');
+        router.push("/");
         setTimeout(() => {
           scrollToElement(sectionId);
         }, 100);
@@ -168,56 +175,59 @@ const Navbar: React.FC = () => {
   );
   return (
     <>
-    <nav className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-black/20 backdrop-blur-lg px-4 py-2.5 rounded-full z-[1000] shadow-lg hidden md:block">
-      <ul className="flex gap-4 list-none m-0 p-0 relative" ref={navRef}>
-        <div
-          className="absolute top-1/2 transform -translate-y-1/2 h-10 bg-black/15 rounded-full transition-all duration-300 ease-out z-[1] backdrop-blur-md"
-          style={{
-            width: sliderStyle.width,
-            left: sliderStyle.left,
-          }}
-        />
-        {sections.map((section) => (
-          <li key={section}>
-            <button
-              ref={(el) => {
-                buttonRefs.current[section] = el;
-              }}
-              onClick={() => scrollToSection(section)}
-              className={`bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] ${
-                activeSection === section ? "font-bold text-white" : ""
-              } hover:text-white/80`}
-            >
-              {section}
-            </button>
-          </li>
-        ))}
+      <nav className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-black/20 backdrop-blur-lg px-4 py-2.5 rounded-full z-[1000] shadow-lg hidden md:block">
+        <ul className="flex gap-4 list-none m-0 p-0 relative" ref={navRef}>
+          <div
+            className="absolute top-1/2 transform -translate-y-1/2 h-10 bg-black/15 rounded-full transition-all duration-300 ease-out z-[1] backdrop-blur-md"
+            style={{
+              width: sliderStyle.width,
+              left: sliderStyle.left,
+            }}
+          />
+          {sections.map((section) => (
+            <li key={section}>
+              <button
+                ref={(el) => {
+                  buttonRefs.current[section] = el;
+                }}
+                onClick={() => scrollToSection(section)}
+                className={`bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] ${
+                  activeSection === section ? "font-bold text-white" : ""
+                } hover:text-white/80`}
+              >
+                {section}
+              </button>
+            </li>
+          ))}
 
-        {/* Auth Buttons */}
-        <li>
-          {loading ? (
-            <div className="px-4 py-2 text-white/60 text-sm">Loading...</div>
-          ) : user ? (
-            <button
-              onClick={() => router.push('/membership')}
-              className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] hover:text-white/80"
-            >
-              Members
-            </button>
-          ) : (
-            <button
-              onClick={() => router.push('/login')}
-              className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal hover:text-white/80"
-            >
-              Login
-            </button>
-          )}
-        </li>
-      </ul>
-    </nav>
+          {/* Auth Buttons */}
+          <li>
+            {loading ? (
+              <div className="px-4 py-2 text-white/60 text-sm">Loading...</div>
+            ) : user ? (
+              <button
+                onClick={() => router.push("/membership")}
+                className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] hover:text-white/80"
+              >
+                Members
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push("/login")}
+                className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal hover:text-white/80"
+              >
+                Login
+              </button>
+            )}
+          </li>
+        </ul>
+      </nav>
 
       {/* Mobile Menu Button */}
-      <div className="md:hidden fixed top-6 right-6 z-[1100] cursor-pointer bg-black/20 backdrop-blur-lg p-3 rounded-full shadow-lg" onClick={() => setMenuOpen(!menuOpen)}>
+      <div
+        className="md:hidden fixed top-6 right-6 z-[1100] cursor-pointer bg-black/20 backdrop-blur-lg p-3 rounded-full shadow-lg"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
         {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
       </div>
 
@@ -242,7 +252,7 @@ const Navbar: React.FC = () => {
             ) : user ? (
               <button
                 onClick={() => {
-                  router.push('/membership');
+                  router.push("/membership");
                   setMenuOpen(false);
                 }}
                 className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal"
@@ -252,7 +262,7 @@ const Navbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => {
-                  router.push('/login');
+                  router.push("/login");
                   setMenuOpen(false);
                 }}
                 className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal"
