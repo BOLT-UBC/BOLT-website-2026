@@ -16,24 +16,7 @@ export const useAuth = () => {
       try {
         if (typeof window !== 'undefined') {
           const url = new URL(window.location.href)
-          const authCode = url.searchParams.get('code')        .next/dev/cache/images/1lnSEU1YxlXErYW8Gxnl4sStEikzNKhPDyyyvtj3kb0/
-        .next/dev/cache/images/CbxwYEkIiq5k59LAW2I32QZjC55MlWtELOhpLktw3WQ/
-        .next/dev/cache/images/GNXlpi4QGaPhxASxJYYiMSbKy2BsYrnNb2XHGo545uo/
-        .next/dev/cache/images/KCQqIBct2SXsnQ1tQDd_Z49fqrzHvh8VHvXST5ZY1tY/
-        .next/dev/cache/images/Q4FQZd-VYJObYpDBfxgSe3tnsCWf0C2eyf3la4vbm8U/
-        .next/dev/cache/images/SXOG3c_Dr6-S_8gIGtCkJ-6d9aue4tKlDjzD1iunTkU/
-        .next/dev/server/app/events/first-byte/
-        .next/dev/server/chunks/ssr/[root-of-the-server]__5412d5c8._.js
-        .next/dev/server/chunks/ssr/[root-of-the-server]__5412d5c8._.js.map
-        .next/dev/server/chunks/ssr/[root-of-the-server]__da01c2b4._.js
-        .next/dev/server/chunks/ssr/[root-of-the-server]__da01c2b4._.js.map
-        .next/dev/server/chunks/ssr/_next-internal_server_app_events_first-byte_page_actions_0c122773.js
-        .next/dev/server/chunks/ssr/_next-internal_server_app_events_first-byte_page_actions_0c122773.js.map
-        .next/dev/server/chunks/ssr/node_modules_next_dist_c479f46b._.js
-        .next/dev/server/chunks/ssr/node_modules_next_dist_c479f46b._.js.map
-        .next/dev/static/chunks/_eb8dfc15._.js
-        .next/dev/static/chunks/_eb8dfc15._.js.map
-        .next/dev/static/chunks/app_events_first-byte_page_tsx_5f573446._.js
+          const authCode = url.searchParams.get('code')
           const errorDescription = url.searchParams.get('error_description')
 
           if (errorDescription) {

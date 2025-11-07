@@ -614,8 +614,8 @@ const Navbar = ()=>{
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["usePathname"])();
     const { user, loading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$useAuth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     // Check if we're on the team page or event page
-    const isTeamPage = pathname === '/team';
-    const isEventPage = pathname.startsWith('/events/');
+    const isTeamPage = pathname === "/team";
+    const isEventPage = pathname.startsWith("/events/");
     const isNotHomePage = isTeamPage || isEventPage;
     // Function to update slider position
     const updateSliderPosition = (sectionName)=>{
@@ -652,6 +652,10 @@ const Navbar = ()=>{
             }
             return;
         }
+        if (isEventPage) {
+            setActiveSection("Events");
+            return;
+        }
         const handleScroll = ()=>{
             if (isScrolling.current) return;
             if ("TURBOPACK compile-time truthy", 1) return;
@@ -671,10 +675,10 @@ const Navbar = ()=>{
         // If we're on a non-home page and clicking any section, navigate to home first
         if (isNotHomePage) {
             if (sectionId === "Home") {
-                router.push('/');
+                router.push("/");
             } else {
                 // Navigate to home and scroll to section after a short delay
-                router.push('/');
+                router.push("/");
                 setTimeout(()=>{
                     (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$dom$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["scrollToElement"])(sectionId);
                 }, 100);
@@ -707,7 +711,7 @@ const Navbar = ()=>{
                     d: "M 2 2.5 L 20 2.5"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 129,
+                    lineNumber: 136,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -718,7 +722,7 @@ const Navbar = ()=>{
                     d: "M 2 9.423 L 20 9.423"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 136,
+                    lineNumber: 143,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -729,13 +733,13 @@ const Navbar = ()=>{
                     d: "M 2 16.346 L 20 16.346"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 143,
+                    lineNumber: 150,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/components/Navbar.tsx",
-            lineNumber: 128,
+            lineNumber: 135,
             columnNumber: 5
         }, ("TURBOPACK compile-time value", void 0));
     const CloseIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -750,7 +754,7 @@ const Navbar = ()=>{
                     d: "M 2 2 L 21 21"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 155,
+                    lineNumber: 162,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -760,13 +764,13 @@ const Navbar = ()=>{
                     d: "M 21 2 L 2 21"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 161,
+                    lineNumber: 168,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/components/Navbar.tsx",
-            lineNumber: 154,
+            lineNumber: 161,
             columnNumber: 5
         }, ("TURBOPACK compile-time value", void 0));
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -785,8 +789,8 @@ const Navbar = ()=>{
                             }
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 173,
-                            columnNumber: 9
+                            lineNumber: 180,
+                            columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         sections.map((section)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -798,13 +802,13 @@ const Navbar = ()=>{
                                     children: section
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.tsx",
-                                    lineNumber: 182,
-                                    columnNumber: 13
+                                    lineNumber: 189,
+                                    columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, section, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 181,
-                                columnNumber: 11
+                                lineNumber: 188,
+                                columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                             children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -812,56 +816,56 @@ const Navbar = ()=>{
                                 children: "Loading..."
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 199,
-                                columnNumber: 13
+                                lineNumber: 206,
+                                columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)) : user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>router.push('/membership'),
+                                onClick: ()=>router.push("/membership"),
                                 className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] hover:text-white/80",
                                 children: "Members"
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 201,
-                                columnNumber: 13
+                                lineNumber: 208,
+                                columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>router.push('/login'),
+                                onClick: ()=>router.push("/login"),
                                 className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal hover:text-white/80",
                                 children: "Login"
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 208,
-                                columnNumber: 13
+                                lineNumber: 215,
+                                columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 197,
-                            columnNumber: 9
+                            lineNumber: 204,
+                            columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 172,
-                    columnNumber: 7
+                    lineNumber: 179,
+                    columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 171,
-                columnNumber: 5
+                lineNumber: 178,
+                columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "md:hidden fixed top-6 right-6 z-[1100] cursor-pointer bg-black/20 backdrop-blur-lg p-3 rounded-full shadow-lg",
                 onClick: ()=>setMenuOpen(!menuOpen),
                 children: menuOpen ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(CloseIcon, {}, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 221,
+                    lineNumber: 231,
                     columnNumber: 21
                 }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(HamburgerIcon, {}, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 221,
+                    lineNumber: 231,
                     columnNumber: 37
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 220,
+                lineNumber: 227,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             menuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -875,7 +879,7 @@ const Navbar = ()=>{
                                 children: section
                             }, section, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 228,
+                                lineNumber: 238,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))),
                         loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -883,40 +887,40 @@ const Navbar = ()=>{
                             children: "Loading..."
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 241,
+                            lineNumber: 251,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0)) : user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: ()=>{
-                                router.push('/membership');
+                                router.push("/membership");
                                 setMenuOpen(false);
                             },
                             className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal",
                             children: "Members"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 243,
+                            lineNumber: 253,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: ()=>{
-                                router.push('/login');
+                                router.push("/login");
                                 setMenuOpen(false);
                             },
                             className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal",
                             children: "Login"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 253,
+                            lineNumber: 263,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 226,
+                    lineNumber: 236,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 225,
+                lineNumber: 235,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
@@ -1271,7 +1275,7 @@ const About = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$
                                         ", and facilitates",
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                             className: "font-bold text-black",
-                                            children: "hands-on experiences"
+                                            children: " hands-on experiences"
                                         }, void 0, false, {
                                             fileName: "[project]/components/About.tsx",
                                             lineNumber: 98,

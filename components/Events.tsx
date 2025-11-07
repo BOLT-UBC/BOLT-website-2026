@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { Event, EventsData } from "../types/types";
-import { getEventImageUrl } from "../lib/assets";
 
 // Import with type assertion for JSON data
 import eventsDataJson from "../lib/events.json";
@@ -17,6 +16,45 @@ const Events: React.FC = () => {
     "/events/bolt-connect",
     "/events/bolt-circuit",
     "/events/bolt-bootcamp"
+  ];
+
+  const eventPreviewConfigs = [
+    {
+      titleAccent: "First Byte",
+      subtitle: "Hands-on workshops",
+      footer: "Beginner friendly",
+      gradient: "from-[#321070] via-[#482a9f] to-[#221247]",
+      accentBg: "bg-white/15",
+      accentBorder: "border-white/10",
+      glow: "shadow-[0_0_25px_rgba(123,97,255,0.35)]"
+    },
+    {
+      titleAccent: "BOLT Connect",
+      subtitle: "Networking with a twist",
+      footer: "Industry mixers",
+      gradient: "from-[#2b0b3d] via-[#46198f] to-[#a53802]",
+      accentBg: "bg-white/10",
+      accentBorder: "border-white/15",
+      glow: "shadow-[0_0_25px_rgba(255,136,76,0.35)]"
+    },
+    {
+      titleAccent: "BOLT Circuit",
+      subtitle: "Analytics case competition",
+      footer: "Team-based challenges",
+      gradient: "from-[#03111f] via-[#073455] to-[#0b5b86]",
+      accentBg: "bg-white/12",
+      accentBorder: "border-white/15",
+      glow: "shadow-[0_0_25px_rgba(37,153,255,0.3)]"
+    },
+    {
+      titleAccent: "BOLT Bootcamp",
+      subtitle: "Immersive learning sprint",
+      footer: "Flagship program",
+      gradient: "from-[#12002c] via-[#2d0f82] to-[#015c92]",
+      accentBg: "bg-white/12",
+      accentBorder: "border-white/15",
+      glow: "shadow-[0_0_25px_rgba(134,201,255,0.25)]"
+    }
   ];
 
   const eventMonths = {
@@ -36,28 +74,39 @@ const Events: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-7">
           {EVENTS.slice(0, 4).map((event, index) => {
             const eventDescriptions = [
-              "Our flagship bootcamp introducing students to data analytics through hands-on projects and mentorship from industry professionals.",
+              "An introductory workshop series for beginners covering fundamental data analysis tools, Excel, SQL, and data visualization basics.",
               "Connect with like-minded data enthusiasts, industry professionals, and alumni. Network and discover career opportunities in analytics.",
               "An intensive case competition where teams tackle real-world business problems using data analytics and present solutions to industry judges.",
-              "An introductory workshop series for beginners covering fundamental data analysis tools, Excel, SQL, and data visualization basics."
+              "Our flagship bootcamp introducing students to data analytics through hands-on projects and mentorship from industry professionals."
             ];
 
             return (
             <div
               key={index}
-              className="bg-white/20 backdrop-blur-lg rounded-xl p-3 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer group active:scale-95 active:shadow-xl active:bg-white/30"
+              className="bg-white/20 backdrop-blur-lg rounded-xl p-3 shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group active:scale-95 active:shadow-xl active:bg-white/30"
               onClick={() => router.push(eventLinks[index])}
             >
-              <div className="w-56 h-56 overflow-hidden rounded-lg mb-2 mx-auto">
-                <img
-                  src={getEventImageUrl(event.image)}
-                  alt={`${event.name} - BOLT UBC data analytics event`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  width="600"
-                  height="338"
-                />
+              <div
+                className={`relative w-full aspect-[16/10] overflow-hidden rounded-xl mb-3 bg-gradient-to-br ${eventPreviewConfigs[index].gradient} ${eventPreviewConfigs[index].glow}`}
+              >
+                <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35)_0%,_transparent_55%)]" />
+                <div className="absolute inset-0 flex flex-col justify-between p-4 sm:p-5">
+                  <div>
+                    <p className="font-inter text-[10px] uppercase tracking-[0.35em] text-white/65">Inside the event</p>
+                    <h3 className="mt-2 font-inter text-lg sm:text-xl font-bold text-white/95">
+                      {eventPreviewConfigs[index].titleAccent}
+                    </h3>
+                    <p className="mt-1 text-xs sm:text-sm text-white/85">
+                      {eventPreviewConfigs[index].subtitle}
+                    </p>
+                  </div>
+                  <div
+                    className={`${eventPreviewConfigs[index].accentBg} ${eventPreviewConfigs[index].accentBorder} border backdrop-blur-md rounded-full inline-flex items-center px-3 py-1 text-[11px] sm:text-xs text-white/90 font-medium self-start`}
+                  >
+                    {eventPreviewConfigs[index].footer}
+                  </div>
+                </div>
+                <div className="pointer-events-none absolute inset-0 border border-white/15 rounded-xl" />
               </div>
               <div className="space-y-1.5 mt-4 mx-4 group-hover:text-gray-900 transition-colors duration-300">
                 <h3 className="font-inter text-gray-800 font-bold text-sm">{event.name}</h3>

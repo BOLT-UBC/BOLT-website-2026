@@ -76,7 +76,6 @@ const Carousel: React.FC<{ images: string[]; interval?: number; onImageLoad?: ()
 };
 const About: React.FC = memo(() => {
   const images = [
-    "/images/Byte.webp",
     "/images/Image1.webp",
     "/images/Image2.webp"
   ];

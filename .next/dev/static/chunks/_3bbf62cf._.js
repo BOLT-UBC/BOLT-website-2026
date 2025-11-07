@@ -74,7 +74,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@supabase/supabase-js/dist/module/index.js [app-client] (ecmascript) <locals>");
 ;
-const supabaseUrl = ("TURBOPACK compile-time value", "https://xbpivmnufaprxrdlbbjq.supabase.co") || '';
+const supabaseUrl = ("TURBOPACK compile-time value", "https://xbpivmnufaprxrdlbbjq.supabase.co/") || '';
 const supabaseAnonKey = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhicGl2bW51ZmFwcnhyZGxiYmpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjYwMjAsImV4cCI6MjA3NjkwMjAyMH0.acR_9qwTCgxNUY1u0vPOaY36M5qF86r8WUxfZeFUQMM") || '';
 const supabaseServiceRoleKey = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.SUPABASE_SERVICE_ROLE_KEY || '';
 const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(supabaseUrl, supabaseAnonKey);
@@ -337,9 +337,9 @@ __turbopack_context__.s([
     "useAuth",
     ()=>useAuth
 ]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/supabase.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/auth.ts [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var _s = __turbopack_context__.k.signature();
 'use client';
 ;
@@ -351,79 +351,121 @@ const useAuth = ()=>{
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useAuth.useEffect": ()=>{
-            // Get initial session
-            __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.getSession().then({
-                "useAuth.useEffect": async ({ data: { session } })=>{
-                    if (session?.user) {
-                        try {
-                            const profile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].getUserProfile(session.user.id);
-                            setUser({
-                                ...session.user,
-                                profile
-                            });
-                        } catch (error) {
-                            void error;
-                            // If profile doesn't exist, create one (for OAuth users)
-                            try {
-                                const newProfile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].createProfile(session.user, {
-                                    full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
-                                    role: 'non_member'
-                                });
-                                setUser({
-                                    ...session.user,
-                                    profile: newProfile
-                                });
-                            } catch (createError) {
-                                void createError;
-                                setUser(session.user);
+            let isMounted = true;
+            const initializeAuth = {
+                "useAuth.useEffect.initializeAuth": async ()=>{
+                    try {
+                        if ("TURBOPACK compile-time truthy", 1) {
+                            const url = new URL(window.location.href);
+                            const authCode = url.searchParams.get('code');
+                            const errorDescription = url.searchParams.get('error_description');
+                            if (errorDescription) {
+                                // eslint-disable-next-line no-console
+                                console.error('Supabase OAuth error:', decodeURIComponent(errorDescription));
+                            }
+                            if (authCode) {
+                                const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.exchangeCodeForSession(authCode);
+                                if (error) {
+                                    // eslint-disable-next-line no-console
+                                    console.error('Failed to exchange OAuth code for session:', error);
+                                } else {
+                                    url.searchParams.delete('code');
+                                    url.searchParams.delete('state');
+                                    url.searchParams.delete('scope');
+                                    url.searchParams.delete('auth_type');
+                                    url.searchParams.delete('provider');
+                                    url.searchParams.delete('provider_token');
+                                    const cleanedUrl = `${url.pathname}${url.search}${url.hash}`;
+                                    window.history.replaceState(window.history.state, '', cleanedUrl);
+                                }
                             }
                         }
-                    } else {
-                        setUser(null);
+                        const { data: { session } } = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.getSession();
+                        if (!isMounted) return;
+                        if (session?.user) {
+                            try {
+                                const profile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].getUserProfile(session.user.id);
+                                if (!isMounted) return;
+                                setUser({
+                                    ...session.user,
+                                    profile
+                                });
+                            } catch (error) {
+                                void error;
+                                if (session.user) {
+                                    try {
+                                        const newProfile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].createProfile(session.user, {
+                                            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
+                                            role: 'non_member'
+                                        });
+                                        if (!isMounted) return;
+                                        setUser({
+                                            ...session.user,
+                                            profile: newProfile
+                                        });
+                                    } catch (createError) {
+                                        void createError;
+                                        if (!isMounted) return;
+                                        setUser(session.user);
+                                    }
+                                }
+                            }
+                        } else {
+                            setUser(null);
+                        }
+                    } finally{
+                        if (isMounted) {
+                            setLoading(false);
+                        }
                     }
-                    setLoading(false);
                 }
-            }["useAuth.useEffect"]);
-            // Listen for auth changes
+            }["useAuth.useEffect.initializeAuth"];
+            void initializeAuth();
             const { data: { subscription } } = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.onAuthStateChange({
                 "useAuth.useEffect": async (event, session)=>{
                     if (session?.user) {
-                        // Get user profile
                         try {
                             const profile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].getUserProfile(session.user.id);
+                            if (!isMounted) return;
                             setUser({
                                 ...session.user,
                                 profile
                             });
                         } catch (error) {
                             void error;
-                            // If profile doesn't exist, create one (for OAuth users)
                             if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
                                 try {
                                     const newProfile = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["authService"].createProfile(session.user, {
                                         full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
                                         role: 'non_member'
                                     });
+                                    if (!isMounted) return;
                                     setUser({
                                         ...session.user,
                                         profile: newProfile
                                     });
                                 } catch (createError) {
                                     void createError;
+                                    if (!isMounted) return;
                                     setUser(session.user);
                                 }
-                            } else {
+                            } else if (isMounted) {
                                 setUser(session.user);
                             }
                         }
-                    } else {
+                    } else if (isMounted) {
                         setUser(null);
                     }
-                    setLoading(false);
+                    if (isMounted) {
+                        setLoading(false);
+                    }
                 }
             }["useAuth.useEffect"]);
             return ({
-                "useAuth.useEffect": ()=>subscription.unsubscribe()
+                "useAuth.useEffect": ()=>{
+                    isMounted = false;
+                    subscription.unsubscribe();
+                }
             })["useAuth.useEffect"];
         }
     }["useAuth.useEffect"], []);
@@ -483,8 +525,8 @@ const Navbar = ()=>{
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
     const { user, loading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$useAuth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
     // Check if we're on the team page or event page
-    const isTeamPage = pathname === '/team';
-    const isEventPage = pathname.startsWith('/events/');
+    const isTeamPage = pathname === "/team";
+    const isEventPage = pathname.startsWith("/events/");
     const isNotHomePage = isTeamPage || isEventPage;
     // Function to update slider position
     const updateSliderPosition = (sectionName)=>{
@@ -510,9 +552,9 @@ const Navbar = ()=>{
                 }
             }["Navbar.useEffect.handleResize"];
             if ("TURBOPACK compile-time truthy", 1) {
-                window.addEventListener('resize', handleResize);
+                window.addEventListener("resize", handleResize);
                 return ({
-                    "Navbar.useEffect": ()=>window.removeEventListener('resize', handleResize)
+                    "Navbar.useEffect": ()=>window.removeEventListener("resize", handleResize)
                 })["Navbar.useEffect"];
             }
         }
@@ -530,6 +572,10 @@ const Navbar = ()=>{
                 }
                 return;
             }
+            if (isEventPage) {
+                setActiveSection("Events");
+                return;
+            }
             const handleScroll = {
                 "Navbar.useEffect.handleScroll": ()=>{
                     if (isScrolling.current) return;
@@ -538,7 +584,7 @@ const Navbar = ()=>{
                     const scrollPosition = window.scrollY;
                     sections.forEach({
                         "Navbar.useEffect.handleScroll": (section)=>{
-                            if (typeof document === 'undefined') return;
+                            if (typeof document === "undefined") return;
                             const element = document.getElementById(section);
                             if (element) {
                                 const { offsetTop, offsetHeight } = element;
@@ -567,10 +613,10 @@ const Navbar = ()=>{
         // If we're on a non-home page and clicking any section, navigate to home first
         if (isNotHomePage) {
             if (sectionId === "Home") {
-                router.push('/');
+                router.push("/");
             } else {
                 // Navigate to home and scroll to section after a short delay
-                router.push('/');
+                router.push("/");
                 setTimeout(()=>{
                     (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$dom$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["scrollToElement"])(sectionId);
                 }, 100);
@@ -603,7 +649,7 @@ const Navbar = ()=>{
                     d: "M 2 2.5 L 20 2.5"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 129,
+                    lineNumber: 136,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -614,7 +660,7 @@ const Navbar = ()=>{
                     d: "M 2 9.423 L 20 9.423"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 136,
+                    lineNumber: 143,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -625,13 +671,13 @@ const Navbar = ()=>{
                     d: "M 2 16.346 L 20 16.346"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 143,
+                    lineNumber: 150,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/components/Navbar.tsx",
-            lineNumber: 128,
+            lineNumber: 135,
             columnNumber: 5
         }, ("TURBOPACK compile-time value", void 0));
     const CloseIcon = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -646,7 +692,7 @@ const Navbar = ()=>{
                     d: "M 2 2 L 21 21"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 155,
+                    lineNumber: 162,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -656,13 +702,13 @@ const Navbar = ()=>{
                     d: "M 21 2 L 2 21"
                 }, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 161,
+                    lineNumber: 168,
                     columnNumber: 7
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/components/Navbar.tsx",
-            lineNumber: 154,
+            lineNumber: 161,
             columnNumber: 5
         }, ("TURBOPACK compile-time value", void 0));
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -681,8 +727,8 @@ const Navbar = ()=>{
                             }
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 173,
-                            columnNumber: 9
+                            lineNumber: 180,
+                            columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         sections.map((section)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -694,13 +740,13 @@ const Navbar = ()=>{
                                     children: section
                                 }, void 0, false, {
                                     fileName: "[project]/components/Navbar.tsx",
-                                    lineNumber: 182,
-                                    columnNumber: 13
+                                    lineNumber: 189,
+                                    columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, section, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 181,
-                                columnNumber: 11
+                                lineNumber: 188,
+                                columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                             children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -708,56 +754,56 @@ const Navbar = ()=>{
                                 children: "Loading..."
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 199,
-                                columnNumber: 13
+                                lineNumber: 206,
+                                columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)) : user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>router.push('/membership'),
+                                onClick: ()=>router.push("/membership"),
                                 className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] hover:text-white/80",
                                 children: "Members"
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 201,
-                                columnNumber: 13
+                                lineNumber: 208,
+                                columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>router.push('/login'),
+                                onClick: ()=>router.push("/login"),
                                 className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal hover:text-white/80",
                                 children: "Login"
                             }, void 0, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 208,
-                                columnNumber: 13
+                                lineNumber: 215,
+                                columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 197,
-                            columnNumber: 9
+                            lineNumber: 204,
+                            columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 172,
-                    columnNumber: 7
+                    lineNumber: 179,
+                    columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 171,
-                columnNumber: 5
+                lineNumber: 178,
+                columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "md:hidden fixed top-6 right-6 z-[1100] cursor-pointer bg-black/20 backdrop-blur-lg p-3 rounded-full shadow-lg",
                 onClick: ()=>setMenuOpen(!menuOpen),
                 children: menuOpen ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(CloseIcon, {}, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 221,
+                    lineNumber: 231,
                     columnNumber: 21
                 }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(HamburgerIcon, {}, void 0, false, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 221,
+                    lineNumber: 231,
                     columnNumber: 37
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 220,
+                lineNumber: 227,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             menuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -771,7 +817,7 @@ const Navbar = ()=>{
                                 children: section
                             }, section, false, {
                                 fileName: "[project]/components/Navbar.tsx",
-                                lineNumber: 228,
+                                lineNumber: 238,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))),
                         loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -779,40 +825,40 @@ const Navbar = ()=>{
                             children: "Loading..."
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 241,
+                            lineNumber: 251,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0)) : user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: ()=>{
-                                router.push('/membership');
+                                router.push("/membership");
                                 setMenuOpen(false);
                             },
                             className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal",
                             children: "Members"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 243,
+                            lineNumber: 253,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: ()=>{
-                                router.push('/login');
+                                router.push("/login");
                                 setMenuOpen(false);
                             },
                             className: "bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal",
                             children: "Login"
                         }, void 0, false, {
                             fileName: "[project]/components/Navbar.tsx",
-                            lineNumber: 253,
+                            lineNumber: 263,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/Navbar.tsx",
-                    lineNumber: 226,
+                    lineNumber: 236,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/components/Navbar.tsx",
-                lineNumber: 225,
+                lineNumber: 235,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
@@ -1263,7 +1309,7 @@ const photos = [
 function EventGallery({ photos, instaURL }) {
     const hero = photos[0];
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-        className: "font-inter w-full",
+        className: "font-inter w-full space-y-6",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "relative w-full overflow-hidden rounded-2xl ring-1 ring-white/10 bg-white/5",
@@ -1271,7 +1317,7 @@ function EventGallery({ photos, instaURL }) {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         src: hero.src,
                         alt: hero.alt ?? "",
-                        className: "w-full h-auto object-cover transition-transform duration-300 hover:scale-[1.02]",
+                        className: "w-full h-auto max-h-[420px] object-cover transition-transform duration-300 hover:scale-[1.02]",
                         width: 800,
                         height: 600
                     }, void 0, false, {
@@ -1293,14 +1339,13 @@ function EventGallery({ photos, instaURL }) {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mt-6",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
                     href: instaURL,
                     target: "_blank",
                     rel: "noreferrer",
-                    className: "group relative inline-flex items-center font-extrabold text-[18px] md:text-[20px]",
+                    className: "group inline-flex items-center font-semibold text-sm sm:text-base lg:text-lg",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                        className: "relative px-4 py-2 rounded-[0.9rem] text-white bg-gradient-to-r from-[#6a11cb] to-[#2575fc] shadow-[0_0_18px_rgba(106,17,203,.35),0_0_34px_rgba(37,117,252,.25)] transition-all duration-200 hover:shadow-[0_0_26px_rgba(106,17,203,.55),0_0_48px_rgba(37,117,252,.35)] hover:-translate-y-0.5",
+                        className: "relative px-5 py-2 rounded-full text-white bg-gradient-to-r from-[#6a11cb] to-[#2575fc] shadow-[0_0_18px_rgba(106,17,203,.35),0_0_34px_rgba(37,117,252,.25)] transition-all duration-200 hover:shadow-[0_0_26px_rgba(106,17,203,.55),0_0_48px_rgba(37,117,252,.35)] hover:-translate-y-0.5",
                         children: "Meet the Presenters"
                     }, void 0, false, {
                         fileName: "[project]/app/events/bolt-connect/page.tsx",
@@ -1348,26 +1393,53 @@ function BoltConnectPage() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-                className: "pt-32 pb-16 px-6",
+                className: "pt-28 sm:pt-32 pb-16 px-4 sm:px-6",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "max-w-7xl mx-auto",
+                    className: "max-w-6xl mx-auto",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "grid gap-y-1 lg:grid-cols-[minmax(0,43rem)_minmax(420px,1fr)] lg:gap-x-0 items-start",
+                        className: "grid gap-10 lg:grid-cols-[minmax(0,40rem)_minmax(320px,1fr)] items-start",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "max-w-[48rem] text-left",
+                                className: "w-full text-left space-y-6",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                        className: "font-inter font-bold text-5xl md:text-7xl leading-tight mb-0",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
-                                            "BOLT ",
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "font-bold inline-block relative isolation-isolate bg-gradient-to-r from-[#46198f] via-[#46198f] to-[#a53802] bg-clip-text text-transparent [text-shadow:0_0_1px_#fff,0_0_2px_#fff,0_0_16px_#fff]",
-                                                children: "Connect"
-                                            }, void 0, false, {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                                className: "font-inter font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight",
+                                                children: [
+                                                    "BOLT ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "font-bold inline-block relative isolation-isolate bg-gradient-to-r from-[#46198f] via-[#46198f] to-[#a53802] bg-clip-text text-transparent [text-shadow:0_0_1px_#fff,0_0_2px_#fff,0_0_16px_#fff]",
+                                                        children: "Connect"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 56,
+                                                        columnNumber: 24
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
                                                 lineNumber: 55,
-                                                columnNumber: 22
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                className: "mt-2 text-2xl sm:text-[32px] lg:text-[40px] font-extrabold leading-snug",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "bg-gradient-to-r from-purple-700 to-purple-700 bg-clip-text text-transparent [text-shadow:0_0_15px_rgba(158,142,255,0.2)]",
+                                                        children: "Networking"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 59,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    " ",
+                                                    "with a Twist"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 58,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
@@ -1375,95 +1447,82 @@ function BoltConnectPage() {
                                         lineNumber: 54,
                                         columnNumber: 15
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                        className: "text-[28px] md:text-[41.7px] font-extrabold -mt-2 leading-none",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-4 text-sm sm:text-base lg:text-lg leading-relaxed text-white/90",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "bg-gradient-to-r from-purple-700 to-purple-700 bg-clip-text text-transparent [text-shadow:0_0_15px_rgba(158,142,255,0.2)]",
-                                                children: "Networking"
-                                            }, void 0, false, {
-                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                lineNumber: 58,
-                                                columnNumber: 17
-                                            }, this),
-                                            " ",
-                                            "with a Twist"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                        lineNumber: 57,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "font-bold max-w-[31rem] text-[10px] md:text-[19px] mb-6 text-justify leading-tight",
-                                        children: "Connect with like-minded data enthusiasts, industry professionals, and alumni. Network and discover career opportunities in analytics."
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                        lineNumber: 63,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "max-w-[31rem] text-[12px] md:text-[19.5px] mb-4 text-justify leading-snug",
-                                        children: [
-                                            "BOLT Connect is a unique networking night that goes beyond traditional professional mixers. In addition to structured open networking between students and industry professionals, last year's event featured a ",
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "font-extrabold",
-                                                children: '"Case Solving with Professionals"'
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "font-semibold",
+                                                children: "Connect with like-minded data enthusiasts, industry professionals, and alumni. Network and discover career opportunities in analytics."
                                             }, void 0, false, {
                                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
                                                 lineNumber: 67,
-                                                columnNumber: 225
+                                                columnNumber: 17
                                             }, this),
-                                            " segment."
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: [
+                                                    "BOLT Connect is a unique networking night that goes beyond traditional professional mixers. In addition to structured open networking between students and industry professionals, last year's event featured a ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "font-extrabold",
+                                                        children: '"Case Solving with Professionals"'
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 71,
+                                                        columnNumber: 227
+                                                    }, this),
+                                                    " segment."
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 70,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: "In this activity, professionals led small groups of students through a mock case interview, offering real-time guidance on structuring problems, brainstorming solutions, and effective communication—key skills for internships and new grad roles."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 73,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: [
+                                                    "The event fosters ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "font-bold",
+                                                        children: "organic connections"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 77,
+                                                        columnNumber: 37
+                                                    }, this),
+                                                    ", ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "font-extrabold",
+                                                        children: "mentorship opportunities"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 77,
+                                                        columnNumber: 93
+                                                    }, this),
+                                                    ", and ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "font-extrabold",
+                                                        children: "practical career preparation"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 77,
+                                                        columnNumber: 163
+                                                    }, this),
+                                                    ", especially in fields like consulting, tech, and business analytics."
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 76,
+                                                columnNumber: 17
+                                            }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/events/bolt-connect/page.tsx",
                                         lineNumber: 66,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "max-w-[31rem] text-[12px] md:text-[19px] mb-4 text-justify leading-snug",
-                                        children: "In this activity, professionals led small groups of students through a mock case interview, offering real-time guidance on structuring problems, brainstorming solutions, and effective communication which are key skills for internships and new grad roles."
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                        lineNumber: 70,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "max-w-[31rem] text-[12px] md:text-[19.5px] text-justify leading-snug",
-                                        children: [
-                                            "The event fosters ",
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "font-bold",
-                                                children: "organic connections"
-                                            }, void 0, false, {
-                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                lineNumber: 74,
-                                                columnNumber: 35
-                                            }, this),
-                                            ", ",
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "font-extrabold",
-                                                children: "mentorship opportunities"
-                                            }, void 0, false, {
-                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                lineNumber: 74,
-                                                columnNumber: 91
-                                            }, this),
-                                            ", and ",
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "font-extrabold",
-                                                children: "practical career preparation"
-                                            }, void 0, false, {
-                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                lineNumber: 74,
-                                                columnNumber: 161
-                                            }, this),
-                                            ", especially in fields like consulting, tech, and business analytics."
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                        lineNumber: 73,
                                         columnNumber: 15
                                     }, this)
                                 ]
@@ -1473,18 +1532,18 @@ function BoltConnectPage() {
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
-                                className: "lg:sticky lg:top-28 -ml-2 md:-ml-3 mt-6",
+                                className: "lg:sticky lg:top-28 lg:pl-4",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(EventGallery, {
                                     photos: photos,
                                     instaURL: "https://www.instagram.com/bolt.ubc/"
                                 }, void 0, false, {
                                     fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                    lineNumber: 79,
+                                    lineNumber: 83,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                lineNumber: 78,
+                                lineNumber: 82,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -1505,7 +1564,7 @@ function BoltConnectPage() {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/events/bolt-connect/page.tsx",
-                lineNumber: 84,
+                lineNumber: 88,
                 columnNumber: 7
             }, this)
         ]
