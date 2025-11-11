@@ -1414,7 +1414,8 @@ function BoltConnectPage() {
                                                         fileName: "[project]/app/events/bolt-connect/page.tsx",
                                                         lineNumber: 56,
                                                         columnNumber: 24
-                                                    }, this)
+                                                    }, this),
+                                                    " × Mastercard"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
@@ -1447,75 +1448,148 @@ function BoltConnectPage() {
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "space-y-4 text-sm sm:text-base lg:text-lg leading-relaxed text-white/90 text-justify lg: max-w-[31.5rem]",
+                                        className: "space-y-5 text-sm sm:text-base lg:text-lg leading-relaxed text-white/90 max-w-2xl xl:max-w-none",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                className: "font-semibold",
-                                                children: "Connect with like-minded data enthusiasts, industry professionals, and alumni. Network and discover career opportunities in analytics."
-                                            }, void 0, false, {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "rounded-2xl border border-white/10 bg-white/5 px-6 py-5 shadow-[0_18px_48px_rgba(70,25,143,0.25)]",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-200/80",
+                                                        children: "November 28 • BOLT Members Only"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 68,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "mt-2 text-lg font-semibold text-white",
+                                                        children: [
+                                                            "We’re thrilled to present an exclusive partnership event: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "font-bold text-amber-200/90",
+                                                                children: "BOLT Connect × Mastercard"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 70,
+                                                                columnNumber: 85
+                                                            }, this),
+                                                            "."
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 69,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
                                                 lineNumber: 67,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                children: [
-                                                    "BOLT Connect is a unique networking night that goes beyond traditional professional mixers. In addition to structured open networking between students and industry professionals, last year's event featured a ",
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-extrabold",
-                                                        children: '"Case Solving with Professionals"'
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                        lineNumber: 71,
-                                                        columnNumber: 227
-                                                    }, this),
-                                                    " segment."
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                lineNumber: 70,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                children: "In this activity, professionals led small groups of students through a mock case interview, offering real-time guidance on structuring problems, brainstorming solutions, and effective communication—key skills for internships and new grad roles."
+                                                className: "font-semibold",
+                                                children: "Join us for an evening of networking with Mastercard professionals across data analytics, engineering, and product. Discover how you can become part of their Summer 2026 co-op intake while connecting with fellow BOLT members."
                                             }, void 0, false, {
                                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                lineNumber: 73,
+                                                lineNumber: 74,
                                                 columnNumber: 17
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "grid gap-3 sm:grid-cols-2 md:grid-cols-3",
                                                 children: [
-                                                    "The event fosters ",
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-bold",
-                                                        children: "organic connections"
-                                                    }, void 0, false, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-xs uppercase tracking-wide text-purple-200/80",
+                                                                children: "Date"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 80,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white font-semibold",
+                                                                children: "November 28"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 81,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                        lineNumber: 77,
-                                                        columnNumber: 37
+                                                        lineNumber: 79,
+                                                        columnNumber: 19
                                                     }, this),
-                                                    ", ",
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-extrabold",
-                                                        children: "mentorship opportunities"
-                                                    }, void 0, false, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-xs uppercase tracking-wide text-purple-200/80",
+                                                                children: "Who"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 84,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white font-semibold",
+                                                                children: "BOLT Members Only"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 85,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                        lineNumber: 77,
-                                                        columnNumber: 93
+                                                        lineNumber: 83,
+                                                        columnNumber: 19
                                                     }, this),
-                                                    ", and ",
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-extrabold",
-                                                        children: "practical career preparation"
-                                                    }, void 0, false, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-xs uppercase tracking-wide text-purple-200/80",
+                                                                children: "Next Step"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 88,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-white font-semibold",
+                                                                children: "Submit resume via link in bio"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 89,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                        lineNumber: 77,
-                                                        columnNumber: 163
-                                                    }, this),
-                                                    ", especially in fields like consulting, tech, and business analytics."
+                                                        lineNumber: 87,
+                                                        columnNumber: 19
+                                                    }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                                lineNumber: 76,
+                                                lineNumber: 78,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: "All resumes submitted through our link in bio will be shared directly with Mastercard for review. Make sure yours highlights your curiosity, impact, and readiness to contribute."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 93,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: "As always, BOLT Connect takes networking beyond surface-level conversations. Expect facilitated table rotations, mini case prompts, and meaningful mentorship moments that help you sharpen your storytelling and career readiness."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 96,
                                                 columnNumber: 17
                                             }, this)
                                         ]
@@ -1532,17 +1606,87 @@ function BoltConnectPage() {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
                                 className: "lg:sticky lg:top-28 lg:pl-4",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(EventGallery, {
-                                    photos: photos,
-                                    instaURL: "https://www.instagram.com/bolt.ubc/"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                    lineNumber: 83,
-                                    columnNumber: 15
-                                }, this)
-                            }, void 0, false, {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(EventGallery, {
+                                        photos: photos,
+                                        instaURL: "https://www.instagram.com/bolt.ubc/"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                        lineNumber: 103,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "mt-8 rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 via-white/5 to-transparent p-6",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xs font-semibold uppercase tracking-[0.35em] text-white/70",
+                                                children: "Partner Spotlight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 105,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "mt-4 flex items-center gap-4",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "relative h-24 w-24 overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-3 sm:p-4",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                            src: "/partners/mastercard.webp",
+                                                            alt: "Mastercard logo",
+                                                            fill: true,
+                                                            className: "object-contain",
+                                                            sizes: "96px"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                            lineNumber: 108,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 107,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "space-y-1 text-sm sm:text-base text-white/80",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "font-semibold text-white",
+                                                                children: "Mastercard"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 111,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                children: "Meet data, engineering, and product leaders shaping the future of payments."
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                                lineNumber: 112,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                        lineNumber: 110,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                                lineNumber: 106,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/events/bolt-connect/page.tsx",
+                                        lineNumber: 104,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/app/events/bolt-connect/page.tsx",
-                                lineNumber: 82,
+                                lineNumber: 102,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -1563,7 +1707,7 @@ function BoltConnectPage() {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/events/bolt-connect/page.tsx",
-                lineNumber: 88,
+                lineNumber: 120,
                 columnNumber: 7
             }, this)
         ]

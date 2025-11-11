@@ -2,7 +2,7 @@
   "events": [
     {
       "name": "First Byte",
-      "image": "first-byte.webp"
+      "image": "byte.webp"
     },
     {
       "name": "BOLT Connect",

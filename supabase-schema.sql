@@ -177,7 +177,7 @@ INSERT INTO teams (name, description) VALUES
 
 -- Insert initial events data
 INSERT INTO events (name, description, image_url, registration_open) VALUES
-('First Byte', 'Introduction to BOLT and tech careers', 'first-byte.webp', true),
+('First Byte', 'Introduction to BOLT and tech careers', 'byte.webp', true),
 ('BOLT Connect', 'Networking event with industry professionals', 'bolt-connect.webp', true),
 ('BOLT Circuit', 'Technical workshops and competitions', 'bolt-circuit.webp', true),
 ('BOLT Bootcamp', 'Intensive learning program', 'bootcamp.webp', true);

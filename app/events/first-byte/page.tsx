@@ -78,7 +78,7 @@ const FirstBytePage: React.FC = () => {
             data analysis tools, Excel, SQL, and data visualization basics.
           </p>
           <img
-            src="first-byte.webp"
+            src="byte.webp"
             alt="First Byte Event"
             className="rounded-lg mb-4"
           />
@@ -86,7 +86,7 @@ const FirstBytePage: React.FC = () => {
 
         {/* Right Box — semi-transparent */}
         <div
-          className="relative z-10 flex flex-col justify-center shadow-lg shadow-[#614ea5]/45 rounded-3xl 
+          className="relative z-10 flex flex-col justify-center shadow-lg shadow-[#614ea5]/45 rounded-3xl
   p-6 sm:p-8 md:p-10 lg:p-12 w-full md:w-[55%] mt-8 md:mt-0 md:ml-[-2rem]
   transition-transform duration-100 overflow-visible"
           style={{
