@@ -39,59 +39,82 @@ export function getSupabaseAdmin() {
 }
 
 export async function getAuthContext(request: NextRequest): Promise<AuthContext | null> {
-  const accessToken = getBearerToken(request)
-  if (!accessToken) {
-    // eslint-disable-next-line no-console
-    console.error('[getAuthContext] No access token found')
-    return null
-  }
+  try {
+    const accessToken = getBearerToken(request)
+    if (!accessToken) {
+      // eslint-disable-next-line no-console
+      console.error('[getAuthContext] No access token found in headers')
+      return null
+    }
 
-  // Create admin client on-demand to ensure env vars are available
-  const adminClient = getSupabaseAdmin()
-  if (!adminClient) {
-    // eslint-disable-next-line no-console
-    console.error('[getAuthContext] Failed to create admin client - check SUPABASE_SERVICE_ROLE_KEY env var')
-    return null
-  }
+    // Create admin client on-demand to ensure env vars are available
+    const adminClient = getSupabaseAdmin()
+    if (!adminClient) {
+      // eslint-disable-next-line no-console
+      console.error('[getAuthContext] Failed to create admin client - check SUPABASE_SERVICE_ROLE_KEY env var')
+      return null
+    }
 
-  // Use admin client to verify the token and get user
-  // This works because admin client has permissions to verify tokens
-  const { data: userData, error: getUserError } = await adminClient.auth.getUser(accessToken)
-  if (getUserError || !userData.user) {
+    // Use admin client to verify the token and get user
+    // This works because admin client has permissions to verify tokens
+    const { data: userData, error: getUserError } = await adminClient.auth.getUser(accessToken)
+
+    if (getUserError) {
+      // eslint-disable-next-line no-console
+      console.error('[getAuthContext] getUser error:', {
+        message: getUserError.message,
+        status: getUserError.status,
+        name: getUserError.name,
+      })
+      return null
+    }
+
+    if (!userData?.user) {
+      // eslint-disable-next-line no-console
+      console.error('[getAuthContext] No user data returned from getUser')
+      return null
+    }
+
+    const userId = userData.user.id
+
+    // Use admin client to bypass RLS - we've already verified the user exists via getUser
+    // This is safe because we're only reading the profile of the authenticated user
+    const { data: profile, error: profileError } = await adminClient
+      .from('profiles')
+      .select('id, email, role')
+      .eq('id', userId)
+      .single()
+
+    if (profileError) {
+      // eslint-disable-next-line no-console
+      console.error('[getAuthContext] Profile fetch error:', {
+        message: profileError.message,
+        code: profileError.code,
+        details: profileError.details,
+        hint: profileError.hint,
+        userId,
+      })
+      return null
+    }
+
+    if (!profile) {
+      // eslint-disable-next-line no-console
+      console.error('[getAuthContext] No profile found for user:', userId)
+      return null
+    }
+
+    return {
+      userId: profile.id,
+      email: profile.email,
+      role: profile.role,
+    }
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('[getAuthContext] Failed to get user:', {
-      error: getUserError?.message,
-      code: getUserError?.status,
-      hasUser: !!userData?.user,
+    console.error('[getAuthContext] Unexpected error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
     })
     return null
-  }
-
-  const userId = userData.user.id
-
-  // Use admin client to bypass RLS - we've already verified the user exists via getUser
-  // This is safe because we're only reading the profile of the authenticated user
-  const { data: profile, error: profileError } = await adminClient
-    .from('profiles')
-    .select('id, email, role')
-    .eq('id', userId)
-    .single()
-
-  if (profileError || !profile) {
-    // eslint-disable-next-line no-console
-    console.error('[getAuthContext] Failed to fetch user profile:', {
-      error: profileError?.message,
-      code: profileError?.code,
-      userId,
-      hasProfile: !!profile,
-    })
-    return null
-  }
-
-  return {
-    userId: profile.id,
-    email: profile.email,
-    role: profile.role,
   }
 }
 

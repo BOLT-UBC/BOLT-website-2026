@@ -21,13 +21,30 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
     setAdminLoading(true)
     try {
       // Get current access token for Authorization header
-      const { data: sessionData } = await supabase.auth.getSession()
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+
+      if (sessionError) {
+        // eslint-disable-next-line no-console
+        console.error('[loadAdminData] Session error:', sessionError)
+      }
+
       const accessToken = sessionData.session?.access_token
+
+      if (!accessToken) {
+        // eslint-disable-next-line no-console
+        console.error('[loadAdminData] No access token available')
+        setAdminUsers([])
+        setAdminStats(null)
+        return
+      }
 
       // Load users
       const usersResponse = await fetch(`/api/admin/users?search=${adminSearch}&role=${adminRoleFilter}&graduation_year=${adminYearFilter}`,
         {
-          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
         }
       )
 
@@ -43,7 +60,10 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
 
       // Load statistics
       const statsResponse = await fetch('/api/admin/statistics', {
-        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
       })
 
       if (!statsResponse.ok) {
@@ -69,10 +89,27 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
     if (activeTab === 'statistics' && (effectiveRole === 'admin' || effectiveRole === 'executive_member')) {
       try {
         setAdminLoading(true)
-        const { data: sessionData } = await supabase.auth.getSession()
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+
+        if (sessionError) {
+          // eslint-disable-next-line no-console
+          console.error('[loadStatistics] Session error:', sessionError)
+        }
+
         const accessToken = sessionData.session?.access_token
+
+        if (!accessToken) {
+          // eslint-disable-next-line no-console
+          console.error('[loadStatistics] No access token available')
+          setAdminStats(null)
+          return
+        }
+
         const res = await fetch('/api/admin/statistics', {
-          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
         })
         if (!res.ok) {
           const errorData = await res.json().catch(() => ({}))
