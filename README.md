@@ -17,3 +17,5 @@ npm install
 # Run development server
 npm run dev
 ```
+
+Vercel requires a paid plan to other devs to push to prod. Work around: update prod by editing readme and commiting changes.
