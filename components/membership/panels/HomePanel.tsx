@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Event } from '../types'
+import Link from "next/link"; // makes links exist
 
 interface HomePanelProps {
   events: Event[]
@@ -164,9 +165,12 @@ export function HomePanel({ events }: HomePanelProps) {
               <h3 className="text-lg font-semibold text-white">Tech Stack Guides</h3>
             </div>
             <p className="text-white/70 mb-3">Quick-start guides and tutorials for popular technologies and frameworks.</p>
-            <button className="text-blue-300 hover:text-blue-200 text-sm font-medium">
-              Explore Guides →
-            </button>
+            <Link href="/membership/guides" className="text-blue-300 hover:text-blue-200 text-sm font-medium"
+             > Explore Guides →
+            
+              </Link>
+        
+            
           </div>
         </div>
       </div>
