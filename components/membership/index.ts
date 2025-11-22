@@ -5,7 +5,7 @@ export type { SidebarProfile, SidebarTeam, RoleView } from './Sidebar'
 export { DeleteAccountModal } from './DeleteAccountModal'
 
 // Types
-export type { UserProfile, Event, Team, AdminStats, EditForm } from './types'
+export type { UserProfile, Event, Team, AdminStats, EditForm, Announcement } from './types'
 
 // Hooks
 export { useMembershipData } from './hooks/useMembershipData'
@@ -20,5 +20,6 @@ export { EventsPanel } from './panels/EventsPanel'
 export { StatisticsPanel } from './panels/StatisticsPanel'
 export { AdminPanel } from './panels/AdminPanel'
 export { AccountPanel } from './panels/AccountPanel'
+export { AnnouncementsPanel } from './panels/AnnouncementsPanel'
 
 

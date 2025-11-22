@@ -53,3 +53,17 @@ export interface EditForm {
   phone: string
   linkedin_url: string
 }
+
+export interface Announcement {
+  id: string
+  title: string
+  content: string
+  created_by: string | null
+  is_pinned: boolean
+  created_at: string
+  updated_at: string
+  profiles?: {
+    full_name: string | null
+    email: string
+  } | null
+}

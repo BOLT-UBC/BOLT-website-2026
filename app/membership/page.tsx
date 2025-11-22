@@ -20,7 +20,8 @@ import {
   EventsPanel,
   StatisticsPanel,
   AdminPanel,
-  AccountPanel
+  AccountPanel,
+  AnnouncementsPanel
 } from '@/components/membership'
 
 export default function MembershipPortal() {
@@ -139,6 +140,12 @@ export default function MembershipPortal() {
 
       case 'events':
         return <EventsPanel events={events} />
+
+      case 'announcements':
+        if (adminData.getEffectiveRole() === 'admin' || adminData.getEffectiveRole() === 'executive_member') {
+          return <AnnouncementsPanel userRole={profile?.role} />
+        }
+        return null
 
       case 'statistics':
         if (adminData.getEffectiveRole() === 'admin' || adminData.getEffectiveRole() === 'executive_member') {

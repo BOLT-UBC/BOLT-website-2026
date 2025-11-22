@@ -1,12 +1,43 @@
-import React from 'react'
-import type { Event } from '../types'
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import type { Event, Announcement } from '../types'
 import Link from "next/link"; // makes links exist
+import { supabase } from '@/lib/supabase'
 
 interface HomePanelProps {
   events: Event[]
 }
 
 export function HomePanel({ events }: HomePanelProps) {
+  const [announcements, setAnnouncements] = useState<Announcement[]>([])
+  const [loadingAnnouncements, setLoadingAnnouncements] = useState(true)
+
+  useEffect(() => {
+    const loadAnnouncements = async () => {
+      try {
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+
+        const response = await fetch('/api/announcements', {
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          setAnnouncements(result.announcements || [])
+        }
+      } catch (error) {
+        // Silently handle error - announcements will just be empty
+        void error
+      } finally {
+        setLoadingAnnouncements(false)
+      }
+    }
+
+    loadAnnouncements()
+  }, [])
+
   return (
     <div className="space-y-6">
       {/* Announcements Section */}
@@ -17,22 +48,37 @@ export function HomePanel({ events }: HomePanelProps) {
           </svg>
           <h2 className="text-2xl font-bold text-white">Announcements</h2>
         </div>
-        <div className="space-y-4">
-          <div className="bg-white/5 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-white mb-2">Welcome to BOLT UBC 2025!</h3>
-            <p className="text-white/70 mb-2">
-              We're excited to have you as part of our community. Make sure to complete your profile and upload your resume to get the most out of your membership.
-            </p>
-            <p className="text-white/50 text-sm">January 15, 2025</p>
+        {loadingAnnouncements ? (
+          <div className="text-center py-4 text-white/70">Loading announcements...</div>
+        ) : announcements.length > 0 ? (
+          <div className="space-y-4">
+            {announcements.map((announcement) => (
+              <div
+                key={announcement.id}
+                className={`bg-white/5 rounded-lg p-4 ${announcement.is_pinned ? 'border-2 border-yellow-400/50' : ''}`}
+              >
+                {announcement.is_pinned && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                    </svg>
+                    <span className="text-yellow-400 text-sm font-medium">Pinned</span>
+                  </div>
+                )}
+                <h3 className="text-lg font-semibold text-white mb-2">{announcement.title}</h3>
+                <p className="text-white/70 mb-2 whitespace-pre-wrap">{announcement.content}</p>
+                <p className="text-white/50 text-sm">
+                  {new Date(announcement.created_at).toLocaleDateString()}
+                  {announcement.profiles && ` • By ${announcement.profiles.full_name || announcement.profiles.email}`}
+                </p>
+              </div>
+            ))}
           </div>
-          <div className="bg-white/5 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-white mb-2">Upcoming Workshop Series</h3>
-            <p className="text-white/70 mb-2">
-              Join us for our technical workshop series starting next week. Topics include web development, data science, and machine learning.
-            </p>
-            <p className="text-white/50 text-sm">January 10, 2025</p>
+        ) : (
+          <div className="text-center py-4 text-white/70">
+            No announcements at the moment. Check back soon!
           </div>
-        </div>
+        )}
       </div>
 
       {/* Upcoming Events Section */}
@@ -167,10 +213,10 @@ export function HomePanel({ events }: HomePanelProps) {
             <p className="text-white/70 mb-3">Quick-start guides and tutorials for popular technologies and frameworks.</p>
             <Link href="/membership/guides" className="text-blue-300 hover:text-blue-200 text-sm font-medium"
              > Explore Guides →
-            
+
               </Link>
-        
-            
+
+
           </div>
         </div>
       </div>
