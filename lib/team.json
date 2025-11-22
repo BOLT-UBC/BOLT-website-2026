@@ -13,9 +13,9 @@
         },
         {
           "name": "Eleanor Lam",
-          "title": "VP Ops & VP Case Dev",
+          "title": "VP Case Dev & VP Club Ops",
           "profilepic": "EleanorLam.webp",
-          "linkedin": "https://linkedin.com/in/placeholder",
+          "linkedin": "https://linkedin.com/in/eleanor-lam",
           "personalEmail": "lam.eleanor@boltubc.com",
           "clubEmail": "events@boltubc.com"
         },
@@ -31,7 +31,7 @@
           "name": "Aadeesh Nargotra",
           "title": "VP CR",
           "profilepic": "AadeeshNargotra.webp",
-          "linkedin": "https://linkedin.com/in/placeholder",
+          "linkedin": "https://www.linkedin.com/in/aadeeshnargotra/",
           "personalEmail": "nargotra.aadeesh@boltubc.com",
           "clubEmail": "cr@boltubc.com"
         },
@@ -47,7 +47,7 @@
           "name": "Jessica Zhou",
           "title": "VP Technology",
           "profilepic": "JessicaZhou.webp",
-          "linkedin": "https://linkedin.com/in/placeholder",
+          "linkedin": "https://www.linkedin.com/in/jessicaz-",
           "personalEmail": "zhou.jessica@boltubc.com",
           "clubEmail": "developer@boltubc.com"
         },
@@ -125,9 +125,9 @@
         },
         {
           "name": "Manya Garg",
-          "title": "CR Executive",
+          "title": "Internal Consulting Director",
           "profilepic": "ManyaGarg.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
+          "linkedin": "https://linkedin.com/in/manya-garg-00a98220a/"
         },
         {
           "name": "Kai Wu",
@@ -144,13 +144,13 @@
           "name": "Prashant Chopra",
           "title": "Case Dev Executive",
           "profilepic": "PrashantChopra.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
+          "linkedin": "https://www.linkedin.com/in/prashant15chopra/"
         },
         {
           "name": "Lucas Ho",
           "title": "Case Dev Executive",
           "profilepic": "LucasHo.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
+          "linkedin": "https://www.linkedin.com/in/lok-to-ho-a78178330/"
         },
         {
           "name": "Ruhani Mittal",
@@ -162,7 +162,7 @@
           "name": "Arnav Dhablania",
           "title": "Case Dev Executive",
           "profilepic": "ArnavDhablania.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
+          "linkedin": "https://www.linkedin.com/in/arnavdhablania/"
         }
       ]
     },
@@ -208,7 +208,7 @@
           "name": "Divjot Virdi",
           "title": "Marketing Executive",
           "profilepic": "DivjotVirdi.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
+          "linkedin": "https://linkedin.com/in/divjot-virdi"
         },
         {
           "name": "Anne Nguyen",
@@ -220,7 +220,7 @@
           "name": "Felicia Amelia",
           "title": "Marketing Executive",
           "profilepic": "FeliciaAmelia.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
+          "linkedin": "https://linkedin.com/in/felicia-amelia"
         }
       ]
     },
@@ -307,7 +307,7 @@
       },
       {
         "name": "Eleanor Lam",
-        "title": "VP Ops & VP Case Dev"
+        "title": "VP Case Dev & VP Club Ops"
       },
       {
         "name": "Kiwi Mottahed",
@@ -463,4 +463,5 @@
       }
     ]
   }
-}
+ }
+
