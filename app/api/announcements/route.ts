@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase, supabaseAdmin } from '@/lib/supabase'
-import { getAuthContext } from '@/lib/serverAuth'
+import { supabase } from '@/lib/supabase'
+import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
 
 // GET - Fetch all announcements (public, ordered by pinned first, then by date)
 export async function GET(request: NextRequest) {
@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if service role client is available
+    const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
         error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
