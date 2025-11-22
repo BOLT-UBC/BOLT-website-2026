@@ -101,6 +101,7 @@ export async function DELETE(
     const { id } = await params
 
     // Check if service role client is available
+    const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
         error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'

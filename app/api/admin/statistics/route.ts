@@ -78,8 +78,10 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    // Failed to get statistics
-    void error
+    // eslint-disable-next-line no-console
+    console.error('[admin/statistics] Unexpected error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
