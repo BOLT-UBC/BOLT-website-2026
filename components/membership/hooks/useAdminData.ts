@@ -30,18 +30,35 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
           headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
         }
       )
-      const usersData = await usersResponse.json()
-      setAdminUsers(usersData.users || [])
+
+      if (!usersResponse.ok) {
+        const errorData = await usersResponse.json().catch(() => ({}))
+        // eslint-disable-next-line no-console
+        console.error('[loadAdminData] Failed to load users:', usersResponse.status, errorData)
+        setAdminUsers([])
+      } else {
+        const usersData = await usersResponse.json()
+        setAdminUsers(usersData.users || [])
+      }
 
       // Load statistics
       const statsResponse = await fetch('/api/admin/statistics', {
         headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       })
-      const statsData = await statsResponse.json()
-      setAdminStats(statsData)
+
+      if (!statsResponse.ok) {
+        const errorData = await statsResponse.json().catch(() => ({}))
+        // eslint-disable-next-line no-console
+        console.error('[loadAdminData] Failed to load statistics:', statsResponse.status, errorData)
+        setAdminStats(null)
+      } else {
+        const statsData = await statsResponse.json()
+        setAdminStats(statsData)
+      }
     } catch (error) {
       // Failed to load admin data
-      void error
+      // eslint-disable-next-line no-console
+      console.error('[loadAdminData] Error:', error)
     } finally {
       setAdminLoading(false)
     }
@@ -57,12 +74,20 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
         const res = await fetch('/api/admin/statistics', {
           headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
         })
-        if (!res.ok) return
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}))
+          // eslint-disable-next-line no-console
+          console.error('[loadStatistics] Failed to load statistics:', res.status, errorData)
+          setAdminStats(null)
+          return
+        }
         const data = await res.json()
         setAdminStats(data)
       } catch (error) {
         // Failed to load statistics
-        void error
+        // eslint-disable-next-line no-console
+        console.error('[loadStatistics] Error:', error)
+        setAdminStats(null)
       } finally {
         setAdminLoading(false)
       }

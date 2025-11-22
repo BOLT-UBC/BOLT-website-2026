@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server'
-import { supabase, supabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export interface AuthContext {
   userId: string
@@ -15,38 +15,75 @@ function getBearerToken(request: NextRequest): string | null {
   return null
 }
 
+// Create admin client on-demand to ensure env vars are read at runtime
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    // eslint-disable-next-line no-console
+    console.error('[getSupabaseAdmin] Missing env vars:', {
+      hasUrl: !!supabaseUrl,
+      hasServiceKey: !!supabaseServiceRoleKey,
+    })
+    return null
+  }
+
+  return createClient(supabaseUrl, supabaseServiceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  })
+}
+
 export async function getAuthContext(request: NextRequest): Promise<AuthContext | null> {
   const accessToken = getBearerToken(request)
-  if (!accessToken) return null
+  if (!accessToken) {
+    // eslint-disable-next-line no-console
+    console.error('[getAuthContext] No access token found')
+    return null
+  }
 
-  const { data: userData, error } = await supabase.auth.getUser(accessToken)
-  if (error || !userData.user) return null
+  // Create admin client on-demand to ensure env vars are available
+  const adminClient = getSupabaseAdmin()
+  if (!adminClient) {
+    // eslint-disable-next-line no-console
+    console.error('[getAuthContext] Failed to create admin client - check SUPABASE_SERVICE_ROLE_KEY env var')
+    return null
+  }
+
+  // Use admin client to verify the token and get user
+  // This works because admin client has permissions to verify tokens
+  const { data: userData, error: getUserError } = await adminClient.auth.getUser(accessToken)
+  if (getUserError || !userData.user) {
+    // eslint-disable-next-line no-console
+    console.error('[getAuthContext] Failed to get user:', {
+      error: getUserError?.message,
+      code: getUserError?.status,
+      hasUser: !!userData?.user,
+    })
+    return null
+  }
 
   const userId = userData.user.id
 
   // Use admin client to bypass RLS - we've already verified the user exists via getUser
   // This is safe because we're only reading the profile of the authenticated user
-  if (!supabaseAdmin) {
-    // In production, supabaseAdmin should always be configured
-    // If not available, we can't reliably get the profile due to RLS
-    if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
-      console.error('SUPABASE_SERVICE_ROLE_KEY not configured - cannot fetch user profile')
-    }
-    return null
-  }
-
-  const { data: profile, error: profileError } = await supabaseAdmin
+  const { data: profile, error: profileError } = await adminClient
     .from('profiles')
     .select('id, email, role')
     .eq('id', userId)
     .single()
 
   if (profileError || !profile) {
-    if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
-      console.error('Failed to fetch user profile:', profileError)
-    }
+    // eslint-disable-next-line no-console
+    console.error('[getAuthContext] Failed to fetch user profile:', {
+      error: profileError?.message,
+      code: profileError?.code,
+      userId,
+      hasProfile: !!profile,
+    })
     return null
   }
 
