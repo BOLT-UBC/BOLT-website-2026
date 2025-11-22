@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 
 export interface AuthContext {
   userId: string
@@ -24,13 +24,31 @@ export async function getAuthContext(request: NextRequest): Promise<AuthContext 
 
   const userId = userData.user.id
 
-  const { data: profile } = await supabase
+  // Use admin client to bypass RLS - we've already verified the user exists via getUser
+  // This is safe because we're only reading the profile of the authenticated user
+  if (!supabaseAdmin) {
+    // In production, supabaseAdmin should always be configured
+    // If not available, we can't reliably get the profile due to RLS
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.error('SUPABASE_SERVICE_ROLE_KEY not configured - cannot fetch user profile')
+    }
+    return null
+  }
+
+  const { data: profile, error: profileError } = await supabaseAdmin
     .from('profiles')
     .select('id, email, role')
     .eq('id', userId)
     .single()
 
-  if (!profile) return null
+  if (profileError || !profile) {
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.error('Failed to fetch user profile:', profileError)
+    }
+    return null
+  }
 
   return {
     userId: profile.id,
