@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
-import { getAuthContext } from '@/lib/serverAuth'
+import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if service role client is available
+    const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
         error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'

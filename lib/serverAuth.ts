@@ -16,7 +16,8 @@ function getBearerToken(request: NextRequest): string | null {
 }
 
 // Create admin client on-demand to ensure env vars are read at runtime
-function getSupabaseAdmin() {
+// Export this so API routes can use it instead of module-level supabaseAdmin
+export function getSupabaseAdmin() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
