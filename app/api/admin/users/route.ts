@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
-import { getAuthContext } from '@/lib/serverAuth'
+import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,6 +20,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
 
     // Ensure service role client is available (bypasses RLS for admin operations)
+    const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Service role key not configured' }, { status: 500 })
     }
@@ -55,8 +55,12 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
 
     if (error) {
-      // Failed to fetch users
-      void error
+      // eslint-disable-next-line no-console
+      console.error('[admin/users] Failed to fetch users:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+      })
       return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 })
     }
 
@@ -71,8 +75,10 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    // Failed to process users request
-    void error
+    // eslint-disable-next-line no-console
+    console.error('[admin/users] Unexpected error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

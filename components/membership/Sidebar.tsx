@@ -1,5 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { authService } from '@/lib/auth'
 import { RoleBadge, UserRole } from './RoleBadge'
 
 export interface SidebarTeam { id: string; name: string; }
@@ -31,7 +33,20 @@ export function Sidebar({
   roleView: RoleView
   setRoleView: React.Dispatch<React.SetStateAction<RoleView>>
 }) {
+  const router = useRouter()
   const effectiveRole: RoleView = profile?.role === 'admin' ? roleView : (profile?.role || 'non_member')
+
+  const handleLogout = async () => {
+    try {
+      await authService.signOut()
+      router.push('/')
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to sign out:', error)
+      // Still redirect even if sign out fails
+      router.push('/')
+    }
+  }
 
   const tabs: { id: string; label: string; icon: React.ReactNode }[] = [
     { id: 'home', label: 'Home', icon: (
@@ -55,6 +70,9 @@ export function Sidebar({
   }
 
   if (effectiveRole === 'admin' || effectiveRole === 'executive_member') {
+    tabs.push({ id: 'announcements', label: 'Announcements', icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
+    ) })
     tabs.push({ id: 'statistics', label: 'Statistics', icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3v18h18M7 13v5m5-10v10m5-7v7" /></svg>
     ) })
@@ -117,6 +135,18 @@ export function Sidebar({
             <span className="font-medium text-sm">{tab.label}</span>
           </button>
         ))}
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-white/20">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors text-white/70 hover:bg-red-500/20 hover:text-red-200"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span className="font-medium text-sm">Logout</span>
+        </button>
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
-import { getAuthContext } from '@/lib/serverAuth'
+import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,6 +13,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Ensure service role client is available (bypasses RLS for admin operations)
+    const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Service role key not configured' }, { status: 500 })
     }
@@ -78,8 +78,10 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    // Failed to get statistics
-    void error
+    // eslint-disable-next-line no-console
+    console.error('[admin/statistics] Unexpected error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
