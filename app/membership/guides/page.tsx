@@ -10,9 +10,9 @@ export default function Page() {
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">Tech Stack Guides</h1>
         </div>
-        <p className="text-white/70 mt-(-1)">
+        <div className="text-white/70 mt-(-1)">
           <h2 >Beginner-friendly guides with real-world applications</h2>
-        </p>
+        </div>
       </div>
 
       {/* Guides  Grid Pane */}
