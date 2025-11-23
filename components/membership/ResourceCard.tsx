@@ -1,4 +1,3 @@
-// components/membership/ResourceCard.tsx
 import React from "react";
 
 type Props = {
