@@ -4,7 +4,9 @@ import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '@/lib/useAuth'
 
 interface ResumeUploadProps {
+  // eslint-disable-next-line no-unused-vars
   onUploadSuccess?: (resume: ResumeData) => void
+  // eslint-disable-next-line no-unused-vars
   onUploadError?: (error: string) => void
 }
 
@@ -21,10 +23,6 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
   const [currentResume, setCurrentResume] = useState<ResumeData | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Check if user can upload resume
-  const canUploadResume = user?.profile?.role &&
-    ['non_member', 'bolt_member', 'executive_member'].includes(user.profile.role)
-
   // Load current resume info from user profile
   useEffect(() => {
     if (user?.profile) {
@@ -33,16 +31,35 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
         resume_file_name: user.profile.resume_file_name,
         resume_uploaded_at: user.profile.resume_uploaded_at
       })
+    } else {
+      // Clear resume state if user profile doesn't have resume data
+      setCurrentResume(null)
     }
   }, [user?.profile])
 
-  if (!canUploadResume) {
-    return (
-      <div className="p-6 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">Resume Upload</h3>
-        <p className="text-gray-500">Resume uploads are not available for your account type.</p>
-      </div>
-    )
+  // Function to refresh user profile from database
+  const refreshUserProfile = async () => {
+    if (!user?.id) return
+
+    try {
+      const { authService } = await import('@/lib/auth')
+      const updatedProfile = await authService.getUserProfile(user.id)
+
+      if (updatedProfile) {
+        setCurrentResume({
+          resume_url: updatedProfile.resume_url,
+          resume_file_name: updatedProfile.resume_file_name,
+          resume_uploaded_at: updatedProfile.resume_uploaded_at
+        })
+      } else {
+        setCurrentResume(null)
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('[ResumeUpload] Failed to refresh profile:', error)
+      // On error, clear resume state to be safe
+      setCurrentResume(null)
+    }
   }
 
   const handleFileUpload = async (file: File) => {
@@ -54,24 +71,46 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
     setUploading(true)
 
     try {
+      // Get access token for authentication
+      const { supabase } = await import('@/lib/supabase')
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+
+      if (sessionError || !sessionData.session?.access_token) {
+        onUploadError?.('Failed to get authentication token')
+        return
+      }
+
       const formData = new FormData()
       formData.append('userId', user.id)
       formData.append('file', file)
 
       const response = await fetch('/api/resume', {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${sessionData.session.access_token}`,
+        },
         body: formData
       })
 
       const result = await response.json()
 
+      if (!response.ok) {
+        onUploadError?.(result.error || `Upload failed: ${response.status}`)
+        return
+      }
+
       if (result.success) {
+        // Update local state immediately
         setCurrentResume(result.data)
         onUploadSuccess?.(result.data)
+        // Refresh profile from database to ensure consistency
+        await refreshUserProfile()
       } else {
-        onUploadError?.(result.error)
+        onUploadError?.(result.error || 'Upload failed')
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[ResumeUpload] Upload error:', error)
       onUploadError?.(error instanceof Error ? error.message : 'Upload failed')
     } finally {
       setUploading(false)
@@ -108,18 +147,42 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
     if (!user?.id) return
 
     try {
+      // Get access token for authentication
+      const { supabase } = await import('@/lib/supabase')
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+
+      if (sessionError || !sessionData.session?.access_token) {
+        onUploadError?.('Failed to get authentication token')
+        return
+      }
+
       const response = await fetch(`/api/resume?userId=${user.id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${sessionData.session.access_token}`,
+        },
       })
 
       const result = await response.json()
 
+      if (!response.ok) {
+        onUploadError?.(result.error || `Delete failed: ${response.status}`)
+        return
+      }
+
       if (result.success) {
+        // Clear local state immediately
         setCurrentResume(null)
+
+        // Refresh profile from database to ensure UI reflects updated state
+        // This updates the component without reloading the page
+        await refreshUserProfile()
       } else {
-        onUploadError?.(result.error)
+        onUploadError?.(result.error || 'Delete failed')
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[ResumeUpload] Delete error:', error)
       onUploadError?.(error instanceof Error ? error.message : 'Delete failed')
     }
   }
