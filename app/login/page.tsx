@@ -19,7 +19,6 @@ export default function LoginPage() {
     fullName: ''
   })
 
-  // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user) {
       router.push('/membership')
@@ -42,25 +41,18 @@ export default function LoginPage() {
 
     try {
       if (isLogin) {
-        // Login
         const { error } = await authService.signIn(formData.email, formData.password)
         if (error) throw error
-
-        // Redirect to membership portal
         router.push('/membership')
       } else {
-        // Signup
         const { user, error } = await authService.signUp(formData.email, formData.password, formData.fullName)
         if (error) throw error
 
         if (user) {
-          // Create profile after successful signup
           await authService.createProfile(user, {
             full_name: formData.fullName,
             role: 'non_member'
           })
-
-          // Redirect to membership portal
           router.push('/membership')
         }
       }
@@ -75,15 +67,11 @@ export default function LoginPage() {
   const handleGoogleAuth = async () => {
     setLoading(true)
     setError(null)
-
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/membership`
-        }
+        options: { redirectTo: `${window.location.origin}/membership` }
       })
-
       if (error) throw error
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Google authentication failed'
@@ -110,23 +98,25 @@ export default function LoginPage() {
       </div>
     )
   }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a0b2e] via-[#614ea5] to-[#493b7b] flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
-        {/* Logo and Title */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
-              BOLT
-            </h1>
-            <Image
-              src="/images/Logo.webp"
-              alt="BOLT UBC Logo"
-              className="w-16 h-16 object-contain"
-              width={64}
-              height={64}
-            />
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6">
+      <div className="flex flex-col items-center justify-center w-full max-w-md text-center">
+        <div className="flex items-center justify-center mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
+            BOLT
+          </h1>
+          <Image
+            src="/images/Logo.webp"
+            alt="BOLT UBC Logo"
+            className="w-20 h-20 object-contain"
+            width={64}
+            height={64}
+          />
+        </div>
+
+        {/* Subtitle */}
+        <div className="mb-8">
           <h2 className="text-2xl font-semibold text-white mb-2">
             {isLogin ? 'Welcome Back' : 'Join BOLT UBC'}
           </h2>
@@ -136,7 +126,7 @@ export default function LoginPage() {
         </div>
 
         {/* Auth Form */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 w-full">
           {/* Google Sign In */}
           <button
             onClick={handleGoogleAuth}
@@ -155,7 +145,7 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/20"></div>
+              <div className="w-full border-t border-white/20 mb-8"></div>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-4 bg-transparent text-white/60">Or continue with email</span>
@@ -163,7 +153,7 @@ export default function LoginPage() {
           </div>
 
           {/* Email/Password Form */}
-          <form onSubmit={handleEmailAuth} className="space-y-4">
+          <form onSubmit={handleEmailAuth} className="space-y-4 text-left">
             {!isLogin && (
               <div>
                 <label htmlFor="fullName" className="block text-white/80 text-sm font-medium mb-2">
