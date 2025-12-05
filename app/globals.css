@@ -74,7 +74,14 @@ html {
 }
 
 .scroll-right-continuous {
-  animation: scroll-right-continuous 20s linear infinite;
+  animation: scroll-right-continuous 30s linear infinite;
+}
+
+@media (min-width: 768px) {
+  .scroll-right-continuous {
+    /* Faster on desktop where items are larger */
+    animation: scroll-right-continuous 20s linear infinite;
+  }
 }
 
 .scroll-left {
