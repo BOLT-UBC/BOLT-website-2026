@@ -74,7 +74,7 @@ html {
 }
 
 .scroll-right-continuous {
-  animation: scroll-right-continuous 60s linear infinite;
+  animation: scroll-right-continuous 20s linear infinite;
 }
 
 .scroll-left {
