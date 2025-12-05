@@ -48,7 +48,7 @@ const FirstBytePage: React.FC = () => {
                 </div>
                 <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base">
                   <span className="text-xs uppercase tracking-wide text-purple-200/80">Duration</span>
-                  <span className="text-white font-semibold">3 Weeks</span>
+                  <span className="text-white font-semibold">2 Weeks</span>
                 </div>
               </div>
               <div className="space-y-4 text-sm sm:text-base lg:text-lg leading-relaxed text-white/85 max-w-2xl">
