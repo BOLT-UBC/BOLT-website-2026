@@ -11,7 +11,10 @@ const Partners: React.FC = memo(() => {
     { name: "CGI", logo: "/partners/cgi.webp" },
     { name: "Microsoft", logo: "/partners/microsoft.webp" },
     { name: "Google", logo: "/partners/google.webp" },
-    { name: "Deloitte", logo: "/partners/deloitte_logo.webp" },
+    { name: "Deloitte", logo: "/partners/deloitte.webp" },
+    { name: "GeoComply", logo: "/partners/geocomply.webp" },
+    { name: "EY", logo: "/partners/ey.webp" },
+    { name: "Accenture", logo: "/partners/accenture.webp" }
   ];
 
   // Triple the partners array for seamless continuous loop
