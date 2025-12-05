@@ -252,10 +252,10 @@ export async function POST(request: NextRequest) {
     const { data: updatedProfile, error: updateError } = await supabaseAdmin
       .from('profiles')
       .update({
-        resume_url: urlData.publicUrl,
-        resume_file_name: file.name,
-        resume_uploaded_at: new Date().toISOString()
-      })
+      resume_url: urlData.publicUrl,
+      resume_file_name: file.name,
+      resume_uploaded_at: new Date().toISOString()
+    })
       .eq('id', userId)
       .select()
       .single()
@@ -390,10 +390,10 @@ export async function DELETE(request: NextRequest) {
     const { data: updatedProfile, error: updateError } = await supabaseAdmin
       .from('profiles')
       .update({
-        resume_url: null,
-        resume_file_name: null,
-        resume_uploaded_at: null
-      })
+      resume_url: null,
+      resume_file_name: null,
+      resume_uploaded_at: null
+    })
       .eq('id', userId)
       .select()
       .single()
