@@ -23,10 +23,11 @@
   animation: scroll-right-continuous 20s linear infinite;
 }
 
-/* Mobile: slower animation for mobile devices */
+/* Mobile: slower animation and tighter spacing for mobile devices */
 @media (max-width: 767px) {
   .scroll-right-continuous {
     animation: scroll-right-continuous 60s linear infinite !important;
+    gap: 0.125rem !important; /* 2px - override Tailwind gap-0.5 */
   }
 }
 
