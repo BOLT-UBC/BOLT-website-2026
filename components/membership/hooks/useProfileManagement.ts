@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { authService } from '@/lib/auth'
+import { authService, type AuthUser } from '@/lib/auth'
 import { profileService } from '@/lib/database'
 import type { UserProfile, EditForm } from '../types'
 
-export function useProfileManagement(user: UserProfile, profile: UserProfile | null) {
+export function useProfileManagement(user: AuthUser | null, profile: UserProfile | null) {
   const [isEditing, setIsEditing] = useState(false)
   const [updating, setUpdating] = useState(false)
   const [editForm, setEditForm] = useState<EditForm>({
@@ -36,6 +36,8 @@ export function useProfileManagement(user: UserProfile, profile: UserProfile | n
     }
   }
 
+  // Parameter name in type definition is required by TypeScript but unused
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUpdateProfile = async (setProfile: (profile: UserProfile) => void): Promise<void> => {
     if (!user?.id) {
       throw new Error('User ID is required')
@@ -67,11 +69,15 @@ export function useProfileManagement(user: UserProfile, profile: UserProfile | n
 
       setProfile(updatedProfile)
       setIsEditing(false)
-    } catch (error: any) {
+    } catch (error: unknown) {
       // eslint-disable-next-line no-console
       console.error('Failed to update profile:', error)
       // Format error message for better display
-      const errorMessage = error?.message || error?.error?.message || 'Failed to update profile. Please try again.'
+      const errorMessage = error instanceof Error
+        ? error.message
+        : (error && typeof error === 'object' && 'error' in error && error.error && typeof error.error === 'object' && 'message' in error.error && typeof error.error.message === 'string')
+        ? error.error.message
+        : 'Failed to update profile. Please try again.'
       throw new Error(errorMessage)
     } finally {
       setUpdating(false)
