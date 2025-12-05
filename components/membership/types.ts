@@ -9,6 +9,10 @@ export interface UserProfile {
   major: string | null
   phone: string | null
   linkedin_url: string | null
+  bio: string | null
+  pronouns: string | null
+  discord_username: string | null
+  ubc_student_id: string | null
   resume_url: string | null
   resume_file_name: string | null
   resume_uploaded_at: string | null
@@ -52,6 +56,10 @@ export interface EditForm {
   major: string
   phone: string
   linkedin_url: string
+  bio: string
+  pronouns: string
+  discord_username: string
+  ubc_student_id: string
 }
 
 export interface Announcement {

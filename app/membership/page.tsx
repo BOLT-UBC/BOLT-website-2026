@@ -77,8 +77,13 @@ export default function MembershipPortal() {
     }
   }
 
-  const handleUpdateProfile = () => {
-    profileManagement.handleUpdateProfile(setProfile)
+  const handleUpdateProfile = async () => {
+    try {
+      await profileManagement.handleUpdateProfile(setProfile)
+    } catch (error) {
+      // Error is handled in ProfilePanel
+      throw error
+    }
   }
 
   if (loading) {
