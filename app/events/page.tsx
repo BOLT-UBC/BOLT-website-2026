@@ -30,6 +30,7 @@ export default function EventsPage() {
       titleAccent: "First Byte",
       subtitle: "Hands-on workshops",
       footer: "Beginner friendly",
+      backgroundImage: "/events/byte.png",
       gradient: "from-[#321070] via-[#482a9f] to-[#221247]",
       accentBg: "bg-white/15",
       accentBorder: "border-white/10",
@@ -39,6 +40,7 @@ export default function EventsPage() {
       titleAccent: "BOLT Connect",
       subtitle: "Networking with a twist",
       footer: "Industry mixers",
+      backgroundImage: "/events/byte-2.png", // You may want to add a specific Connect image
       gradient: "from-[#2b0b3d] via-[#46198f] to-[#a53802]",
       accentBg: "bg-white/10",
       accentBorder: "border-white/15",
@@ -48,6 +50,7 @@ export default function EventsPage() {
       titleAccent: "BOLT Circuit",
       subtitle: "Analytics case competition",
       footer: "Team-based challenges",
+      backgroundImage: "/events/bolt-circuit.webp",
       gradient: "from-[#03111f] via-[#073455] to-[#0b5b86]",
       accentBg: "bg-white/12",
       accentBorder: "border-white/15",
@@ -57,6 +60,7 @@ export default function EventsPage() {
       titleAccent: "BOLT Bootcamp",
       subtitle: "Immersive learning sprint",
       footer: "Flagship program",
+      backgroundImage: "/events/bootcamp.webp",
       gradient: "from-[#12002c] via-[#2d0f82] to-[#015c92]",
       accentBg: "bg-white/12",
       accentBorder: "border-white/15",
@@ -85,7 +89,6 @@ export default function EventsPage() {
       <div className="pt-24 pb-16">
         <div className="w-full max-w-6xl mx-auto px-6 sm:px-6 md:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-inter text-sm font-normal text-gray-600 mb-2 lowercase italic">Events</h2>
             <h1 className="font-inter text-3xl md:text-4xl font-bold text-black mb-4">
               Our Events
             </h1>
@@ -103,10 +106,20 @@ export default function EventsPage() {
                   onClick={() => router.push(eventLinks[index])}
                 >
                   <div
-                    className={`relative w-full aspect-[16/10] overflow-hidden rounded-xl mb-3 bg-gradient-to-br ${eventPreviewConfigs[index].gradient} ${eventPreviewConfigs[index].glow}`}
+                    className={`relative w-full aspect-[16/10] overflow-hidden rounded-xl mb-3 ${eventPreviewConfigs[index].glow}`}
+                    style={{
+                      backgroundImage: `url(${eventPreviewConfigs[index].backgroundImage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }}
                   >
+                    {/* Gradient overlay - covers the background image */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${eventPreviewConfigs[index].gradient} opacity-80`} />
+                    {/* Radial gradient overlay for depth */}
                     <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35)_0%,_transparent_55%)]" />
-                    <div className="absolute inset-0 flex flex-col justify-between p-4 sm:p-5">
+                    {/* Content layer */}
+                    <div className="relative z-10 flex flex-col justify-between p-4 sm:p-5 h-full">
                       <div>
                         <p className="font-inter text-[10px] uppercase tracking-[0.35em] text-white/65">Inside the event</p>
                         <h3 className="mt-2 font-inter text-lg sm:text-xl font-bold text-white/95">

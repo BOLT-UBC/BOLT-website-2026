@@ -5,11 +5,10 @@ const DataBridge: React.FC = memo(() => {
     <div className="w-full py-16 md:py-20 bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7]" id="Solutions">
       <div className="max-w-6xl mx-auto px-6 sm:px-6 md:px-8">
         <div className="mb-6 md:mb-8">
-          <h2 className="font-inter text-sm font-normal text-gray-600 mb-2 lowercase italic">DataBridge</h2>
-          <h1 className="font-inter text-2xl sm:text-3xl font-bold text-black mb-4 md:mb-6 leading-tight">Free Data Consulting for Local Businesses</h1>
+          <h1 className="font-inter text-2xl sm:text-3xl font-bold text-black mb-4 md:mb-6 leading-tight">Data Consulting for Local Businesses</h1>
           <p className="font-inter text-sm leading-relaxed text-gray-800 max-w-3xl font-normal">
             Connect with our expert data analytics team for complimentary consulting services.
-            We help local businesses unlock the power of their data through analysis, visualization, and strategic insights.
+            We help local businesses in Vancouver unlock the power of their data through analysis, visualization, and strategic insights.
           </p>
         </div>
 
@@ -53,7 +52,7 @@ const DataBridge: React.FC = memo(() => {
 
         <div className="text-center">
           <p className="font-inter text-gray-800 text-sm mb-4 leading-relaxed">
-            Our team of data science students is ready to help your business thrive.
+            Our team of dedicated students across different disciplines is ready to help your business thrive.
             Contact us for a free consultation and discover how data can transform your operations.
           </p>
           <div className="flex justify-center">
@@ -81,7 +80,7 @@ const DataBridge: React.FC = memo(() => {
 
         <div className="mt-8 md:mt-12 text-center">
           <p className="font-inter text-gray-500 text-xs">
-            * DataBridge services are provided free of charge to local businesses as part of our educational mission
+            * All services are provided free of charge to local businesses as part of our educational mission.
           </p>
         </div>
       </div>

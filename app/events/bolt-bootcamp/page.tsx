@@ -13,48 +13,14 @@ export default function BoltBootcampPage() {
     <div className="min-h-screen bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7]">
       <Navbar />
 
-      <div className="pt-20 pb-16">
-        <div className="max-w-4xl mx-auto px-6 sm:px-6 md:px-8">
-          <div className="text-center mb-12">
-            <h1 className="font-inter text-4xl md:text-6xl font-bold text-black mb-4">
-              BOLT Bootcamp
-            </h1>
-            <p className="font-inter text-lg text-gray-600 max-w-2xl mx-auto">
-              An introductory workshop series for beginners covering fundamental data analysis tools, Excel, SQL, and data visualization basics.
-            </p>
-          </div>
-
-          <div className="bg-white/20 backdrop-blur-lg rounded-xl p-8 shadow-lg">
-            <h2 className="font-inter text-2xl font-bold text-black mb-4">
-              About BOLT Bootcamp
-            </h2>
-            <p className="font-inter text-gray-700 leading-relaxed mb-6">
-              BOLT Bootcamp is designed for students who are new to data analytics. This comprehensive workshop series covers
-              the fundamental tools and techniques needed to start your journey in data analysis, from Excel basics to
-              introductory SQL and data visualization.
-            </p>
-
-            <h3 className="font-inter text-xl font-bold text-black mb-3">
-              Workshop Topics
-            </h3>
-            <ul className="font-inter text-gray-700 space-y-2 mb-6">
-              <li>• Excel fundamentals and advanced functions</li>
-              <li>• Introduction to SQL and databases</li>
-              <li>• Data visualization principles</li>
-              <li>• Statistical analysis basics</li>
-              <li>• Hands-on projects and exercises</li>
-            </ul>
-
-            <h3 className="font-inter text-xl font-bold text-black mb-3">
-              Event Details
-            </h3>
-            <div className="font-inter text-gray-700 space-y-2">
-              <p><strong>Date:</strong> April 2025</p>
-              <p><strong>Duration:</strong> 3 days</p>
-              <p><strong>Location:</strong> UBC Campus</p>
-              <p><strong>Prerequisites:</strong> None - perfect for beginners</p>
-            </div>
-          </div>
+      <div className="pt-32 pb-32 flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <h1 className="font-inter text-4xl md:text-6xl font-bold text-black mb-4">
+            BOLT Bootcamp 2026 Coming Soon
+          </h1>
+          <p className="font-inter text-2xl md:text-3xl text-gray-600">
+            Follow us on <a href="https://www.instagram.com/ubcbolt/" className="text-blue-500 hover:text-blue-600">Instagram</a> for updates.
+          </p>
         </div>
       </div>
 
