@@ -33,6 +33,10 @@ export interface Database {
           major: string | null
           phone: string | null
           linkedin_url: string | null
+          bio: string | null
+          pronouns: string | null
+          discord_username: string | null
+          ubc_student_id: string | null
           resume_url: string | null
           resume_file_name: string | null
           resume_uploaded_at: string | null
@@ -50,6 +54,10 @@ export interface Database {
           major?: string | null
           phone?: string | null
           linkedin_url?: string | null
+          bio?: string | null
+          pronouns?: string | null
+          discord_username?: string | null
+          ubc_student_id?: string | null
           resume_url?: string | null
           resume_file_name?: string | null
           resume_uploaded_at?: string | null
@@ -67,6 +75,10 @@ export interface Database {
           major?: string | null
           phone?: string | null
           linkedin_url?: string | null
+          bio?: string | null
+          pronouns?: string | null
+          discord_username?: string | null
+          ubc_student_id?: string | null
           resume_url?: string | null
           resume_file_name?: string | null
           resume_uploaded_at?: string | null

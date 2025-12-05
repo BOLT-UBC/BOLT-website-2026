@@ -167,6 +167,10 @@ export const authService = {
     major?: string
     phone?: string
     linkedin_url?: string
+    bio?: string
+    pronouns?: string
+    discord_username?: string
+    ubc_student_id?: string
   }) {
     // Input validation and sanitization
     const sanitizedUpdates: Record<string, string | number | null> = {}
@@ -195,9 +199,6 @@ export const authService = {
       }
     }
     if (updates.graduation_year !== undefined) {
-      if (updates.graduation_year < 2020 || updates.graduation_year > 2030) {
-        throw new Error('Graduation year must be between 2020 and 2030')
-      }
       sanitizedUpdates.graduation_year = updates.graduation_year
     }
     if (updates.team_id) {
@@ -205,6 +206,18 @@ export const authService = {
     }
     if (updates.avatar_url) {
       sanitizedUpdates.avatar_url = updates.avatar_url
+    }
+    if (updates.bio !== undefined) {
+      sanitizedUpdates.bio = updates.bio ? this.sanitizeInput(updates.bio) : null
+    }
+    if (updates.pronouns !== undefined) {
+      sanitizedUpdates.pronouns = updates.pronouns ? this.sanitizeInput(updates.pronouns) : null
+    }
+    if (updates.discord_username !== undefined) {
+      sanitizedUpdates.discord_username = updates.discord_username ? this.sanitizeInput(updates.discord_username) : null
+    }
+    if (updates.ubc_student_id !== undefined) {
+      sanitizedUpdates.ubc_student_id = updates.ubc_student_id ? this.sanitizeInput(updates.ubc_student_id) : null
     }
 
     const { data, error } = await supabase
