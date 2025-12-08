@@ -30,11 +30,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Validate graduation year if provided
     if (updates.graduation_year) {
       const year = parseInt(updates.graduation_year)
-      if (year < 2020 || year > 2030) {
-        return NextResponse.json({ error: 'Graduation year must be between 2020 and 2030' }, { status: 400 })
+      if (isNaN(year)) {
+        return NextResponse.json({ error: 'Graduation year must be a valid number' }, { status: 400 })
       }
     }
 

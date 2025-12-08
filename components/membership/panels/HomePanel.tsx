@@ -9,9 +9,28 @@ interface HomePanelProps {
   events: Event[]
 }
 
+interface PublicStats {
+  totalMembers: number
+  upcomingEvents: number
+  totalEvents: number
+  membersWithResumes: number
+}
+
 export function HomePanel({ events }: HomePanelProps) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [loadingAnnouncements, setLoadingAnnouncements] = useState(true)
+  const [publicStats, setPublicStats] = useState<PublicStats | null>(null)
+  const [loadingStats, setLoadingStats] = useState(true)
+
+
+  const getEventRoute = (eventName: string) => {
+    const name = eventName.toLowerCase()
+    if (name.includes('first byte')) return '/events/first-byte'
+    if (name.includes('bolt connect')) return '/events/bolt-connect'
+    if (name.includes('bolt circuit')) return '/events/bolt-circuit'
+    if (name.includes('bolt bootcamp')) return '/events/bolt-bootcamp'
+    return '/events'
+  }
 
   useEffect(() => {
     const loadAnnouncements = async () => {
@@ -35,11 +54,55 @@ export function HomePanel({ events }: HomePanelProps) {
       }
     }
 
+    const loadPublicStats = async () => {
+      try {
+        const { data: sessionData } = await supabase.auth.getSession()
+        const accessToken = sessionData.session?.access_token
+
+        const response = await fetch('/api/stats/public', {
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          setPublicStats(result)
+        }
+      } catch (error) {
+        // Silently handle error - stats will just be null
+        void error
+      } finally {
+        setLoadingStats(false)
+      }
+    }
+
     loadAnnouncements()
+    loadPublicStats()
   }, [])
 
   return (
     <div className="space-y-6">
+      {/* Community Stats Section */}
+      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+        <div className="flex items-center gap-3 mb-4">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <h2 className="text-2xl font-bold text-white">Community Stats</h2>
+        </div>
+        {loadingStats ? (
+          <div className="text-center py-4 text-white/70">Loading stats...</div>
+        ) : publicStats ? (
+          <div className="bg-white/5 rounded-lg p-6 text-center">
+            <div className="text-white/70 text-sm mb-2">Total Members</div>
+            <div className="text-white text-4xl font-bold">{publicStats.totalMembers}</div>
+          </div>
+        ) : (
+          <div className="text-center py-4 text-white/70">
+            Unable to load community stats at this time.
+          </div>
+        )}
+      </div>
+
       {/* Announcements Section */}
       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
         <div className="flex items-center gap-3 mb-4">
@@ -89,63 +152,63 @@ export function HomePanel({ events }: HomePanelProps) {
           </svg>
           <h2 className="text-2xl font-bold text-white">Upcoming Events</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {events.length > 0 ? (
-            events.slice(0, 6).map((event) => {
-              // Map event names to their corresponding page routes
-              const getEventRoute = (eventName: string) => {
-                const name = eventName.toLowerCase();
-                if (name.includes('first byte')) return '/events/first-byte';
-                if (name.includes('bolt connect')) return '/events/bolt-connect';
-                if (name.includes('bolt circuit')) return '/events/bolt-circuit';
-                if (name.includes('bolt bootcamp')) return '/events/bolt-bootcamp';
-                return '/events'; // fallback to events page
-              };
+            (() => {
+              // Filter to only show upcoming event
+              const boltCircuitEvent = events.find(event =>
+                event.name.toLowerCase().includes('bolt circuit')
+              )
+
+              if (!boltCircuitEvent) {
+                return (
+                  <div className="col-span-full bg-white/5 rounded-lg p-8 text-center">
+                    <svg className="w-12 h-12 text-white/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="text-white/60 text-lg">No upcoming events at the moment</p>
+                    <p className="text-white/40 text-sm mt-2">Check back soon for exciting events!</p>
+                  </div>
+                )
+              }
 
               return (
                 <a
-                  key={event.id}
-                  href={getEventRoute(event.name)}
+                  key={boltCircuitEvent.id}
+                  href={getEventRoute(boltCircuitEvent.name)}
                   className="block bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors group"
                 >
                   <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-300 transition-colors">
-                    {event.name}
+                    {boltCircuitEvent.name}
                   </h3>
-                  {event.description && (
-                    <p className="text-white/70 mb-3 text-sm line-clamp-2">{event.description}</p>
+                  {boltCircuitEvent.description && (
+                    <p className="text-white/70 mb-3 text-sm line-clamp-2">{boltCircuitEvent.description}</p>
                   )}
                   <div className="space-y-2 text-sm text-white/60">
-                    {event.date && (
+                    {boltCircuitEvent.date && (
                       <div className="flex items-center gap-2">
                         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <span className="truncate">{new Date(event.date).toLocaleDateString()}</span>
+                        <span className="truncate">{new Date(boltCircuitEvent.date).toLocaleDateString()}</span>
                       </div>
                     )}
-                    {event.location && (
+                    {boltCircuitEvent.location && (
                       <div className="flex items-center gap-2">
                         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <span className="truncate">{event.location}</span>
+                        <span className="truncate">{boltCircuitEvent.location}</span>
                       </div>
                     )}
                   </div>
-                  {event.name.toLowerCase().includes('bolt connect') && (
-                    <div className="mt-3">
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Registration Open
-                      </span>
-                    </div>
-                  )}
                   <div className="mt-3 flex items-center text-blue-300 text-sm font-medium group-hover:text-blue-200 transition-colors">
                     Learn More →
                   </div>
                 </a>
-              );
-            })
+              )
+            })()
           ) : (
             <div className="col-span-full bg-white/5 rounded-lg p-8 text-center">
               <svg className="w-12 h-12 text-white/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +279,23 @@ export function HomePanel({ events }: HomePanelProps) {
 
               </Link>
 
-
+          </div>
+          <div className="bg-white/5 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <svg className="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <h3 className="text-lg font-semibold text-white">Mastercard Interview & Case Study Tips</h3>
+            </div>
+            <p className="text-white/70 mb-3">Exclusive prep content for Mastercard interviews and case studies.</p>
+            <a
+              href="https://docs.google.com/presentation/d/1I7CRLXe-kCv5ElLHPYkMA7IAdaovHV2U/edit?usp=sharing&ouid=103896099220639941650&rtpof=true&sd=true"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-300 hover:text-blue-200 text-sm font-medium"
+            >
+              View Guide →
+            </a>
           </div>
         </div>
       </div>

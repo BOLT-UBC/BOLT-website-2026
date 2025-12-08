@@ -35,9 +35,9 @@ const Partners: React.FC = memo(() => {
         <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#614ea5] to-transparent z-10 pointer-events-none"></div>
         {/* Right fade */}
         <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#493b7b] to-transparent z-10 pointer-events-none"></div>
-        <div className="inline-flex w-max gap-3 sm:gap-4 md:gap-6 scroll-right-continuous py-1 flex-nowrap">
+        <div className="inline-flex w-max gap-0.5 sm:gap-2 md:gap-6 scroll-right-continuous py-1 flex-nowrap">
           {duplicatedPartners.map((partner, index) => (
-            <div key={`${partner.name}-${index}`} className="flex-shrink-0 p-1.5 sm:p-3 md:p-4 min-w-[100px] sm:min-w-[140px] md:min-w-[180px] hover:-translate-y-2 transition-transform duration-300 cursor-pointer active:scale-95 active:-translate-y-1">
+            <div key={`${partner.name}-${index}`} className="flex-shrink-0 p-0.5 sm:p-2 md:p-4 min-w-[100px] sm:min-w-[140px] md:min-w-[180px] hover:-translate-y-2 transition-transform duration-300 cursor-pointer active:scale-95 active:-translate-y-1">
               <img
                 src={partner.logo}
                 alt={partner.name}

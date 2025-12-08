@@ -36,7 +36,6 @@ const Team: React.FC = () => {
   return (
     <div className="w-full py-20 md:py-24 bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7] flex flex-col items-center overflow-hidden relative" id="Team">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-8 md:mb-12">
-        <h2 className="font-inter text-sm font-normal text-gray-600 mb-2 lowercase italic">Team</h2>
         <h1 className="font-inter text-2xl sm:text-3xl font-bold text-black mb-4 md:mb-6 leading-tight">Meet Our Team</h1>
       </div>
 

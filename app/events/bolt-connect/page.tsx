@@ -67,18 +67,36 @@ export default function BoltConnectPage() {
                 <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5 shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
                   <p className="text-xs font-semibold uppercase tracking-[0.25em] text-fuchsia-200/80">November 28 • BOLT Members Only</p>
                   <p className="mt-2 text-lg font-semibold text-white">
-                    We&rsquo;re thrilled to present an exclusive partnership event: <span className="font-bold text-amber-200/90">BOLT Connect × Mastercard</span>.
+                    Exclusive partnership event: <span className="font-bold text-amber-200/90">BOLT Connect × Mastercard</span>.
                   </p>
                 </div>
 
                 <p className="font-semibold">
-                  Join us for an evening of networking with Mastercard professionals across data analytics, engineering, and product. Discover how you can become part of their Summer 2026 co-op intake while connecting with fellow BOLT members.
+                  Join us for an evening of networking with Mastercard professionals across data analytics & performance, engineering, consulting, and more.
                 </p>
+
+                <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-4">What You&rsquo;ll Get</h3>
+                  <ul className="space-y-3 text-sm sm:text-base text-white/90">
+                    <li className="flex items-start gap-3">
+                      <span className="text-amber-400/90 mt-1">•</span>
+                      <span><strong className="text-white">Case Session:</strong> Solve a case and get hands-on experience through a case session led by a speaker from Mastercard</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-amber-400/90 mt-1">•</span>
+                      <span><strong className="text-white">2026 Co-op Insights:</strong> Learn about Summer 2026 opportunities and what qualifications and skills Mastercard recruiters are looking for</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-amber-400/90 mt-1">•</span>
+                      <span><strong className="text-white">Professional Networking:</strong> Connect with Mastercard professionals and ask career-related questions</span>
+                    </li>
+                  </ul>
+                </div>
 
                 <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
                   <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base">
                     <span className="text-xs uppercase tracking-wide text-purple-200/80">Date</span>
-                    <span className="text-white font-semibold">November 28</span>
+                    <span className="text-white font-semibold">November 28, 2025</span>
                   </div>
                   <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base">
                     <span className="text-xs uppercase tracking-wide text-purple-200/80">Who</span>
@@ -86,7 +104,7 @@ export default function BoltConnectPage() {
                   </div>
                   <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base">
                     <span className="text-xs uppercase tracking-wide text-purple-200/80">Next Step</span>
-                    <span className="text-white font-semibold">Submit resume via link in bio</span>
+                    <span className="text-white font-semibold">Register via Instagram Bio Link</span>
                   </div>
                 </div>
 
@@ -96,6 +114,7 @@ export default function BoltConnectPage() {
                 <p>
                   As always, BOLT Connect takes networking beyond surface-level conversations. Expect facilitated table rotations, mini case prompts, and meaningful mentorship moments that help you sharpen your storytelling and career readiness.
                 </p>
+
               </div>
             </div>
 
@@ -103,16 +122,48 @@ export default function BoltConnectPage() {
               <EventGallery photos={photos} instaURL="https://www.instagram.com/bolt.ubc/" />
               <div className="mt-8 rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 via-white/5 to-transparent p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/70">Partner Spotlight</p>
-                <div className="mt-4 flex items-center gap-4">
-                  <div className="relative h-24 w-24 overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-3 sm:p-4">
-                    <Image src="/partners/mastercard.webp" alt="Mastercard logo" fill className="object-contain" sizes="96px" />
+                <div className="mt-4 flex flex-col items-center gap-4">
+                  <div className="relative h-40 w-40 sm:h-32 sm:w-32">
+                    <Image src="/partners/mastercard.webp" alt="Mastercard logo" fill className="object-contain" sizes="192px" />
                   </div>
-                  <div className="space-y-1 text-sm sm:text-base text-white/80">
+                  <div className="text-left space-y-2 text-sm sm:text-base text-white/80">
                     <p className="font-semibold text-white">Mastercard</p>
                     <p>Meet data, engineering, and product leaders shaping the future of payments.</p>
                   </div>
                 </div>
               </div>
+
+              <div className="mt-8 rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Helpful Resources</h3>
+                  <p className="text-sm sm:text-base text-white/80 mb-4">
+                    Prepare for the event and learn more about Mastercard&rsquo;s recruitment process:
+                  </p>
+                  <div className="space-y-3">
+                    <a
+                      href="http://careers.mastercard.com/us/en/mastercards-hiring-process"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-3 text-sm sm:text-base text-white/90 hover:text-white transition-colors group"
+                    >
+                      <svg className="w-5 h-5 text-amber-400/90 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <span className="hover:underline">Mastercard&rsquo;s Hiring Process Overview</span>
+                    </a>
+                    <a
+                      href="https://careers.mastercard.com/us/en/interview-tips"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-3 text-sm sm:text-base text-white/90 hover:text-white transition-colors group"
+                    >
+                      <svg className="w-5 h-5 text-amber-400/90 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                      <span className="hover:underline">Tips for Interviewing at Mastercard</span>
+                    </a>
+                  </div>
+                </div>
+
             </aside>
           </div>
         </div>
