@@ -86,6 +86,10 @@ html {
   animation: scroll-right 20s linear infinite;
 }
 
+.scroll-right-continuous {
+  animation: scroll-right-continuous 30s linear infinite;
+}
+
 .scroll-left {
   animation: scroll-left 20s linear infinite;
 }
