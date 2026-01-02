@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { EventCard } from '@/components/EventCard'
-import { getEventConfig, getEventRoute, eventMonths } from '@/lib/eventConfig'
+import { getEventConfig, getEventRoute, getPortalEventRoute, eventMonths } from '@/lib/eventConfig'
 import type { Event } from '../types'
 
 interface EventsPanelProps {
@@ -18,7 +18,7 @@ export function EventsPanel({ events }: EventsPanelProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-7">
             {events.slice(0, 4).map((event) => {
               const config = getEventConfig(event.name, event.description || undefined)
-              const eventRoute = getEventRoute(event.name)
+              const eventRoute = getPortalEventRoute(event.name);
               const eventMonth = eventMonths[config.titleAccent]
 
               return (

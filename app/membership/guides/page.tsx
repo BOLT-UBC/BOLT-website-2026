@@ -25,6 +25,7 @@ export default function Page() {
     </div>
   );
 }
+
 {/* Each resource and hyperlink*/}
 const GUIDES = [
   { title: "Next.js App Router", href: "https://nextjs.org/docs/app",

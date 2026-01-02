@@ -56,7 +56,7 @@ export const eventMonths: Record<string, string> = {
   "First Byte": "October",
   "BOLT Connect": "November",
   "BOLT Circuit": "March",
-  "BOLT Bootcamp": "April"
+  "BOLT Bootcamp": "January"
 }
 
 export function getEventConfig(eventName: string, eventDescription?: string): EventConfig {
@@ -87,3 +87,12 @@ export function getEventRoute(eventName: string): string {
   return '/events'
 }
 
+export function getPortalEventRoute(eventName: string) {
+    switch (eventName) {
+      case 'BOLT Bootcamp':
+        return '/membership/events/bolt-bootcamp'
+      default:
+        // portal can reuse the same public routes for other events
+        return getEventRoute(eventName)
+    }
+  }
