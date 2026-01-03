@@ -56,7 +56,7 @@ export const eventMonths: Record<string, string> = {
   "First Byte": "October",
   "BOLT Connect": "November",
   "BOLT Circuit": "March",
-  "BOLT Bootcamp": "January"
+  "BOLT Bootcamp": "March"
 }
 
 export function getEventConfig(eventName: string, eventDescription?: string): EventConfig {
