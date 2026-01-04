@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { roleUtils } from '../RoleBadge'
 import type { UserProfile } from '../types'
+import { BootcampRegistrationsPanel } from './BootcampRegistrationsPanel'
 
 interface AdminPanelProps {
   adminUsers: UserProfile[]
@@ -19,6 +20,16 @@ interface AdminPanelProps {
   setBulkValue: (value: string) => void
   loadAdminData: () => void
   handleBulkUpdate: () => void
+  // Bootcamp registrations props
+  bootcampRegistrations: any[]
+  bootcampLoading: boolean
+  bootcampSearch: string
+  bootcampStatusFilter: string
+  setBootcampSearch: (value: string) => void
+  setBootcampStatusFilter: (value: string) => void
+  updateRegistrationStatus: (registrationId: string, status: 'pending' | 'confirmed' | 'cancelled') => Promise<void>
+  updateRegistrationNotes: (registrationId: string, notes: string) => Promise<void>
+  bulkUpdateRegistrationStatus: (registrationIds: string[], status: 'pending' | 'confirmed' | 'cancelled') => Promise<void>
 }
 
 export function AdminPanel({
@@ -37,14 +48,48 @@ export function AdminPanel({
   setBulkAction,
   setBulkValue,
   loadAdminData,
-  handleBulkUpdate
+  handleBulkUpdate,
+  bootcampRegistrations,
+  bootcampLoading,
+  bootcampSearch,
+  bootcampStatusFilter,
+  setBootcampSearch,
+  setBootcampStatusFilter,
+  updateRegistrationStatus,
+  updateRegistrationNotes,
+  bulkUpdateRegistrationStatus,
 }: AdminPanelProps) {
   const { getRoleDisplayName, getRoleColor } = roleUtils
+  const [activeTab, setActiveTab] = useState<'users' | 'bootcamp'>('users')
 
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+      {/* Tabs */}
+      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 flex gap-2">
+        <button
+          onClick={() => setActiveTab('users')}
+          className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === 'users'
+              ? 'bg-white/20 text-white'
+              : 'text-white/70 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          User Management
+        </button>
+        <button
+          onClick={() => setActiveTab('bootcamp')}
+          className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === 'bootcamp'
+              ? 'bg-white/20 text-white'
+              : 'text-white/70 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          Bootcamp Registrations
+        </button>
+      </div>
+
+      {activeTab === 'users' && (
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
         <h2 className="text-2xl font-bold text-white mb-4">User Management</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -218,7 +263,22 @@ export function AdminPanel({
             </tbody>
           </table>
         </div>
-      </div>
+        </div>
+      )}
+
+      {activeTab === 'bootcamp' && (
+        <BootcampRegistrationsPanel
+          registrations={bootcampRegistrations}
+          loading={bootcampLoading}
+          search={bootcampSearch}
+          statusFilter={bootcampStatusFilter}
+          setSearch={setBootcampSearch}
+          setStatusFilter={setBootcampStatusFilter}
+          onUpdateStatus={updateRegistrationStatus}
+          onUpdateNotes={updateRegistrationNotes}
+          onBulkUpdateStatus={bulkUpdateRegistrationStatus}
+        />
+      )}
     </div>
   )
 }

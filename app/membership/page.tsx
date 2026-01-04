@@ -178,6 +178,15 @@ export default function MembershipPortal() {
               setBulkValue={adminData.setBulkValue}
               loadAdminData={adminData.loadAdminData}
               handleBulkUpdate={adminData.handleBulkUpdate}
+              bootcampRegistrations={adminData.bootcampRegistrations}
+              bootcampLoading={adminData.bootcampLoading}
+              bootcampSearch={adminData.bootcampSearch}
+              bootcampStatusFilter={adminData.bootcampStatusFilter}
+              setBootcampSearch={adminData.setBootcampSearch}
+              setBootcampStatusFilter={adminData.setBootcampStatusFilter}
+              updateRegistrationStatus={adminData.updateRegistrationStatus}
+              updateRegistrationNotes={adminData.updateRegistrationNotes}
+              bulkUpdateRegistrationStatus={adminData.bulkUpdateRegistrationStatus}
             />
           )
         }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "components/Navbar";
 import Footer from "components/Footer";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 const BOOTCAMP_EVENT_ID = "2d144452-6cb2-44e3-8cf3-5af2ecf46058";
 
@@ -11,21 +12,23 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
-function withTimeout<T>(p: Promise<T>, ms = 9000): Promise<T> {
-  return Promise.race([
-    p,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error("Request timed out")), ms)
-    ),
-  ]);
-}
+type FormStep = "form" | "review" | "status";
 
 export default function BoltBootcampRegistrationPage() {
+  const router = useRouter();
   useEffect(() => window.scrollTo(0, 0), []);
 
+  const [currentStep, setCurrentStep] = useState<FormStep>("form");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState<string>("");
+  const [existingRegistration, setExistingRegistration] = useState<{
+    id: string
+    status: string
+    registered_at: string
+    notes: string | null
+  } | null>(null);
+  const [checkingStatus, setCheckingStatus] = useState(true);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -35,13 +38,56 @@ export default function BoltBootcampRegistrationPage() {
     notes: "",
   });
 
+  // Check if user already registered
+  useEffect(() => {
+    const checkExistingRegistration = async () => {
+      try {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const user = sessionData?.session?.user;
+
+        if (!user) {
+          setCheckingStatus(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("event_registrations")
+          .select("*")
+          .eq("event_id", BOOTCAMP_EVENT_ID)
+          .eq("user_id", user.id)
+          .single();
+
+        if (data && !error) {
+          setExistingRegistration(data);
+          setCurrentStep("status");
+        }
+      } catch {
+        // User not registered yet
+      } finally {
+        setCheckingStatus(false);
+      }
+    };
+
+    checkExistingRegistration();
+  }, []);
+
   const canSubmit =
     form.fullName.trim().length > 0 &&
     isValidEmail(form.email) &&
     form.major.trim().length > 0;
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const handleReview = () => {
+    if (canSubmit) {
+      setCurrentStep("review");
+    }
+  };
+
+  const handleBackToForm = () => {
+    setCurrentStep("form");
+  };
+
+  async function handleSubmit(e?: React.FormEvent) {
+    if (e) e.preventDefault();
     if (!canSubmit || isSubmitting) return;
 
     setStatus("idle");
@@ -49,7 +95,6 @@ export default function BoltBootcampRegistrationPage() {
     setIsSubmitting(true);
 
     try {
-      
       const { data: sessionData, error: sessionErr } =
         await supabase.auth.getSession();
       if (sessionErr) throw sessionErr;
@@ -61,47 +106,244 @@ export default function BoltBootcampRegistrationPage() {
         return;
       }
 
-    
-      const notesValue = form.notes.trim().length ? form.notes.trim() : null;
-
       const payload = {
         event_id: BOOTCAMP_EVENT_ID,
         user_id: user.id,
         status: "pending",
-        notes: notesValue,
+        notes: form.notes.trim() || null,
       };
 
-
-      const op = supabase
+      const { error } = await supabase
         .from("event_registrations")
         .upsert(payload, { onConflict: "event_id,user_id" });
-
-      const { error } = await withTimeout(op, 9000); // don't remove line 80, 81
       if (error) throw error;
 
       setStatus("success");
       setMessage("Successfully registered");
+      setCurrentStep("status");
 
-      setForm({
-        fullName: "",
-        email: "",
-        major: "",
-        graduationYear: "",
-        notes: "",
-      });
-    } catch (err: any) {
-      console.error("[bootcamp registration] submit failed:", err);
+      // Fetch the registration to show status
+      const { data: regData } = await supabase
+        .from("event_registrations")
+        .select("*")
+        .eq("event_id", BOOTCAMP_EVENT_ID)
+        .eq("user_id", user.id)
+        .single();
+
+      if (regData) {
+        setExistingRegistration(regData);
+      }
+      } catch (err: unknown) {
+        // eslint-disable-next-line no-console
+        console.error("[bootcamp registration] submit failed:", err);
       setStatus("error");
+      const errorMessage = err instanceof Error ? err.message : "Unknown error"
       setMessage(
-        err?.message === "Request timed out"
+        errorMessage === "Request timed out"
           ? "Network timed out. Try again (or turn off VPN/adblock)."
-          : "Couldn’t submit right now. Please try again in a moment."
+          : "Couldn't submit right now. Please try again in a moment."
       );
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return "bg-green-500/20 text-green-200 border-green-400/30";
+      case "cancelled":
+        return "bg-red-500/20 text-red-200 border-red-400/30";
+      case "pending":
+      default:
+        return "bg-yellow-500/20 text-yellow-200 border-yellow-400/30";
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return "Confirmed";
+      case "cancelled":
+        return "Cancelled";
+      case "pending":
+      default:
+        return "Pending Review";
+    }
+  };
+
+  if (checkingStatus) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
+        <Navbar />
+        <div className="pt-28 pb-20 px-6">
+          <div className="max-w-xl mx-auto text-center text-white">
+            <div className="text-xl">Checking registration status...</div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Status page - user already registered
+  if (currentStep === "status" && existingRegistration) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
+        <Navbar />
+
+        <div className="pt-28 pb-20 px-6">
+          <div className="max-w-xl mx-auto">
+            <h1 className="font-inter text-3xl md:text-3xl font-bold text-white mb-6">
+              Registration Status
+            </h1>
+
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/30 shadow-xl p-6 md:p-8 space-y-6">
+              <div className="text-center">
+                <div
+                  className={`inline-block px-4 py-2 rounded-full border ${getStatusColor(
+                    existingRegistration.status
+                  )}`}
+                >
+                  <span className="font-semibold">
+                    {getStatusLabel(existingRegistration.status)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-white/80 text-sm font-medium mb-1">
+                    Registration Date
+                  </h3>
+                  <p className="text-white">
+                    {new Date(existingRegistration.registered_at).toLocaleDateString()}
+                  </p>
+                </div>
+
+                {existingRegistration.notes && (
+                  <div>
+                    <h3 className="text-white/80 text-sm font-medium mb-1">
+                      Notes
+                    </h3>
+                    <div className="bg-white/5 rounded-lg p-4 text-white whitespace-pre-wrap text-sm">
+                      {existingRegistration.notes}
+                    </div>
+                  </div>
+                )}
+
+                {existingRegistration.status === "pending" && (
+                  <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-4">
+                    <p className="text-yellow-200 text-sm">
+                      Your registration is pending review. We'll notify you once it's been processed.
+                    </p>
+                  </div>
+                )}
+
+                {existingRegistration.status === "confirmed" && (
+                  <div className="bg-green-500/10 border border-green-400/30 rounded-lg p-4">
+                    <p className="text-green-200 text-sm">
+                      Your registration has been confirmed! We'll send you more details soon.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => router.push("/membership")}
+                className="w-full px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors"
+              >
+                Back to Membership Portal
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <Footer />
+      </div>
+    );
+  }
+
+  // Review step
+  if (currentStep === "review") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
+        <Navbar />
+
+        <div className="pt-28 pb-20 px-6">
+          <div className="max-w-xl mx-auto">
+            <h1 className="font-inter text-3xl md:text-3xl font-bold text-white mb-3">
+              Review Your Registration
+            </h1>
+
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/30 shadow-xl p-6 md:p-8 space-y-4 mb-4">
+              <div>
+                <h3 className="text-white/80 text-sm font-medium mb-1">Full Name</h3>
+                <p className="text-white">{form.fullName}</p>
+              </div>
+
+              <div>
+                <h3 className="text-white/80 text-sm font-medium mb-1">Email</h3>
+                <p className="text-white">{form.email}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-white/80 text-sm font-medium mb-1">Major</h3>
+                  <p className="text-white">{form.major}</p>
+                </div>
+                <div>
+                  <h3 className="text-white/80 text-sm font-medium mb-1">Graduation Year</h3>
+                  <p className="text-white">{form.graduationYear || "Not specified"}</p>
+                </div>
+              </div>
+
+              {form.notes && (
+                <div>
+                  <h3 className="text-white/80 text-sm font-medium mb-1">
+                    Notes
+                  </h3>
+                  <p className="text-white whitespace-pre-wrap">{form.notes}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={handleBackToForm}
+                className="flex-1 px-6 py-3 bg-white/10 text-white rounded-lg font-medium hover:bg-white/20 transition-colors"
+              >
+                Back to Edit
+              </button>
+              <button
+                onClick={() => handleSubmit()}
+                disabled={isSubmitting}
+                className="flex-1 px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? "Submitting..." : "Submit Registration"}
+              </button>
+            </div>
+
+            {status !== "idle" && (
+              <div
+                className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
+                  status === "success"
+                    ? "border-green-200/40 bg-green-200/10 text-green-100"
+                    : "border-red-200/40 bg-red-200/10 text-red-100"
+                }`}
+              >
+                {message}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <Footer />
+      </div>
+    );
+  }
+
+  // Form step
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
       <Navbar />
@@ -113,7 +355,10 @@ export default function BoltBootcampRegistrationPage() {
           </h1>
 
           <form
-            onSubmit={handleSubmit}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleReview();
+            }}
             className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/30 shadow-xl p-6 md:p-8 space-y-4"
           >
             <div>
@@ -188,18 +433,14 @@ export default function BoltBootcampRegistrationPage() {
                 onChange={(e) =>
                   setForm((p) => ({ ...p, notes: e.target.value }))
                 }
-                placeholder="Anything you'd like us to know? Mention it here!"
+                placeholder="Anything else you would like to let us know?"
+                rows={3}
               />
             </div>
 
-            {status !== "idle" && (
-              <div
-                className={`rounded-xl border px-4 py-3 text-sm ${
-                  status === "success"
-                    ? "border-green-200/40 bg-green-200/10 text-green-100"
-                    : "border-red-200/40 bg-red-200/10 text-red-100"
-                }`}
-              >
+
+            {status === "error" && (
+              <div className="rounded-xl border border-red-200/40 bg-red-200/10 px-4 py-3 text-sm text-red-100">
                 {message}
               </div>
             )}
@@ -209,7 +450,7 @@ export default function BoltBootcampRegistrationPage() {
               disabled={!canSubmit || isSubmitting}
               className="w-full px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors disabled:opacity-90 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? "Submitting..." : "Register"}
+              Review Registration
             </button>
           </form>
         </div>
