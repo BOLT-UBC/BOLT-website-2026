@@ -79,12 +79,7 @@ export default function MembershipPortal() {
   }
 
   const handleUpdateProfile = async () => {
-    try {
-      await profileManagement.handleUpdateProfile(setProfile)
-    } catch (error) {
-      // Error is handled in ProfilePanel
-      throw error
-    }
+    await profileManagement.handleUpdateProfile(setProfile)
   }
 
   if (loading) {
@@ -195,7 +190,7 @@ export default function MembershipPortal() {
 
       case 'resources':
         if (adminData.getEffectiveRole() !== 'non_member') {
-          return <ResourcesPanel />
+          return <ResourcesPanel userRole={profile?.role} />
         }
         return null
 

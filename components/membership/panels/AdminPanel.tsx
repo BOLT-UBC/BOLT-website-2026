@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { roleUtils } from '../RoleBadge'
 import type { UserProfile } from '../types'
 import { BootcampRegistrationsPanel } from './BootcampRegistrationsPanel'
+import { ResourcesManagementPanel } from './ResourcesManagementPanel'
 
 interface AdminPanelProps {
   adminUsers: UserProfile[]
@@ -60,7 +61,7 @@ export function AdminPanel({
   bulkUpdateRegistrationStatus,
 }: AdminPanelProps) {
   const { getRoleDisplayName, getRoleColor } = roleUtils
-  const [activeTab, setActiveTab] = useState<'users' | 'bootcamp'>('users')
+  const [activeTab, setActiveTab] = useState<'users' | 'bootcamp' | 'resources'>('users')
 
   return (
     <div className="space-y-6">
@@ -85,6 +86,16 @@ export function AdminPanel({
           }`}
         >
           Bootcamp Registrations
+        </button>
+        <button
+          onClick={() => setActiveTab('resources')}
+          className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === 'resources'
+              ? 'bg-white/20 text-white'
+              : 'text-white/70 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          Resources
         </button>
       </div>
 
@@ -278,6 +289,10 @@ export function AdminPanel({
           onUpdateNotes={updateRegistrationNotes}
           onBulkUpdateStatus={bulkUpdateRegistrationStatus}
         />
+      )}
+
+      {activeTab === 'resources' && (
+        <ResourcesManagementPanel />
       )}
     </div>
   )

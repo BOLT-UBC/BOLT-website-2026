@@ -11,10 +11,20 @@ interface HomePanelProps {
   onSwitchTab?: (tab: string) => void
 }
 
+interface Resource {
+  id: string
+  title: string
+  description: string | null
+  link: string
+  display_order: number
+}
+
 export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [loadingAnnouncements, setLoadingAnnouncements] = useState(true)
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null)
+  const [resources, setResources] = useState<Resource[]>([])
+  const [loadingResources, setLoadingResources] = useState(true)
 
   useEffect(() => {
     const loadAnnouncements = async () => {
@@ -39,6 +49,25 @@ export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
     }
 
     loadAnnouncements()
+  }, [])
+
+  useEffect(() => {
+    const loadResources = async () => {
+      try {
+        const response = await fetch('/api/resources')
+        if (response.ok) {
+          const data = await response.json()
+          setResources(data.resources || [])
+        }
+      } catch (error) {
+        // Silently handle error
+        void error
+      } finally {
+        setLoadingResources(false)
+      }
+    }
+
+    loadResources()
   }, [])
 
   return (
@@ -165,13 +194,21 @@ export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
           </svg>
           <h2 className="text-2xl font-bold text-white">Resources</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="text-white font-medium">Previous Cases</div>
-          <div className="text-white font-medium">Assets & Logos</div>
-          <div className="text-white font-medium">Workshop Materials</div>
-          <div className="text-white font-medium">Tech Stack Guides</div>
-          <div className="text-white font-medium">Mastercard Interview & Case Study Tips</div>
-        </div>
+        {loadingResources ? (
+          <div className="text-center py-4 text-white/70 text-sm">Loading resources...</div>
+        ) : resources.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {resources.map((resource) => (
+              <div key={resource.id} className="text-white font-medium">
+                {resource.title}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-4 text-white/60 text-sm">
+            No resources available.
+          </div>
+        )}
       </div>
 
       {/* Announcement Modal */}
