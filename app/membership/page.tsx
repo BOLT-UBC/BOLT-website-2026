@@ -21,7 +21,8 @@ import {
   StatisticsPanel,
   AdminPanel,
   AccountPanel,
-  AnnouncementsPanel
+  AnnouncementsPanel,
+  ResourcesPanel
 } from '@/components/membership'
 
 export default function MembershipPortal() {
@@ -124,7 +125,7 @@ export default function MembershipPortal() {
   const renderActivePanel = () => {
     switch (activeTab) {
       case 'home':
-        return <HomePanel events={events} />
+        return <HomePanel events={events} onSwitchTab={setActiveTab} />
 
       case 'profile':
         return (
@@ -144,7 +145,7 @@ export default function MembershipPortal() {
         return <ResumePanel />
 
       case 'events':
-        return <EventsPanel events={events} />
+        return <EventsPanel events={events} userId={user?.id} />
 
       case 'announcements':
         if (adminData.getEffectiveRole() === 'admin' || adminData.getEffectiveRole() === 'executive_member') {
@@ -192,12 +193,29 @@ export default function MembershipPortal() {
         }
         return null
 
+      case 'resources':
+        if (adminData.getEffectiveRole() !== 'non_member') {
+          return <ResourcesPanel />
+        }
+        return null
+
       case 'account':
         return (
           <AccountPanel
             user={{ email: user.email || '', created_at: user.created_at }}
             profile={profile}
             setShowDeleteConfirm={setShowDeleteConfirm}
+            onLogout={async () => {
+              try {
+                await authService.signOut()
+                router.push('/')
+              } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to sign out:', error)
+                // Still redirect even if sign out fails
+                router.push('/')
+              }
+            }}
           />
         )
 

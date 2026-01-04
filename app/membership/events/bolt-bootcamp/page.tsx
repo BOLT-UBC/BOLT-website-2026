@@ -5,6 +5,8 @@ import Navbar from "components/Navbar";
 import Footer from "components/Footer";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { Timeline } from "@/components/membership/Timeline";
+import { useAuth } from "@/lib/useAuth";
 
 const BOOTCAMP_EVENT_ID = "2d144452-6cb2-44e3-8cf3-5af2ecf46058";
 
@@ -29,6 +31,7 @@ export default function BoltBootcampRegistrationPage() {
     notes: string | null
   } | null>(null);
   const [checkingStatus, setCheckingStatus] = useState(true);
+  const { user } = useAuth();
 
   const [form, setForm] = useState({
     fullName: "",
@@ -37,6 +40,7 @@ export default function BoltBootcampRegistrationPage() {
     graduationYear: "",
     notes: "",
   });
+
 
   // Check if user already registered
   useEffect(() => {
@@ -151,12 +155,24 @@ export default function BoltBootcampRegistrationPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "confirmed":
-        return "bg-green-500/20 text-green-200 border-green-400/30";
+        return "bg-green-500/10 border-green-400/30";
       case "cancelled":
-        return "bg-red-500/20 text-red-200 border-red-400/30";
+        return "bg-red-500/10 border-red-400/30";
       case "pending":
       default:
-        return "bg-yellow-500/20 text-yellow-200 border-yellow-400/30";
+        return "bg-yellow-500/10 border-yellow-400/30";
+    }
+  };
+
+  const getStatusTextColor = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return "text-green-200";
+      case "cancelled":
+        return "text-red-200";
+      case "pending":
+      default:
+        return "text-yellow-200";
     }
   };
 
@@ -172,12 +188,51 @@ export default function BoltBootcampRegistrationPage() {
     }
   };
 
+  const getTimelineEvents = () => {
+    // Hardcode all dates to TBA (null)
+    const events = [
+      {
+        label: 'Applications Open',
+        date: null,
+        isComplete: false,
+        isCurrent: false,
+      },
+      {
+        label: 'Application Deadline',
+        date: null,
+        isComplete: false,
+        isCurrent: false,
+      },
+      {
+        label: 'Decision Release',
+        date: null,
+        isComplete: false,
+        isCurrent: false,
+      },
+      {
+        label: 'Confirmation Due',
+        date: null,
+        isComplete: false,
+        isCurrent: false,
+      },
+      {
+        label: 'Event Day',
+        date: null,
+        isComplete: false,
+        isCurrent: false,
+      },
+    ]
+
+    return events
+  }
+
+
   if (checkingStatus) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
         <Navbar />
-        <div className="pt-28 pb-20 px-6">
-          <div className="max-w-xl mx-auto text-center text-white">
+        <div className="pt-28 pb-20 px-4 sm:px-6">
+          <div className="max-w-7xl mx-auto text-center text-white">
             <div className="text-xl">Checking registration status...</div>
           </div>
         </div>
@@ -192,69 +247,105 @@ export default function BoltBootcampRegistrationPage() {
       <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
         <Navbar />
 
-        <div className="pt-28 pb-20 px-6">
-          <div className="max-w-xl mx-auto">
-            <h1 className="font-inter text-3xl md:text-3xl font-bold text-white mb-6">
-              Registration Status
+        <div className="pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="font-inter text-3xl md:text-4xl font-bold text-white mb-8 text-center">
+              Timeline
             </h1>
 
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/30 shadow-xl p-6 md:p-8 space-y-6">
-              <div className="text-center">
-                <div
-                  className={`inline-block px-4 py-2 rounded-full border ${getStatusColor(
-                    existingRegistration.status
-                  )}`}
-                >
-                  <span className="font-semibold">
-                    {getStatusLabel(existingRegistration.status)}
-                  </span>
-                </div>
+            <div className="space-y-8">
+              {/* Timeline */}
+              <div>
+                <Timeline
+                  events={getTimelineEvents()}
+                />
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <h3 className="text-white/80 text-sm font-medium mb-1">
-                    Registration Date
-                  </h3>
-                  <p className="text-white">
-                    {new Date(existingRegistration.registered_at).toLocaleDateString()}
-                  </p>
-                </div>
-
-                {existingRegistration.notes && (
-                  <div>
-                    <h3 className="text-white/80 text-sm font-medium mb-1">
-                      Notes
-                    </h3>
-                    <div className="bg-white/5 rounded-lg p-4 text-white whitespace-pre-wrap text-sm">
-                      {existingRegistration.notes}
+                {existingRegistration.status === "pending" && (
+                  <div className={`${getStatusColor(existingRegistration.status)} rounded-xl p-6 border-2`}>
+                    <div className="text-center space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <span className={`${getStatusTextColor(existingRegistration.status)} font-medium`}>Application Status:</span>
+                        <span className={`${getStatusTextColor(existingRegistration.status)} font-semibold text-lg`}>{getStatusLabel(existingRegistration.status)}</span>
+                      </div>
+                      <p className={`${getStatusTextColor(existingRegistration.status)} text-sm`}>
+                        Your registration is pending review. Check back again at a later time.
+                      </p>
                     </div>
                   </div>
                 )}
 
-                {existingRegistration.status === "pending" && (
-                  <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-4">
-                    <p className="text-yellow-200 text-sm">
-                      Your registration is pending review. We'll notify you once it's been processed.
-                    </p>
+                {existingRegistration.status === "confirmed" && (
+                  <div className={`${getStatusColor(existingRegistration.status)} rounded-xl p-6 border-2`}>
+                    <div className="text-center space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <span className={`${getStatusTextColor(existingRegistration.status)} font-medium`}>Application Status:</span>
+                        <span className={`${getStatusTextColor(existingRegistration.status)} font-semibold text-lg`}>{getStatusLabel(existingRegistration.status)}</span>
+                      </div>
+                      <p className={`${getStatusTextColor(existingRegistration.status)} text-sm`}>
+                        Your registration has been confirmed! We'll send you more details soon.
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                {existingRegistration.status === "confirmed" && (
-                  <div className="bg-green-500/10 border border-green-400/30 rounded-lg p-4">
-                    <p className="text-green-200 text-sm">
-                      Your registration has been confirmed! We'll send you more details soon.
-                    </p>
+                {existingRegistration.status === "cancelled" && (
+                  <div className={`${getStatusColor(existingRegistration.status)} rounded-xl p-6 border-2`}>
+                    <div className="text-center space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <span className={`${getStatusTextColor(existingRegistration.status)} font-medium`}>Application Status:</span>
+                        <span className={`${getStatusTextColor(existingRegistration.status)} font-semibold text-lg`}>{getStatusLabel(existingRegistration.status)}</span>
+                      </div>
+                      <p className={`${getStatusTextColor(existingRegistration.status)} text-sm`}>
+                        Your registration has been cancelled.
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
 
-              <button
-                onClick={() => router.push("/membership")}
-                className="w-full px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors"
-              >
-                Back to Membership Portal
-              </button>
+              <div className="flex flex-col gap-4 items-center">
+                <button
+                  onClick={async () => {
+                    // Load user profile data to populate form
+                    if (user?.id) {
+                      try {
+                        const { data: profileData } = await supabase
+                          .from('profiles')
+                          .select('*')
+                          .eq('id', user.id)
+                          .single()
+
+                        if (profileData) {
+                          setForm({
+                            fullName: profileData.full_name || user.email || '',
+                            email: user.email || '',
+                            major: profileData.major || '',
+                            graduationYear: profileData.graduation_year?.toString() || '',
+                            notes: existingRegistration.notes || '',
+                          })
+                          setCurrentStep("form")
+                        }
+                      } catch {
+                        // If profile load fails, just go to form
+                        setCurrentStep("form")
+                      }
+                    } else {
+                      setCurrentStep("form")
+                    }
+                  }}
+                  className="text-white font-medium underline hover:no-underline"
+                >
+                  View Application
+                </button>
+                <button
+                  onClick={() => router.push("/membership")}
+                  className="px-4 py-2 bg-white text-purple-600 rounded-lg text-sm font-medium hover:bg-white/90 transition-colors"
+                >
+                  Back to Membership Portal
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -270,13 +361,13 @@ export default function BoltBootcampRegistrationPage() {
       <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
         <Navbar />
 
-        <div className="pt-28 pb-20 px-6">
-          <div className="max-w-xl mx-auto">
-            <h1 className="font-inter text-3xl md:text-3xl font-bold text-white mb-3">
+        <div className="pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="font-inter text-3xl md:text-4xl font-bold text-white mb-6 text-center">
               Review Your Registration
             </h1>
 
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/30 shadow-xl p-6 md:p-8 space-y-4 mb-4">
+            <div className="space-y-4 mb-6">
               <div>
                 <h3 className="text-white/80 text-sm font-medium mb-1">Full Name</h3>
                 <p className="text-white">{form.fullName}</p>
@@ -287,7 +378,7 @@ export default function BoltBootcampRegistrationPage() {
                 <p className="text-white">{form.email}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <h3 className="text-white/80 text-sm font-medium mb-1">Major</h3>
                   <p className="text-white">{form.major}</p>
@@ -348,26 +439,49 @@ export default function BoltBootcampRegistrationPage() {
     <div className="min-h-screen bg-gradient-to-b from-[#1a0b2e] via-[#614ea5] to-[#493b7b] px-6 py-10">
       <Navbar />
 
-      <div className="pt-28 pb-20 px-6">
-        <div className="max-w-xl mx-auto">
-          <h1 className="font-inter text-3xl md:text-3xl font-bold text-white mb-3">
-            BOLT Bootcamp Registration Form
+      <div className="pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="font-inter text-3xl md:text-4xl font-bold text-white mb-6 text-center">
+            {existingRegistration ? 'Your Application' : 'BOLT Bootcamp Registration Form'}
           </h1>
+
+          {existingRegistration && (
+            <div className="mb-6 text-center">
+              <button
+                onClick={() => setCurrentStep("status")}
+                className="text-white/70 hover:text-white text-sm underline"
+              >
+                ← Back to Status
+              </button>
+            </div>
+          )}
 
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleReview();
             }}
-            className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/30 shadow-xl p-6 md:p-8 space-y-4"
+            className="space-y-4"
           >
+            {existingRegistration && (
+              <div>
+                <label className="block text-white/80 text-sm font-medium mb-2">
+                  Registration Date
+                </label>
+                <p className="text-white px-4 py-3 border-white/20 rounded-lg">
+                  {new Date(existingRegistration.registered_at).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+
             <div>
               <label className="block text-white/80 text-sm font-medium mb-2">
                 Full Name *
               </label>
               <input
                 required
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                disabled={!!existingRegistration}
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                 value={form.fullName}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, fullName: e.target.value }))
@@ -383,7 +497,8 @@ export default function BoltBootcampRegistrationPage() {
               <input
                 required
                 type="email"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                disabled={!!existingRegistration}
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                 value={form.email}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, email: e.target.value }))
@@ -399,7 +514,8 @@ export default function BoltBootcampRegistrationPage() {
                 </label>
                 <input
                   required
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                  disabled={!!existingRegistration}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                   value={form.major}
                   onChange={(e) =>
                     setForm((p) => ({ ...p, major: e.target.value }))
@@ -413,7 +529,8 @@ export default function BoltBootcampRegistrationPage() {
                 </label>
                 <input
                   inputMode="numeric"
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                  disabled={!!existingRegistration}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                   value={form.graduationYear}
                   onChange={(e) =>
                     setForm((p) => ({ ...p, graduationYear: e.target.value }))
@@ -428,7 +545,8 @@ export default function BoltBootcampRegistrationPage() {
                 Notes
               </label>
               <textarea
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                disabled={!!existingRegistration}
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
                 value={form.notes}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, notes: e.target.value }))
@@ -438,20 +556,21 @@ export default function BoltBootcampRegistrationPage() {
               />
             </div>
 
-
             {status === "error" && (
               <div className="rounded-xl border border-red-200/40 bg-red-200/10 px-4 py-3 text-sm text-red-100">
                 {message}
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={!canSubmit || isSubmitting}
-              className="w-full px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors disabled:opacity-90 disabled:cursor-not-allowed"
-            >
-              Review Registration
-            </button>
+            {!existingRegistration && (
+              <button
+                type="submit"
+                disabled={!canSubmit || isSubmitting}
+                className="w-full px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors disabled:opacity-90 disabled:cursor-not-allowed"
+              >
+                Review Registration
+              </button>
+            )}
           </form>
         </div>
       </div>

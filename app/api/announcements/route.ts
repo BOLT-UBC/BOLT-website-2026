@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
 import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
 
 // GET - Fetch all announcements (public, ordered by pinned first, then by date)
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { data, error } = await supabase
+    // Use admin client to ensure profile join works properly
+    const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service role key not configured' },
+        { status: 500 }
+      )
+    }
+
+    // Fetch announcements with profile join
+    const { data: initialData, error } = await supabaseAdmin
       .from('announcements')
       .select(`
         *,
@@ -18,7 +27,36 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Error fetching announcements:', error)
+      return NextResponse.json(
+        { error: 'Failed to fetch announcements' },
+        { status: 500 }
+      )
+    }
+
+    // If join doesn't work, fetch profiles separately and merge
+    let data = initialData
+    if (data) {
+      // Check if profiles data is missing and fetch separately if needed
+      const announcementsWithMissingProfiles = data.filter(a => !a.profiles && a.created_by)
+
+      if (announcementsWithMissingProfiles.length > 0) {
+        const userIds = announcementsWithMissingProfiles.map(a => a.created_by).filter(Boolean) as string[]
+        const { data: profilesData } = await supabaseAdmin
+          .from('profiles')
+          .select('id, full_name, email')
+          .in('id', userIds)
+
+        if (profilesData) {
+          const profilesMap = new Map(profilesData.map(p => [p.id, { full_name: p.full_name, email: p.email }]))
+          data = data.map(announcement => ({
+            ...announcement,
+            profiles: announcement.profiles || (announcement.created_by ? profilesMap.get(announcement.created_by) || null : null)
+          }))
+        }
+      }
+    }
+
+    if (error) {
       return NextResponse.json(
         { error: 'Failed to fetch announcements' },
         { status: 500 }
@@ -29,8 +67,7 @@ export async function GET(request: NextRequest) {
       success: true,
       announcements: data || []
     })
-  } catch (error) {
-    console.error('API error:', error)
+  } catch {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
