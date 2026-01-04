@@ -67,11 +67,6 @@ const nextConfig = {
     ]
   },
 
-  // Environment variables validation
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
-
   // Disable x-powered-by header
   poweredByHeader: false,
 
