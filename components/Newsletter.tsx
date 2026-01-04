@@ -29,7 +29,6 @@ const Newsletter: React.FC = memo(() => {
     <section className="w-full py-16 md:py-16 flex items-center justify-center bg-gradient-to-r from-[#614ea5] to-[#493b7b]" id="Newsletter">
       <div className="max-w-6xl mx-auto px-6 sm:px-6 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
                     <div className="text-white text-left max-w-lg">
-                      <h2 className="font-inter text-sm font-normal mb-2 lowercase italic">Newsletter</h2>
                       <h1 className="font-inter text-2xl sm:text-3xl font-bold mb-4 md:mb-6 leading-tight">Stay Connected</h1>
                       <p className="font-inter text-sm leading-relaxed opacity-90">
                         Subscribe to our newsletter for exclusive updates on upcoming events, data analytics insights, workshops, and career opportunities in the tech industry.

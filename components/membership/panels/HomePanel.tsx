@@ -28,7 +28,7 @@ export function HomePanel({ events }: HomePanelProps) {
     if (name.includes('first byte')) return '/events/first-byte'
     if (name.includes('bolt connect')) return '/events/bolt-connect'
     if (name.includes('bolt circuit')) return '/events/bolt-circuit'
-    if (name.includes('bolt bootcamp')) return '/events/bolt-bootcamp'
+    if (name.includes('bolt bootcamp')) return '/membership/events/bolt-bootcamp'
     return '/events'
   }
 
