@@ -3,6 +3,7 @@ export type { UserRole } from './RoleBadge'
 export { Sidebar } from './Sidebar'
 export type { SidebarProfile, SidebarTeam, RoleView } from './Sidebar'
 export { DeleteAccountModal } from './DeleteAccountModal'
+export { Timeline } from './Timeline'
 
 // Types
 export type { UserProfile, Event, Team, AdminStats, EditForm, Announcement } from './types'
@@ -19,7 +20,9 @@ export { ResumePanel } from './panels/ResumePanel'
 export { EventsPanel } from './panels/EventsPanel'
 export { StatisticsPanel } from './panels/StatisticsPanel'
 export { AdminPanel } from './panels/AdminPanel'
+export { BootcampRegistrationsPanel } from './panels/BootcampRegistrationsPanel'
 export { AccountPanel } from './panels/AccountPanel'
 export { AnnouncementsPanel } from './panels/AnnouncementsPanel'
+export { ResourcesPanel } from './panels/ResourcesPanel'
 
 

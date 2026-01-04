@@ -2,6 +2,22 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { UserProfile, AdminStats } from '../types'
 
+interface BootcampRegistration {
+  id: string
+  status: 'pending' | 'confirmed' | 'cancelled'
+  registered_at: string
+  notes: string | null
+  profiles: {
+    id: string
+    email: string
+    full_name: string | null
+    graduation_year: number | null
+    major: string | null
+    phone: string | null
+    linkedin_url: string | null
+  } | null
+}
+
 export function useAdminData(profileRole: string | undefined, activeTab: string, roleView: string) {
   const [adminUsers, setAdminUsers] = useState<UserProfile[]>([])
   const [adminStats, setAdminStats] = useState<AdminStats | null>(null)
@@ -12,6 +28,12 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [bulkAction, setBulkAction] = useState('')
   const [bulkValue, setBulkValue] = useState('')
+
+  // Bootcamp registrations state
+  const [bootcampRegistrations, setBootcampRegistrations] = useState<BootcampRegistration[]>([])
+  const [bootcampLoading, setBootcampLoading] = useState(false)
+  const [bootcampSearch, setBootcampSearch] = useState('')
+  const [bootcampStatusFilter, setBootcampStatusFilter] = useState('')
 
   const getEffectiveRole = () => (profileRole === 'admin' ? roleView : (profileRole || 'non_member'))
 
@@ -175,9 +197,157 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
     }
   }, [activeTab, profileRole, roleView])
 
+  const loadBootcampRegistrations = async () => {
+    if (profileRole !== 'admin') return
+
+    setBootcampLoading(true)
+    try {
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+
+      if (!accessToken) {
+        console.error('[loadBootcampRegistrations] No access token available')
+        setBootcampRegistrations([])
+        return
+      }
+
+      const response = await fetch(
+        `/api/admin/bootcamp-registrations?search=${bootcampSearch}&status=${bootcampStatusFilter}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('[loadBootcampRegistrations] Failed to load registrations:', response.status, errorData)
+        setBootcampRegistrations([])
+      } else {
+        const data = await response.json()
+        setBootcampRegistrations(data.registrations || [])
+      }
+    } catch (error) {
+      console.error('[loadBootcampRegistrations] Error:', error)
+      setBootcampRegistrations([])
+    } finally {
+      setBootcampLoading(false)
+    }
+  }
+
+  const updateRegistrationStatus = async (registrationId: string, status: 'pending' | 'confirmed' | 'cancelled') => {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+
+      if (!accessToken) {
+        alert('Not authenticated')
+        return
+      }
+
+      const response = await fetch('/api/admin/bootcamp-registrations', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ registrationId, status }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        alert(`Failed to update status: ${errorData.error || 'Unknown error'}`)
+        return
+      }
+
+      // Reload registrations
+      await loadBootcampRegistrations()
+    } catch (error) {
+      console.error('[updateRegistrationStatus] Error:', error)
+      alert('Error updating registration status')
+    }
+  }
+
+  const updateRegistrationNotes = async (registrationId: string, notes: string) => {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+
+      if (!accessToken) {
+        alert('Not authenticated')
+        return
+      }
+
+      const response = await fetch('/api/admin/bootcamp-registrations', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ registrationId, notes }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        alert(`Failed to update notes: ${errorData.error || 'Unknown error'}`)
+        return
+      }
+
+      // Reload registrations
+      await loadBootcampRegistrations()
+    } catch (error) {
+      console.error('[updateRegistrationNotes] Error:', error)
+      alert('Error updating notes')
+    }
+  }
+
+  const bulkUpdateRegistrationStatus = async (registrationIds: string[], status: 'pending' | 'confirmed' | 'cancelled') => {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+
+      if (!accessToken) {
+        alert('Not authenticated')
+        return
+      }
+
+      const response = await fetch('/api/admin/bootcamp-registrations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ registrationIds, status }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        alert(`Failed to update registrations: ${errorData.error || 'Unknown error'}`)
+        return
+      }
+
+      const result = await response.json()
+      alert(`Successfully updated ${result.updated || registrationIds.length} registration(s)`)
+
+      // Reload registrations
+      await loadBootcampRegistrations()
+    } catch (error) {
+      console.error('[bulkUpdateRegistrationStatus] Error:', error)
+      alert('Error updating registrations')
+    }
+  }
+
   useEffect(() => {
     loadStatistics()
   }, [activeTab, profileRole, roleView])
+
+  useEffect(() => {
+    if (activeTab === 'admin' && getEffectiveRole() === 'admin') {
+      loadBootcampRegistrations()
+    }
+  }, [activeTab, profileRole, roleView, bootcampSearch, bootcampStatusFilter])
 
   return {
     adminUsers,
@@ -197,6 +367,17 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
     setBulkValue,
     loadAdminData,
     handleBulkUpdate,
-    getEffectiveRole
+    getEffectiveRole,
+    // Bootcamp registrations
+    bootcampRegistrations,
+    bootcampLoading,
+    bootcampSearch,
+    bootcampStatusFilter,
+    setBootcampSearch,
+    setBootcampStatusFilter,
+    loadBootcampRegistrations,
+    updateRegistrationStatus,
+    updateRegistrationNotes,
+    bulkUpdateRegistrationStatus,
   }
 }

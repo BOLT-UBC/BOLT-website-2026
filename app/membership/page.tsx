@@ -21,7 +21,8 @@ import {
   StatisticsPanel,
   AdminPanel,
   AccountPanel,
-  AnnouncementsPanel
+  AnnouncementsPanel,
+  ResourcesPanel
 } from '@/components/membership'
 
 export default function MembershipPortal() {
@@ -78,12 +79,7 @@ export default function MembershipPortal() {
   }
 
   const handleUpdateProfile = async () => {
-    try {
-      await profileManagement.handleUpdateProfile(setProfile)
-    } catch (error) {
-      // Error is handled in ProfilePanel
-      throw error
-    }
+    await profileManagement.handleUpdateProfile(setProfile)
   }
 
   if (loading) {
@@ -124,7 +120,7 @@ export default function MembershipPortal() {
   const renderActivePanel = () => {
     switch (activeTab) {
       case 'home':
-        return <HomePanel events={events} />
+        return <HomePanel events={events} onSwitchTab={setActiveTab} />
 
       case 'profile':
         return (
@@ -144,7 +140,7 @@ export default function MembershipPortal() {
         return <ResumePanel />
 
       case 'events':
-        return <EventsPanel events={events} />
+        return <EventsPanel events={events} userId={user?.id} />
 
       case 'announcements':
         if (adminData.getEffectiveRole() === 'admin' || adminData.getEffectiveRole() === 'executive_member') {
@@ -178,8 +174,23 @@ export default function MembershipPortal() {
               setBulkValue={adminData.setBulkValue}
               loadAdminData={adminData.loadAdminData}
               handleBulkUpdate={adminData.handleBulkUpdate}
+              bootcampRegistrations={adminData.bootcampRegistrations}
+              bootcampLoading={adminData.bootcampLoading}
+              bootcampSearch={adminData.bootcampSearch}
+              bootcampStatusFilter={adminData.bootcampStatusFilter}
+              setBootcampSearch={adminData.setBootcampSearch}
+              setBootcampStatusFilter={adminData.setBootcampStatusFilter}
+              updateRegistrationStatus={adminData.updateRegistrationStatus}
+              updateRegistrationNotes={adminData.updateRegistrationNotes}
+              bulkUpdateRegistrationStatus={adminData.bulkUpdateRegistrationStatus}
             />
           )
+        }
+        return null
+
+      case 'resources':
+        if (adminData.getEffectiveRole() !== 'non_member') {
+          return <ResourcesPanel userRole={profile?.role} />
         }
         return null
 
@@ -189,6 +200,17 @@ export default function MembershipPortal() {
             user={{ email: user.email || '', created_at: user.created_at }}
             profile={profile}
             setShowDeleteConfirm={setShowDeleteConfirm}
+            onLogout={async () => {
+              try {
+                await authService.signOut()
+                router.push('/')
+              } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to sign out:', error)
+                // Still redirect even if sign out fails
+                router.push('/')
+              }
+            }}
           />
         )
 

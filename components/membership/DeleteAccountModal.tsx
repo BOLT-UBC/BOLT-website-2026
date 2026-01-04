@@ -22,7 +22,7 @@ export function DeleteAccountModal({
       <div className="bg-white rounded-2xl p-8 max-w-md w-full">
         <h3 className="text-2xl font-bold text-gray-900 mb-4">Delete Account</h3>
         <p className="text-gray-600 mb-6">
-          This action cannot be undone. This will permanently delete your account and remove all your data.
+          Are you sure? Once you delete your account, there is no going back. Please be certain.
         </p>
         <div className="space-y-4">
           <div>

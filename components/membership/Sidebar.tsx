@@ -1,7 +1,5 @@
 import React from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { authService } from '@/lib/auth'
 import { RoleBadge, UserRole } from './RoleBadge'
 
 export interface SidebarTeam { id: string; name: string; }
@@ -33,22 +31,19 @@ export function Sidebar({
   roleView: RoleView
   setRoleView: React.Dispatch<React.SetStateAction<RoleView>>
 }) {
-  const router = useRouter()
   const effectiveRole: RoleView = profile?.role === 'admin' ? roleView : (profile?.role || 'non_member')
 
-  const handleLogout = async () => {
-    try {
-      await authService.signOut()
-      router.push('/')
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to sign out:', error)
-      // Still redirect even if sign out fails
-      router.push('/')
-    }
+  const tabs: { id: string; label: string; icon: React.ReactNode }[] = []
+
+  // Add admin tab first if user is admin
+  if (effectiveRole === 'admin') {
+    tabs.push({ id: 'admin', label: 'Admin', icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+    ) })
   }
 
-  const tabs: { id: string; label: string; icon: React.ReactNode }[] = [
+  // Add regular tabs
+  tabs.push(
     { id: 'home', label: 'Home', icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
     ) },
@@ -60,12 +55,13 @@ export function Sidebar({
     ) },
     { id: 'events', label: 'Events', icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-    ) },
-  ]
+    ) }
+  )
 
-  if (effectiveRole === 'admin') {
-    tabs.push({ id: 'admin', label: 'Admin', icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+  // Add Resources tab for all users except non_members
+  if (effectiveRole !== 'non_member') {
+    tabs.push({ id: 'resources', label: 'Resources', icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
     ) })
   }
 
@@ -105,7 +101,7 @@ export function Sidebar({
       </div>
 
       {profile?.role === 'admin' && (
-        <div className="mt-3 p-2 bg-white/5 rounded-lg border border-white/10">
+        <div className="mt-3 p-2">
           <div className="flex items-center justify-between">
             <span className="text-white/70 text-xs font-medium">View as:</span>
             <select
@@ -137,17 +133,6 @@ export function Sidebar({
         ))}
       </div>
 
-      <div className="mt-6 pt-4 border-t border-white/20">
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors text-white/70 hover:bg-red-500/20 hover:text-red-200"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          <span className="font-medium text-sm">Logout</span>
-        </button>
-      </div>
     </div>
   )
 }
