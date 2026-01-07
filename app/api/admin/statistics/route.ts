@@ -66,6 +66,12 @@ export async function GET(request: NextRequest) {
       .select('*', { count: 'exact', head: true })
       .not('resume_url', 'is', null)
 
+    const { data: dateData } = await supabaseAdmin
+      .from('profiles')
+      .select('created_at')
+    
+    const createdAt = dateData?.map(row => new Date(row.created_at).getTime()).sort((a, b) => a - b) || []
+
     return NextResponse.json({
       totalUsers: totalUsers || 0,
       roleDistribution,
@@ -74,7 +80,8 @@ export async function GET(request: NextRequest) {
       completeProfiles: completeProfiles?.length || 0,
       usersWithResumes: usersWithResumes || 0,
       profileCompletionRate: totalUsers ? Math.round((completeProfiles?.length || 0) / totalUsers * 100) : 0,
-      resumeUploadRate: totalUsers ? Math.round((usersWithResumes || 0) / totalUsers * 100) : 0
+      resumeUploadRate: totalUsers ? Math.round((usersWithResumes || 0) / totalUsers * 100) : 0,
+      createdAt
     })
 
   } catch (error) {

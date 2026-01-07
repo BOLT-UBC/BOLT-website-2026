@@ -1,6 +1,7 @@
 import React from 'react'
 import { roleUtils } from '../RoleBadge'
 import type { UserProfile, AdminStats } from '../types'
+import { RolePieChart, RegistrationGraph } from '../Chart'
 
 interface StatisticsPanelProps {
   adminStats: AdminStats | null
@@ -8,6 +9,7 @@ interface StatisticsPanelProps {
 }
 
 export function StatisticsPanel({ adminStats, adminLoading }: StatisticsPanelProps) {
+
   return (
     <div className="space-y-6">
       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
@@ -54,6 +56,20 @@ export function StatisticsPanel({ adminStats, adminLoading }: StatisticsPanelPro
                 <div className="text-white text-2xl font-bold">{count as number}</div>
               </div>
             ))}
+          </div>
+        )}
+
+        {adminStats && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div className="h-[400px] bg-white/5 rounded-2xl p-6 border border-white/10">
+              <h3 className="text-white font-medium mb-4">User Distribution</h3>
+              <RolePieChart distribution={adminStats.roleDistribution || {}} />
+            </div>
+
+            <div className="h-[400px] bg-white/5 rounded-2xl p-6 border border-white/10">
+              <h3 className="text-white font-medium mb-4">Timeline</h3>
+              <RegistrationGraph createdAt={adminStats.createdAt || []} />
+            </div>
           </div>
         )}
       </div>

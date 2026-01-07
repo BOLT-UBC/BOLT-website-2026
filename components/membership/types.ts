@@ -47,6 +47,7 @@ export interface AdminStats {
   usersWithResumes: number
   profileCompletionRate: number
   resumeUploadRate: number
+  createdAt: number[]
 }
 
 export interface EditForm {
