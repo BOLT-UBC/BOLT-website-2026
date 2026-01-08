@@ -33,7 +33,6 @@ export function RolePieChart({ distribution }: RolePieChartProps) {
           dataKey="value"
           nameKey="name"
           isAnimationActive={true}
-          animationDuration={300}
           labelLine={{ stroke: 'rgba(255,255,255,0.5)', strokeWidth: 1 }}
           label={({ name, value }) => `${name}: ${value}`}
         >
@@ -117,7 +116,6 @@ export function RegistrationGraph({ createdAt, maxMonthlySignups, lineColor }: R
             strokeWidth={3} 
             dot={{ r: 4, fill: lineColor, strokeWidth: 0 }}
             activeDot={{ r: 6, stroke: '#1e293b', strokeWidth: 2 }}
-            animationDuration={300}
           />
         </LineChart>
     </ResponsiveContainer>
