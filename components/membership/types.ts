@@ -40,13 +40,14 @@ export interface Team {
 
 export interface AdminStats {
   totalUsers: number
-  roleDistribution: Record<string, number>
+  roleRegistrations: Record<string, number>
   newSignups: number
   recentSignups: number
   completeProfiles: number
   usersWithResumes: number
   profileCompletionRate: number
   resumeUploadRate: number
+  maxMonthlySignups: number
 }
 
 export interface EditForm {

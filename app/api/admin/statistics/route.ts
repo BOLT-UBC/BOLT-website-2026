@@ -23,16 +23,26 @@ export async function GET(request: NextRequest) {
       .from('profiles')
       .select('*', { count: 'exact', head: true })
 
-    // Get role distribution
+    // Get roles and creation dates
     const { data: roleStats } = await supabaseAdmin
       .from('profiles')
-      .select('role')
+      .select('role, created_at')
       .not('role', 'is', null)
 
-    const roleDistribution = roleStats?.reduce((acc: Record<string, number>, user: { role: string }) => {
-      acc[user.role] = (acc[user.role] || 0) + 1
-      return acc
-    }, {}) || {}
+    const roleRegistrations = roleStats?.map(row => ({
+      role: row.role,
+      createdAt: new Date(row.created_at).getTime()
+    })) || []
+
+    const monthlyCounts: Record<string, number> = {}
+    roleRegistrations.forEach(reg => {
+      const date = new Date(reg.createdAt)
+      const monthKey = `${date.getFullYear()}-${date.getMonth()}` // Unique key per month/year
+      monthlyCounts[monthKey] = (monthlyCounts[monthKey] || 0) + 1
+    })
+
+    // Find the highest count in any single month (default to 5 so chart isn't empty)
+    const maxMonthlySignups = Math.max(...Object.values(monthlyCounts), 5)
 
     // Get new signups in the last 30 days
     const thirtyDaysAgo = new Date()
@@ -68,13 +78,14 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       totalUsers: totalUsers || 0,
-      roleDistribution,
+      roleRegistrations,
       newSignups: newSignups || 0,
       recentSignups: recentSignups || 0,
       completeProfiles: completeProfiles?.length || 0,
       usersWithResumes: usersWithResumes || 0,
       profileCompletionRate: totalUsers ? Math.round((completeProfiles?.length || 0) / totalUsers * 100) : 0,
-      resumeUploadRate: totalUsers ? Math.round((usersWithResumes || 0) / totalUsers * 100) : 0
+      resumeUploadRate: totalUsers ? Math.round((usersWithResumes || 0) / totalUsers * 100) : 0,
+      maxMonthlySignups
     })
 
   } catch (error) {
