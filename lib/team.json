@@ -193,12 +193,6 @@
       "team_name": "Marketing",
       "executives": [
         {
-          "name": "Leo Shang",
-          "title": "Marketing Executive",
-          "profilepic": "LeoShang.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
-        },
-        {
           "name": "Jove Wan",
           "title": "Marketing Executive",
           "profilepic": "JoveWan.webp",
@@ -260,40 +254,6 @@
           "name": "Jacob O'Callaghan",
           "title": "Club Ops Executive",
           "profilepic": "JacobOCallaghan.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
-        }
-      ]
-    },
-    {
-      "team_name": "Finance",
-      "executives": [
-        {
-          "name": "Andrew Andrew",
-          "title": "Finance Executive",
-          "profilepic": "AndrewAndrew.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
-        }
-      ]
-    },
-    {
-      "team_name": "1st/2nd Year Representatives",
-      "executives": [
-        {
-          "name": "Natania Huang",
-          "title": "First Year Rep (CR)",
-          "profilepic": "NataniaHuang.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
-        },
-        {
-          "name": "Julianna Huang",
-          "title": "First Year Rep",
-          "profilepic": "JuliannaHuang.webp",
-          "linkedin": "https://linkedin.com/in/placeholder"
-        },
-        {
-          "name": "Carys Fong",
-          "title": "First Year Rep",
-          "profilepic": "CarysFong.webp",
           "linkedin": "https://linkedin.com/in/placeholder"
         }
       ]
@@ -463,5 +423,4 @@
       }
     ]
   }
- }
-
+}
