@@ -236,10 +236,10 @@ export default function BoltBootcampRegistrationPage() {
         const isComplete = m.is_complete;
         const previousComplete = index > 0 && timelineMilestones[index - 1].is_complete;
         const isCurrent = !isComplete && previousComplete;
-        
+
         return {
           label: m.milestone,
-          date: m.date,
+          date: m.date ? new Date(m.date) : null,
           isComplete: m.is_complete,
           isCurrent,
         };

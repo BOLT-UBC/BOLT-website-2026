@@ -157,7 +157,7 @@ export function DynamicEventForm({
   const renderField = (field: FormField) => {
     const value = formData[field.id]
     const error = errors[field.id]
-    const isDisabled = readOnly || (field.profileField && !!profile && !!value)
+    const isDisabled = !!(readOnly || (field.profileField && !!profile && !!value))
 
     const baseInputClass = `w-full px-4 py-3 bg-white/10 border rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent ${
       error ? 'border-red-400' : 'border-white/20'
