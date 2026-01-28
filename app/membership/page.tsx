@@ -30,6 +30,7 @@ export default function MembershipPortal() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState('home')
   const [roleView, setRoleView] = useState<RoleView>('admin')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   // Delete account state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -183,6 +184,7 @@ export default function MembershipPortal() {
               updateRegistrationStatus={adminData.updateRegistrationStatus}
               updateRegistrationNotes={adminData.updateRegistrationNotes}
               bulkUpdateRegistrationStatus={adminData.bulkUpdateRegistrationStatus}
+              updateApplicationResponses={adminData.updateApplicationResponses}
             />
           )
         }
@@ -223,32 +225,43 @@ export default function MembershipPortal() {
     <div className="min-h-screen bg-gradient-to-br from-[#1a0b2e] via-[#614ea5] to-[#493b7b]">
       <Navbar />
 
-      <div className="pt-20 px-6 sm:px-6 md:px-16 pb-16">
-        {/* Header */}
-        <div className="text-center mb-16 mt-8">
-          <h1 className="text-xl md:text-xl font-bold text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
-            Welcome to your BOLT membership dashboard
-          </h1>
+      <div className="flex relative" style={{ paddingTop: '80px' }}>
+        {/* Fixed Left Sidebar */}
+        <div className="fixed left-0 top-0 z-40">
+          <Sidebar
+            profile={sidebarProfile}
+            email={user.email || ''}
+            teams={teams}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            roleView={roleView}
+            setRoleView={setRoleView}
+            collapsed={!sidebarOpen}
+            onToggle={() => setSidebarOpen(!sidebarOpen)}
+          />
         </div>
 
-        {/* Main Layout - Sidebar + Content */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Sidebar */}
-          <div className="lg:w-1/4">
-            <Sidebar
-              profile={sidebarProfile}
-              email={user.email || ''}
-              teams={teams}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              roleView={roleView}
-              setRoleView={setRoleView}
-            />
-          </div>
+        {/* Main Content Area */}
+        <div
+          className="flex-1 transition-all duration-300"
+          style={{
+            marginLeft: sidebarOpen ? '256px' : '80px'
+          }}
+        >
+          <div className="min-h-[calc(100vh-80px)]">
+            <div className="px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-8">
+              {/* Header */}
+              <div className="text-center mb-12">
+                <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
+                  Welcome to your BOLT membership dashboard
+                </h1>
+              </div>
 
-          {/* Right Content Area */}
-          <div className="lg:w-3/4">
-            {renderActivePanel()}
+              {/* Content Panel */}
+              <div className="w-full">
+                {renderActivePanel()}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -261,8 +274,6 @@ export default function MembershipPortal() {
         onConfirm={handleDeleteAccount}
         onCancel={() => { setShowDeleteConfirm(false); setDeleteConfirmText('') }}
       />
-
-      <Footer />
     </div>
   )
 }

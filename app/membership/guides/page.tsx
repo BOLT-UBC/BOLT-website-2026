@@ -1,4 +1,3 @@
-// app/membership/guides/page.tsx
 import Link from "next/link";
 import { ResourceCard } from "@/components/membership/ResourceCard";
 
@@ -7,18 +6,22 @@ export default function Page() {
     <div className="min-h-screen bg-gradient-to-b from-[#2b1056] via-[#3c1563] to-[#120327] px-6 py-10">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.06)]">
-          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-[0_0_24px_rgba(255,255,255,0.5)]">   Tech Stack Guides </h1>
-          <p className="text-white/70 text-lg -mt-1"> Beginner-friendly guides with real-world applications </p>
+          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-[0_0_24px_rgba(255,255,255,0.5)]">Tech Stack Guides</h1>
+          <p className="text-white/70 text-lg -mt-1">Beginner-friendly guides with real-world applications</p>
         </div>
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.06)]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {GUIDES.map((g) => ( <ResourceCard key={g.title} {...g} /> ))}
+            {GUIDES.map((g) => (
+              <ResourceCard key={g.title} {...g} />
+            ))}
           </div>
             <div className="mt-6 flex items-center justify-between">
             <Link
               href="/membership"
               className="text-white/60 hover:text-white text-sm"
-            >   ← Back to Membership </Link>
+            >
+              ← Back to Membership
+            </Link>
           </div>
         </div>
       </div>
@@ -26,7 +29,7 @@ export default function Page() {
   );
 }
 
-{/* Each resource and hyperlink*/}
+// Each resource and hyperlink
 const GUIDES = [
   { title: "Next.js App Router", href: "https://nextjs.org/docs/app",
     desc: "Routing, layouts, server vs client components, data fetching, metadata, deployment." },

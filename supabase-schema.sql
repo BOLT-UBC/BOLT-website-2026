@@ -56,7 +56,29 @@ CREATE TABLE event_registrations (
     status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'cancelled')),
     registered_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     notes TEXT,
+    application_responses JSONB DEFAULT '{}',
     UNIQUE(event_id, user_id)
+);
+
+-- Create application_form_configs table (stores form structure per event)
+CREATE TABLE application_form_configs (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    event_id UUID REFERENCES events(id) ON DELETE CASCADE UNIQUE,
+    fields JSONB NOT NULL DEFAULT '[]',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create event_timeline table (flexible timeline milestones per event)
+CREATE TABLE event_timeline (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+    milestone VARCHAR(255) NOT NULL,
+    date TIMESTAMP WITH TIME ZONE,
+    is_complete BOOLEAN DEFAULT false,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Create partners table
@@ -103,6 +125,9 @@ CREATE INDEX idx_events_registration_open ON events(registration_open);
 CREATE INDEX idx_partners_tier ON partners(tier);
 CREATE INDEX idx_resume_uploads_user_id ON resume_uploads(user_id);
 CREATE INDEX idx_resume_uploads_active ON resume_uploads(is_active);
+CREATE INDEX idx_application_form_configs_event_id ON application_form_configs(event_id);
+CREATE INDEX idx_event_timeline_event_id ON event_timeline(event_id);
+CREATE INDEX idx_event_timeline_order ON event_timeline(display_order);
 
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -118,6 +143,8 @@ CREATE TRIGGER update_teams_updated_at BEFORE UPDATE ON teams FOR EACH ROW EXECU
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_events_updated_at BEFORE UPDATE ON events FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_partners_updated_at BEFORE UPDATE ON partners FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_application_form_configs_updated_at BEFORE UPDATE ON application_form_configs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_event_timeline_updated_at BEFORE UPDATE ON event_timeline FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Row Level Security (RLS) policies
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
@@ -127,6 +154,8 @@ ALTER TABLE event_registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE partners ENABLE ROW LEVEL SECURITY;
 ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE resume_uploads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE application_form_configs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_timeline ENABLE ROW LEVEL SECURITY;
 
 -- Profiles policies
 CREATE POLICY "Users can view all profiles" ON profiles FOR SELECT USING (true);
@@ -165,6 +194,14 @@ CREATE POLICY "Non-admin users can upload resume" ON resume_uploads FOR INSERT W
 CREATE POLICY "Users can update their own resume" ON resume_uploads FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "Users can delete their own resume" ON resume_uploads FOR DELETE USING (auth.uid() = user_id);
 CREATE POLICY "Admins can view all resumes" ON resume_uploads FOR SELECT USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
+
+-- Application form configs policies
+CREATE POLICY "Anyone can view form configs" ON application_form_configs FOR SELECT USING (true);
+CREATE POLICY "Admins can manage form configs" ON application_form_configs FOR ALL USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
+
+-- Event timeline policies
+CREATE POLICY "Anyone can view event timeline" ON event_timeline FOR SELECT USING (true);
+CREATE POLICY "Admins can manage event timeline" ON event_timeline FOR ALL USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
 
 -- Insert initial teams data (executive departments)
 INSERT INTO teams (name, description) VALUES

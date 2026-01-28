@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Navbar from "components/Navbar";
 import Footer from "components/Footer";
 import { supabase } from "@/lib/supabase";
@@ -16,6 +16,14 @@ function isValidEmail(email: string) {
 
 type FormStep = "form" | "review" | "status";
 
+interface TimelineMilestone {
+  id: string
+  milestone: string
+  date: string | null
+  is_complete: boolean
+  display_order: number
+}
+
 export default function BoltBootcampRegistrationPage() {
   const router = useRouter();
   useEffect(() => window.scrollTo(0, 0), []);
@@ -29,8 +37,10 @@ export default function BoltBootcampRegistrationPage() {
     status: string
     registered_at: string
     notes: string | null
+    application_responses?: Record<string, unknown>
   } | null>(null);
   const [checkingStatus, setCheckingStatus] = useState(true);
+  const [timelineMilestones, setTimelineMilestones] = useState<TimelineMilestone[]>([]);
   const { user } = useAuth();
 
   const [form, setForm] = useState({
@@ -41,6 +51,25 @@ export default function BoltBootcampRegistrationPage() {
     notes: "",
   });
 
+
+  // Load timeline milestones
+  const loadTimeline = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/admin/events/${BOOTCAMP_EVENT_ID}/timeline`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.milestones && data.milestones.length > 0) {
+          setTimelineMilestones(data.milestones);
+        }
+      }
+    } catch {
+      // Use default timeline if fetch fails
+    }
+  }, []);
+
+  useEffect(() => {
+    loadTimeline();
+  }, [loadTimeline]);
 
   // Check if user already registered
   useEffect(() => {
@@ -56,7 +85,7 @@ export default function BoltBootcampRegistrationPage() {
 
         const { data, error } = await supabase
           .from("event_registrations")
-          .select("*")
+          .select("*, application_responses")
           .eq("event_id", BOOTCAMP_EVENT_ID)
           .eq("user_id", user.id)
           .single();
@@ -110,11 +139,22 @@ export default function BoltBootcampRegistrationPage() {
         return;
       }
 
+      // Store custom responses alongside profile-linked data
+      const applicationResponses = {
+        notes: form.notes.trim() || null,
+        // Store a copy of form data for record-keeping
+        submitted_full_name: form.fullName,
+        submitted_email: form.email,
+        submitted_major: form.major,
+        submitted_graduation_year: form.graduationYear || null,
+      };
+
       const payload = {
         event_id: BOOTCAMP_EVENT_ID,
         user_id: user.id,
         status: "pending",
         notes: form.notes.trim() || null,
+        application_responses: applicationResponses,
       };
 
       const { error } = await supabase
@@ -189,8 +229,25 @@ export default function BoltBootcampRegistrationPage() {
   };
 
   const getTimelineEvents = () => {
-    // Hardcode all dates to TBA (null)
-    const events = [
+    // Use dynamic milestones if available, otherwise fall back to defaults
+    if (timelineMilestones.length > 0) {
+      return timelineMilestones.map((m, index) => {
+        // Determine if this milestone is current (most recent incomplete after a complete one)
+        const isComplete = m.is_complete;
+        const previousComplete = index > 0 && timelineMilestones[index - 1].is_complete;
+        const isCurrent = !isComplete && previousComplete;
+        
+        return {
+          label: m.milestone,
+          date: m.date,
+          isComplete: m.is_complete,
+          isCurrent,
+        };
+      });
+    }
+
+    // Default timeline if no milestones are configured
+    const defaultEvents = [
       {
         label: 'Applications Open',
         date: null,
@@ -221,9 +278,9 @@ export default function BoltBootcampRegistrationPage() {
         isComplete: false,
         isCurrent: false,
       },
-    ]
+    ];
 
-    return events
+    return defaultEvents;
   }
 
 

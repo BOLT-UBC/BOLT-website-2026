@@ -17,6 +17,30 @@ export const supabaseAdmin = supabaseServiceRoleKey
     })
   : null
 
+// Form field types for application form configuration
+export type FormFieldType = 'text' | 'email' | 'number' | 'textarea' | 'select' | 'checkbox' | 'date'
+
+export interface FormField {
+  id: string
+  label: string
+  type: FormFieldType
+  required: boolean
+  placeholder?: string
+  options?: string[] // For select fields
+  defaultValue?: string | number | boolean
+  order: number
+  profileField?: string // Maps to profile field (e.g., 'full_name', 'major', 'graduation_year')
+}
+
+export interface TimelineMilestone {
+  id: string
+  event_id: string
+  milestone: string
+  date: string | null
+  is_complete: boolean
+  display_order: number
+}
+
 // Database types
 export interface Database {
   public: {
@@ -158,6 +182,7 @@ export interface Database {
           status: 'pending' | 'confirmed' | 'cancelled'
           registered_at: string
           notes: string | null
+          application_responses: Record<string, unknown>
         }
         Insert: {
           id?: string
@@ -166,6 +191,7 @@ export interface Database {
           status?: 'pending' | 'confirmed' | 'cancelled'
           registered_at?: string
           notes?: string | null
+          application_responses?: Record<string, unknown>
         }
         Update: {
           id?: string
@@ -174,6 +200,62 @@ export interface Database {
           status?: 'pending' | 'confirmed' | 'cancelled'
           registered_at?: string
           notes?: string | null
+          application_responses?: Record<string, unknown>
+        }
+      }
+      application_form_configs: {
+        Row: {
+          id: string
+          event_id: string
+          fields: FormField[]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          fields: FormField[]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          event_id?: string
+          fields?: FormField[]
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      event_timeline: {
+        Row: {
+          id: string
+          event_id: string
+          milestone: string
+          date: string | null
+          is_complete: boolean
+          display_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          milestone: string
+          date?: string | null
+          is_complete?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          event_id?: string
+          milestone?: string
+          date?: string | null
+          is_complete?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
         }
       }
       partners: {
