@@ -7,6 +7,7 @@ interface BootcampRegistration {
   status: 'pending' | 'confirmed' | 'cancelled'
   registered_at: string
   notes: string | null
+  application_responses?: Record<string, unknown>
   profiles: {
     id: string
     email: string
@@ -339,6 +340,39 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
     }
   }
 
+  const updateApplicationResponses = async (registrationId: string, responses: Record<string, unknown>) => {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
+
+      if (!accessToken) {
+        alert('Not authenticated')
+        return
+      }
+
+      const response = await fetch('/api/admin/bootcamp-registrations', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ registrationId, application_responses: responses }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        alert(`Failed to update responses: ${errorData.error || 'Unknown error'}`)
+        return
+      }
+
+      // Reload registrations
+      await loadBootcampRegistrations()
+    } catch (error) {
+      console.error('[updateApplicationResponses] Error:', error)
+      alert('Error updating application responses')
+    }
+  }
+
   useEffect(() => {
     loadStatistics()
   }, [activeTab, profileRole, roleView])
@@ -379,5 +413,6 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
     updateRegistrationStatus,
     updateRegistrationNotes,
     bulkUpdateRegistrationStatus,
+    updateApplicationResponses,
   }
 }

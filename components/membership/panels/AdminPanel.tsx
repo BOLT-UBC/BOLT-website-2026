@@ -3,6 +3,8 @@ import { roleUtils } from '../RoleBadge'
 import type { UserProfile } from '../types'
 import { BootcampRegistrationsPanel } from './BootcampRegistrationsPanel'
 import { ResourcesManagementPanel } from './ResourcesManagementPanel'
+import { FormConfigPanel } from './FormConfigPanel'
+import { EventTimelinePanel } from './EventTimelinePanel'
 
 interface AdminPanelProps {
   adminUsers: UserProfile[]
@@ -31,6 +33,7 @@ interface AdminPanelProps {
   updateRegistrationStatus: (registrationId: string, status: 'pending' | 'confirmed' | 'cancelled') => Promise<void>
   updateRegistrationNotes: (registrationId: string, notes: string) => Promise<void>
   bulkUpdateRegistrationStatus: (registrationIds: string[], status: 'pending' | 'confirmed' | 'cancelled') => Promise<void>
+  updateApplicationResponses?: (registrationId: string, responses: Record<string, unknown>) => Promise<void>
 }
 
 export function AdminPanel({
@@ -59,17 +62,18 @@ export function AdminPanel({
   updateRegistrationStatus,
   updateRegistrationNotes,
   bulkUpdateRegistrationStatus,
+  updateApplicationResponses,
 }: AdminPanelProps) {
   const { getRoleDisplayName, getRoleColor } = roleUtils
-  const [activeTab, setActiveTab] = useState<'users' | 'bootcamp' | 'resources'>('users')
+  const [activeTab, setActiveTab] = useState<'users' | 'bootcamp' | 'resources' | 'forms' | 'timeline'>('users')
 
   return (
     <div className="space-y-6">
       {/* Tabs */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 flex gap-2">
+      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 flex flex-wrap gap-2">
         <button
           onClick={() => setActiveTab('users')}
-          className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+          className={`flex-1 min-w-[120px] px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === 'users'
               ? 'bg-white/20 text-white'
               : 'text-white/70 hover:text-white hover:bg-white/5'
@@ -79,17 +83,37 @@ export function AdminPanel({
         </button>
         <button
           onClick={() => setActiveTab('bootcamp')}
-          className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+          className={`flex-1 min-w-[120px] px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === 'bootcamp'
               ? 'bg-white/20 text-white'
               : 'text-white/70 hover:text-white hover:bg-white/5'
           }`}
         >
-          Bootcamp Registrations
+          Registrations
+        </button>
+        <button
+          onClick={() => setActiveTab('forms')}
+          className={`flex-1 min-w-[120px] px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === 'forms'
+              ? 'bg-white/20 text-white'
+              : 'text-white/70 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          Form Config
+        </button>
+        <button
+          onClick={() => setActiveTab('timeline')}
+          className={`flex-1 min-w-[120px] px-4 py-2 rounded-lg font-medium transition-colors ${
+            activeTab === 'timeline'
+              ? 'bg-white/20 text-white'
+              : 'text-white/70 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          Timeline
         </button>
         <button
           onClick={() => setActiveTab('resources')}
-          className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+          className={`flex-1 min-w-[120px] px-4 py-2 rounded-lg font-medium transition-colors ${
             activeTab === 'resources'
               ? 'bg-white/20 text-white'
               : 'text-white/70 hover:text-white hover:bg-white/5'
@@ -288,7 +312,16 @@ export function AdminPanel({
           onUpdateStatus={updateRegistrationStatus}
           onUpdateNotes={updateRegistrationNotes}
           onBulkUpdateStatus={bulkUpdateRegistrationStatus}
+          onUpdateApplicationResponses={updateApplicationResponses}
         />
+      )}
+
+      {activeTab === 'forms' && (
+        <FormConfigPanel />
+      )}
+
+      {activeTab === 'timeline' && (
+        <EventTimelinePanel />
       )}
 
       {activeTab === 'resources' && (

@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
         status,
         registered_at,
         notes,
+        application_responses,
         profiles:user_id (
           id,
           email,
@@ -103,7 +104,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const { registrationId, status, notes } = await request.json()
+    const { registrationId, status, notes, application_responses } = await request.json()
 
     if (!registrationId) {
       return NextResponse.json({ error: 'Registration ID is required' }, { status: 400 })
@@ -121,9 +122,10 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Build update object
-    const updates: { status?: string; notes?: string | null } = {}
+    const updates: { status?: string; notes?: string | null; application_responses?: Record<string, unknown> } = {}
     if (status) updates.status = status
     if (notes !== undefined) updates.notes = notes || null
+    if (application_responses !== undefined) updates.application_responses = application_responses || {}
 
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: 'No updates provided' }, { status: 400 })
@@ -140,6 +142,7 @@ export async function PATCH(request: NextRequest) {
         status,
         registered_at,
         notes,
+        application_responses,
         profiles:user_id (
           id,
           email,

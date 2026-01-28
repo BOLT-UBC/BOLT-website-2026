@@ -184,6 +184,7 @@ export default function MembershipPortal() {
               updateRegistrationStatus={adminData.updateRegistrationStatus}
               updateRegistrationNotes={adminData.updateRegistrationNotes}
               bulkUpdateRegistrationStatus={adminData.bulkUpdateRegistrationStatus}
+              updateApplicationResponses={adminData.updateApplicationResponses}
             />
           )
         }
