@@ -22,10 +22,4 @@ npm run build
 npm start
 ```
 
-## Environment Variables
-
-Make sure to set up the following environment variables in a `.env.local` file:
-
-- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
-- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key (for admin operations)
+Vercel requires a paid plan to other devs to push to prod. Work around: update prod by editing readme and commiting changes.
