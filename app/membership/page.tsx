@@ -242,9 +242,9 @@ export default function MembershipPortal() {
         </div>
 
         {/* Main Content Area */}
-        <div 
+        <div
           className="flex-1 transition-all duration-300"
-          style={{ 
+          style={{
             marginLeft: sidebarOpen ? '256px' : '80px'
           }}
         >
@@ -274,8 +274,6 @@ export default function MembershipPortal() {
         onConfirm={handleDeleteAccount}
         onCancel={() => { setShowDeleteConfirm(false); setDeleteConfirmText('') }}
       />
-
-      <Footer />
     </div>
   )
 }
