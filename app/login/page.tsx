@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { authService } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
@@ -10,6 +10,8 @@ import { useAuth } from '@/lib/useAuth'
 export default function LoginPage() {
   const router = useRouter()
   const { user, loading: authLoading } = useAuth()
+  const searchParams = useSearchParams()
+  const nextPath = searchParams.get('next') || '/membership'
   const [isLogin, setIsLogin] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -21,9 +23,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      router.push('/membership')
+      router.push(nextPath)
     }
-  }, [user, authLoading, router])
+  }, [user, authLoading, router, nextPath])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -43,7 +45,7 @@ export default function LoginPage() {
       if (isLogin) {
         const { error } = await authService.signIn(formData.email, formData.password)
         if (error) throw error
-        router.push('/membership')
+        router.push(nextPath)
       } else {
         const { user, error } = await authService.signUp(formData.email, formData.password, formData.fullName)
         if (error) throw error
@@ -53,7 +55,7 @@ export default function LoginPage() {
             full_name: formData.fullName,
             role: 'non_member'
           })
-          router.push('/membership')
+          router.push(nextPath)
         }
       }
     } catch (error: unknown) {
@@ -68,9 +70,10 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
     try {
+      const redirectUrl = `${window.location.origin}/login?next=${encodeURIComponent(nextPath)}`
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: `${window.location.origin}/membership` }
+        options: { redirectTo: redirectUrl }
       })
       if (error) throw error
     } catch (error: unknown) {
