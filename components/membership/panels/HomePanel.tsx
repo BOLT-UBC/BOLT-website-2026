@@ -157,6 +157,10 @@ export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
               const config = getEventConfig(bootcampEvent.name, bootcampEvent.description || undefined)
               const eventRoute = getPortalEventRoute(bootcampEvent.name)
               const eventMonth = eventMonths[config.titleAccent]
+              const applicationRoute = getPortalEventRoute(bootcampEvent.name)
+              const learnMoreRoute = '/events/bolt-bootcamp'   
+              const primaryCta = { label: 'Register Now', href: applicationRoute }
+               
 
               return (
                 <div onClick={(e) => e.stopPropagation()}>
@@ -164,9 +168,10 @@ export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
                     key={bootcampEvent.id}
                     event={bootcampEvent}
                     config={config}
-                    eventRoute={eventRoute}
+                    eventRoute={learnMoreRoute}
                     eventMonth={eventMonth}
                     isDarkMode={true}
+                    primaryCta={primaryCta}
                   />
                 </div>
               )

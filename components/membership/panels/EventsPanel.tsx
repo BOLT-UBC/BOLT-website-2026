@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { EventCard } from '@/components/EventCard'
-import { getEventConfig, getEventRoute, getPortalEventRoute, eventMonths } from '@/lib/eventConfig'
+import { getEventConfig, getPortalEventRoute, eventMonths } from '@/lib/eventConfig'
 import { supabase } from '@/lib/supabase'
 import { eventRegistrationService } from '@/lib/database'
 import type { Event } from '../types'
@@ -88,22 +88,27 @@ export function EventsPanel({ events, userId }: EventsPanelProps) {
         {events.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {events.slice(0, 8).map((event) => {
-              const config = getEventConfig(event.name, event.description || undefined)
-              const eventRoute = getPortalEventRoute(event.name);
-              const eventMonth = eventMonths[config.titleAccent]
-
-              return (
+                const config = getEventConfig(event.name, event.description || undefined)
+                const applicationRoute = getPortalEventRoute(event.name)
+                const isBootcamp = event.name.toLowerCase().includes('bootcamp')
+                const learnMoreRoute = isBootcamp ? '/events/bolt-bootcamp' : applicationRoute
+                const eventMonth = eventMonths[config.titleAccent]
+                const primaryCta = isBootcamp
+                ? { label: 'Register Now', href: applicationRoute }
+                : undefined
+                return (
                 <EventCard
-                  key={event.id}
-                  event={event}
-                  config={config}
-                  eventRoute={eventRoute}
-                  eventMonth={eventMonth}
-                  isDarkMode={true}
+                key={event.id}
+                event={event}
+                config={config}
+                eventRoute={learnMoreRoute}
+                eventMonth={eventMonth}
+                isDarkMode={true}
+                primaryCta={primaryCta}
                 />
-              )
+            )
             })}
-          </div>
+        </div>
         ) : (
           <div className="bg-white/5 rounded-lg p-8 text-center">
             <svg className="w-12 h-12 text-white/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

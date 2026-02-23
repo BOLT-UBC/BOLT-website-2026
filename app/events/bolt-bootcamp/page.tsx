@@ -90,7 +90,7 @@ export default function BoltBootcampPage() {
                   <div className="h-[2px] flex-1 bg-gradient-to-r from-purple-500/50 to-transparent"></div>
                 </div>
                 <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-white/85 max-w-2xl">
-                Bootcamp is our largest annual case competition event. All students are welcomed to join this thrilling week-long event with a variety of workshops, and collaborate with your peers to take down one of our most challenging case yet.
+                Bootcamp is our largest annual case competition event. All students are welcome to join this thrilling week-long event with a variety of workshops, and collaborate with your peers to take down one of our most challenging cases yet.
                 </p>
               </section>
               <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
