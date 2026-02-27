@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { roleUtils } from '../RoleBadge'
 import type { UserProfile, EditForm } from '../types'
 
+
 interface ProfilePanelProps {
   profile: UserProfile | null
   user: { email: string }
@@ -365,7 +366,7 @@ export function ProfilePanel({
               </FieldIcon>
               <div className="flex-1 min-w-0">
                 <label className="block text-white/50 mb-1 text-xs">Email</label>
-                <p className="text-white text-sm break-all">{user.email}</p>
+                <p className="text-white text-sm break-all">{profile?.email ?? user.email}</p>
               </div>
             </div>
 

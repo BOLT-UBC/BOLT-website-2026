@@ -78,3 +78,13 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
 }
 
+export interface TimelineItem {
+  name: string;
+  date: string;
+  dateISO: string;
+  description: string;
+}
+
+export interface TimelineProps {
+  timeline: TimelineItem[];
+}

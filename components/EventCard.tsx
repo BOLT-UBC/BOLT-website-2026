@@ -3,6 +3,12 @@
 import { useRouter } from 'next/navigation'
 import type { EventConfig } from '@/lib/eventConfig'
 
+type PrimaryCta = {
+    label: string
+    href: string
+    disabled?: boolean
+  }
+
 interface EventCardProps {
   event: {
     id: string
@@ -15,9 +21,10 @@ interface EventCardProps {
   eventRoute: string
   eventMonth?: string
   isDarkMode?: boolean // For portal vs homepage styling
+  primaryCta?: PrimaryCta
 }
 
-export function EventCard({ event, config, eventRoute, eventMonth, isDarkMode = false }: EventCardProps) {
+export function EventCard({ event, config, eventRoute, eventMonth, isDarkMode = false, primaryCta }: EventCardProps) {
   const router = useRouter()
 
   return (
@@ -64,32 +71,48 @@ export function EventCard({ event, config, eventRoute, eventMonth, isDarkMode = 
             {event.description}
           </p>
         )}
-        <div className="flex justify-center pt-0.5">
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              router.push(eventRoute)
-            }}
-            className="bg-black/20 backdrop-blur-lg hover:bg-black/30 text-white font-inter font-semibold px-2 py-0.5 text-[9px] rounded-full transition-all duration-200 border border-white/20 flex items-center gap-1 group active:scale-95"
-          >
-            Learn More
-            <svg
-              width="8"
-              height="8"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="transition-transform duration-200 group-hover:translate-x-0.5"
-            >
-              <path d="M7 17L17 7M17 7H7M17 7V17"/>
+        <div className="flex justify-center gap-2 pt-0.5">
+            {primaryCta ? (
+                <button
+                onClick={(e) => {
+                    e.stopPropagation()
+        if (!primaryCta.disabled) router.push(primaryCta.href)
+        }}
+    className={`bg-black/20 backdrop-blur-lg hover:bg-black/30 text-white font-inter font-semibold px-2 py-0.5 text-[11px] rounded-full transition-all duration-200 border border-white/20 flex items-center gap-1 group active:scale-95 ${
+            primaryCta.disabled
+              ? 'opacity-50 cursor-not-allowed'
+              : ''
+    }`}
+      aria-disabled={primaryCta.disabled ? true : undefined}
+    >
+      {primaryCta.label}
+      </button>
+    ) : null}
+    <button
+    onClick={(e) => {
+        e.stopPropagation()
+        router.push(eventRoute)
+    }}
+    className="bg-black/20 backdrop-blur-lg hover:bg-black/30 text-white font-inter font-semibold px-2 py-0.5 text-[11px] rounded-full transition-all duration-200 border border-white/20 flex items-center gap-1 group active:scale-95"
+    >
+        Learn More
+        <svg
+        width="8"
+        height="8"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="transition-transform duration-200 group-hover:translate-x-0.5"
+         >
+            <path d="M7 17L17 7M17 7H7M17 7V17" />
             </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
+            </button>
+            </div>
+            </div>
+            </div>
+            )
+        }
 

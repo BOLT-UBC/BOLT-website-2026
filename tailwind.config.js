@@ -28,6 +28,9 @@ export default {
     'shadow-[0_0_25px_rgba(255,136,76,0.35)]',
     'shadow-[0_0_25px_rgba(37,153,255,0.3)]',
     'shadow-[0_0_25px_rgba(134,201,255,0.25)]',
+    // Event Timeline Progression Animation
+    'bg-[linear-gradient(to_bottom,#10b981,#3f3f46,#10b981)]',
+    'bg-[length:100%_200%]',
   ],
   theme: {
     extend: {
@@ -42,11 +45,16 @@ export default {
       },
       animation: {
         'scroll-right': 'scroll-right 20s linear infinite',
+        "timeline-flow": "timeline-flow 4s linear infinite",
       },
       keyframes: {
         'scroll-right': {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
+        },
+        "timeline-flow": {
+          "0%": { backgroundPosition: "0% 0%" },
+          "100%": { backgroundPosition: "0% -200%" },
         },
       },
     },
