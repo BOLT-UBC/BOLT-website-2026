@@ -1,0 +1,78 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
+
+export async function POST(request: NextRequest) {
+  try {
+    // AuthN / AuthZ: require admin
+    const auth = await getAuthContext(request)
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (auth.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    const { userIds, updates } = await request.json()
+
+    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+      return NextResponse.json({ error: 'User IDs are required' }, { status: 400 })
+    }
+
+    if (!updates || Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: 'Updates are required' }, { status: 400 })
+    }
+
+    // Validate role if provided
+    if (updates.role) {
+      const validRoles = ['non_member', 'bolt_member', 'executive_member', 'admin']
+      if (!validRoles.includes(updates.role)) {
+        return NextResponse.json({ error: 'Invalid role' }, { status: 400 })
+      }
+    }
+
+    if (updates.graduation_year) {
+      const year = parseInt(updates.graduation_year)
+      if (isNaN(year)) {
+        return NextResponse.json({ error: 'Graduation year must be a valid number' }, { status: 400 })
+      }
+    }
+
+    // Check if service role client is available
+    const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json({
+        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+      }, { status: 500 })
+    }
+
+    // Update all users using service role (bypasses RLS)
+    const { data, error } = await supabaseAdmin
+      .from('profiles')
+      .update(updates)
+      .in('id', userIds)
+      .select()
+
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error('[admin/bulk-update] Failed to update users:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+      })
+      return NextResponse.json({ error: 'Failed to update users' }, { status: 500 })
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Updated ${data?.length || 0} users successfully`,
+      updatedUsers: data
+    })
+
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('[admin/bulk-update] Unexpected error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

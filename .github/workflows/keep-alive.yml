@@ -1,0 +1,104 @@
+name: Keep Alive Ping
+
+on:
+  schedule:
+    # Run once daily at 12:00 UTC
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping API
+        run: |
+          # Check if SITE_URL secret is set
+          if [ -z "${{ secrets.SITE_URL }}" ]; then
+            echo "ERROR: SITE_URL secret is not set"
+            exit 1
+          fi
+
+          SITE_URL="${{ secrets.SITE_URL }}"
+          # Remove trailing slash if present to avoid double slashes
+          SITE_URL="${SITE_URL%/}"
+          PING_URL="${SITE_URL}/api/ping"
+          echo "Pinging: ${PING_URL}"
+          echo "Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          # Retry logic for cold starts (serverless platforms may need warm-up time)
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+          ATTEMPT=1
+          SUCCESS=0
+
+          while [ $ATTEMPT -le $MAX_RETRIES ]; do
+            echo "Attempt $ATTEMPT of $MAX_RETRIES..."
+
+            # Use curl with proper timeout handling and capture errors
+            CURL_ERROR=$(mktemp)
+            echo "Making request to: ${PING_URL}"
+
+            # Try curl and capture both HTTP code and errors
+            HTTP_CODE=$(curl -v -s -o /tmp/ping_response.json -w "%{http_code}" \
+              --max-time 60 \
+              --connect-timeout 30 \
+              --retry 0 \
+              -H "User-Agent: GitHub-Actions-Keep-Alive/1.0" \
+              "${PING_URL}" 2>"$CURL_ERROR" || echo "000")
+
+            # Show curl errors if any (limit to first 20 lines to avoid huge output)
+            if [ -s "$CURL_ERROR" ]; then
+              echo "Curl diagnostic info:"
+              head -20 "$CURL_ERROR"
+            fi
+
+            # Normalize HTTP_CODE (in case of weird formatting)
+            HTTP_CODE=$(echo "$HTTP_CODE" | tr -d '\n\r' | sed 's/^0*\([^0]\)/\1/' || echo "$HTTP_CODE")
+            if [ -z "$HTTP_CODE" ] || [ "$HTTP_CODE" = "000" ] || [ "$HTTP_CODE" = "000000" ]; then
+              HTTP_CODE="000"
+            fi
+
+            echo "HTTP Status Code: ${HTTP_CODE}"
+            rm -f "$CURL_ERROR"
+
+            if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+              echo "Ping successful! HTTP Status: $HTTP_CODE"
+              echo "Response:"
+              cat /tmp/ping_response.json 2>/dev/null | head -20 || echo "(No response body)"
+              SUCCESS=1
+              break
+            else
+              echo "Attempt $ATTEMPT failed with HTTP Status: $HTTP_CODE"
+              if [ "$HTTP_CODE" = "000" ]; then
+                echo "Connection failed - possible causes:"
+                echo "  - DNS resolution failed"
+                echo "  - Connection timeout"
+                echo "  - Site unreachable from GitHub Actions"
+                echo "  - SSL/TLS handshake failed"
+              fi
+              if [ -f /tmp/ping_response.json ]; then
+                echo "Response body (if any):"
+                cat /tmp/ping_response.json | head -20 || echo "(Empty)"
+              fi
+
+              if [ $ATTEMPT -lt $MAX_RETRIES ]; then
+                echo "Waiting ${RETRY_DELAY}s before retry..."
+                sleep $RETRY_DELAY
+              fi
+            fi
+
+            ATTEMPT=$((ATTEMPT + 1))
+          done
+
+          if [ $SUCCESS -eq 1 ]; then
+            echo "Keep-alive ping completed successfully"
+            exit 0
+          else
+            echo "All retry attempts failed"
+            exit 1
+          fi

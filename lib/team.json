@@ -1,0 +1,426 @@
+{
+  "teams": [
+    {
+      "team_name": "Leadership",
+      "executives": [
+        {
+          "name": "Nav Thukral",
+          "title": "President",
+          "profilepic": "NavThukral.webp",
+          "linkedin": "https://linkedin.com/in/navthukral",
+          "personalEmail": "thukral.nav@boltubc.com",
+          "clubEmail": ""
+        },
+        {
+          "name": "Eleanor Lam",
+          "title": "VP Case Dev & VP Club Ops",
+          "profilepic": "EleanorLam.webp",
+          "linkedin": "https://linkedin.com/in/eleanor-lam",
+          "personalEmail": "lam.eleanor@boltubc.com",
+          "clubEmail": "events@boltubc.com"
+        },
+        {
+          "name": "Kiwi Mottahed",
+          "title": "VP Events",
+          "profilepic": "KiwiMottahed.webp",
+          "linkedin": "https://linkedin.com/in/placeholder",
+          "personalEmail": "mottahed.kiwi@boltubc.com",
+          "clubEmail": "events@boltubc.com"
+        },
+        {
+          "name": "Aadeesh Nargotra",
+          "title": "VP CR",
+          "profilepic": "AadeeshNargotra.webp",
+          "linkedin": "https://www.linkedin.com/in/aadeeshnargotra/",
+          "personalEmail": "nargotra.aadeesh@boltubc.com",
+          "clubEmail": "cr@boltubc.com"
+        },
+        {
+          "name": "Chloe Lee",
+          "title": "VP Finance",
+          "profilepic": "ChloeLee.webp",
+          "linkedin": "https://linkedin.com/in/placeholder",
+          "personalEmail": "lee.chloe@boltubc.com",
+          "clubEmail": "finance@boltubc.com"
+        },
+        {
+          "name": "Jessica Zhou",
+          "title": "VP Technology",
+          "profilepic": "JessicaZhou.webp",
+          "linkedin": "https://www.linkedin.com/in/jessicaz-",
+          "personalEmail": "zhou.jessica@boltubc.com",
+          "clubEmail": "developer@boltubc.com"
+        },
+        {
+          "name": "Raghav Awasthi",
+          "title": "VP Marketing",
+          "profilepic": "RaghavAwasthi.webp",
+          "linkedin": "https://linkedin.com/in/placeholder",
+          "personalEmail": "awasthi.raghav@boltubc.com",
+          "clubEmail": "marketing@boltubc.com"
+        }
+      ]
+    },
+    {
+      "team_name": "Advising",
+      "executives": [
+        {
+          "name": "Antarip Kashyap",
+          "title": "Advising Director",
+          "profilepic": "AntaripKashyap.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Bradley Wong",
+          "title": "Advising Director",
+          "profilepic": "BradleyWong.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Alexy Lamoot",
+          "title": "Advising Director",
+          "profilepic": "AlexyLamoot.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Kyle Gomez",
+          "title": "Advisor (Finance)",
+          "profilepic": "KyleGomez.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        }
+      ]
+    },
+    {
+      "team_name": "Corporate Relations",
+      "executives": [
+        {
+          "name": "Calista Budi",
+          "title": "CR Director",
+          "profilepic": "CalistaValencia.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Harshit Sethi",
+          "title": "CR Director",
+          "profilepic": "HarshitSethi.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Nevan Leo",
+          "title": "CR Executive",
+          "profilepic": "NevanLeo.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Ethan Le",
+          "title": "CR Executive",
+          "profilepic": "EthanLe.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Sophia Huang",
+          "title": "CR Executive",
+          "profilepic": "SophiaHuang.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Manya Garg",
+          "title": "Internal Consulting Director",
+          "profilepic": "ManyaGarg.webp",
+          "linkedin": "https://linkedin.com/in/manya-garg-00a98220a/"
+        },
+        {
+          "name": "Kai Wu",
+          "title": "CR Executive",
+          "profilepic": "KaiWu.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        }
+      ]
+    },
+    {
+      "team_name": "Case Development",
+      "executives": [
+        {
+          "name": "Prashant Chopra",
+          "title": "Case Dev Executive",
+          "profilepic": "PrashantChopra.webp",
+          "linkedin": "https://www.linkedin.com/in/prashant15chopra/"
+        },
+        {
+          "name": "Lucas Ho",
+          "title": "Case Dev Executive",
+          "profilepic": "LucasHo.webp",
+          "linkedin": "https://www.linkedin.com/in/lok-to-ho-a78178330/"
+        },
+        {
+          "name": "Ruhani Mittal",
+          "title": "Case Dev Executive",
+          "profilepic": "RuhaniMittal.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Arnav Dhablania",
+          "title": "Case Dev Executive",
+          "profilepic": "ArnavDhablania.webp",
+          "linkedin": "https://www.linkedin.com/in/arnavdhablania/"
+        }
+      ]
+    },
+    {
+      "team_name": "Events",
+      "executives": [
+        {
+          "name": "Aarav Alaric Bhatia",
+          "title": "Events Executive",
+          "profilepic": "AaravAlaricBhatia.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Hannah Goharian",
+          "title": "Events Executive",
+          "profilepic": "HannahGoharian.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Owen Chan",
+          "title": "Events Executive",
+          "profilepic": "OwenChan.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        }
+      ]
+    },
+    {
+      "team_name": "Marketing",
+      "executives": [
+        {
+          "name": "Jove Wan",
+          "title": "Marketing Executive",
+          "profilepic": "JoveWan.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Divjot Virdi",
+          "title": "Marketing Executive",
+          "profilepic": "DivjotVirdi.webp",
+          "linkedin": "https://linkedin.com/in/divjot-virdi"
+        },
+        {
+          "name": "Anne Nguyen",
+          "title": "Marketing Executive",
+          "profilepic": "AnneNguyen.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Felicia Amelia",
+          "title": "Marketing Executive",
+          "profilepic": "FeliciaAmelia.webp",
+          "linkedin": "https://linkedin.com/in/felicia-amelia"
+        }
+      ]
+    },
+    {
+      "team_name": "Development",
+      "executives": [
+        {
+          "name": "Chirag Raisingh",
+          "title": "Developer",
+          "profilepic": "ChiragRaisingh.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Chloe Sepulveda",
+          "title": "Developer",
+          "profilepic": "ChloeSepulveda.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Harmanjeet Singh",
+          "title": "Developer",
+          "profilepic": "HarmanjeetSingh.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        }
+      ]
+    },
+    {
+      "team_name": "Club Operations",
+      "executives": [
+        {
+          "name": "Nicole Li",
+          "title": "Club Ops Executive",
+          "profilepic": "NicoleLi.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        },
+        {
+          "name": "Jacob O'Callaghan",
+          "title": "Club Ops Executive",
+          "profilepic": "JacobOCallaghan.webp",
+          "linkedin": "https://linkedin.com/in/placeholder"
+        }
+      ]
+    }
+  ],
+  "pastExecutives": {
+    "2025-2026": [
+      {
+        "name": "Nav Thukral",
+        "title": "President"
+      },
+      {
+        "name": "Eleanor Lam",
+        "title": "VP Case Dev & VP Club Ops"
+      },
+      {
+        "name": "Kiwi Mottahed",
+        "title": "VP Events"
+      },
+      {
+        "name": "Aadeesh Nargotra",
+        "title": "VP CR"
+      },
+      {
+        "name": "Raghav Awasthi",
+        "title": "VP Marketing"
+      },
+      {
+        "name": "Jessica Zhou",
+        "title": "VP Technology"
+      },
+      {
+        "name": "Chloe Lee",
+        "title": "VP Finance"
+      },
+      {
+        "name": "Calista Budi",
+        "title": "CR Director"
+      },
+      {
+        "name": "Harshit Sethi",
+        "title": "CR Director"
+      },
+      {
+        "name": "Nevan Leo",
+        "title": "CR Executive"
+      },
+      {
+        "name": "Ethan Le",
+        "title": "CR Executive"
+      },
+      {
+        "name": "Sophia Huang",
+        "title": "CR Executive"
+      },
+      {
+        "name": "Manya Garg",
+        "title": "CR Executive"
+      },
+      {
+        "name": "Kai Wu",
+        "title": "CR Executive"
+      },
+      {
+        "name": "Prashant Chopra",
+        "title": "Case Dev Executive"
+      },
+      {
+        "name": "Lucas Ho",
+        "title": "Case Dev Executive"
+      },
+      {
+        "name": "Ruhani Mittal",
+        "title": "Case Dev Executive"
+      },
+      {
+        "name": "Arnav Dhablania",
+        "title": "Case Dev Executive"
+      },
+      {
+        "name": "Aarav Alaric Bhatia",
+        "title": "Events Executive"
+      },
+      {
+        "name": "Hannah Goharian",
+        "title": "Events Executive"
+      },
+      {
+        "name": "Owen",
+        "title": "Events Executive"
+      },
+      {
+        "name": "Leo Shang",
+        "title": "Marketing Executive"
+      },
+      {
+        "name": "Jove Wan",
+        "title": "Marketing Executive"
+      },
+      {
+        "name": "Divjot Virdi",
+        "title": "Marketing Executive"
+      },
+      {
+        "name": "Anne Nguyen",
+        "title": "Marketing Executive"
+      },
+      {
+        "name": "Felicia Amelia",
+        "title": "Marketing Executive"
+      },
+      {
+        "name": "Harmanjeet Singh",
+        "title": "Developer"
+      },
+      {
+        "name": "Chirag Raisingh",
+        "title": "Developer"
+      },
+      {
+        "name": "Chloe Sepulveda",
+        "title": "Developer"
+      },
+      {
+        "name": "Nicole Li",
+        "title": "Club Ops Executive"
+      },
+      {
+        "name": "Jacob O'Callaghan",
+        "title": "Club Ops Executive"
+      },
+      {
+        "name": "Andrew Andrew",
+        "title": "Finance Executive"
+      },
+      {
+        "name": "Jenise Yang",
+        "title": "First Year Rep (Events)"
+      },
+      {
+        "name": "Natania Huang",
+        "title": "First Year Rep (CR)"
+      },
+      {
+        "name": "Julianna Huang",
+        "title": "First Year Rep"
+      },
+      {
+        "name": "Carys Fong",
+        "title": "First Year Rep"
+      },
+      {
+        "name": "Antarip Kashyap",
+        "title": "Advising Director"
+      },
+      {
+        "name": "Bradley Wong",
+        "title": "Advising Director"
+      },
+      {
+        "name": "Alexy Lamoot",
+        "title": "Advising Director"
+      },
+      {
+        "name": "Kyle Gomez",
+        "title": "Advisor (Finance)"
+      }
+    ]
+  }
+}

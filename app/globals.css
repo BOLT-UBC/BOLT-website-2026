@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('/fonts/Roboto-Mono/RobotoMono-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Desktop: faster animation (default) */
+.scroll-right-continuous {
+  animation: scroll-right-continuous 20s linear infinite;
+}
+
+/* Mobile: slower animation and tighter spacing for mobile devices */
+@media (max-width: 767px) {
+  .scroll-right-continuous {
+    animation: scroll-right-continuous 60s linear infinite !important;
+    gap: 0.125rem !important; /* 2px - override Tailwind gap-0.5 */
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animation keyframes */
+@keyframes scroll-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-right-continuous {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.scroll-right {
+  animation: scroll-right 20s linear infinite;
+}
+
+.scroll-right-continuous {
+  animation: scroll-right-continuous 30s linear infinite;
+}
+
+.scroll-left {
+  animation: scroll-left 20s linear infinite;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #614ea5;
+  outline-offset: 2px;
+}
