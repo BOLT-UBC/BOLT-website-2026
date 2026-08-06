@@ -19,7 +19,7 @@ function getBearerToken(request: NextRequest): string | null {
 // Export this so API routes can use it instead of module-level supabaseAdmin
 export function getSupabaseAdmin() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const supabaseServiceRoleKey = process.env.SUPABASE_SECRET_KEY
 
   if (!supabaseUrl || !supabaseServiceRoleKey) {
     // eslint-disable-next-line no-console
@@ -51,7 +51,7 @@ export async function getAuthContext(request: NextRequest): Promise<AuthContext 
     const adminClient = getSupabaseAdmin()
     if (!adminClient) {
       // eslint-disable-next-line no-console
-      console.error('[getAuthContext] Failed to create admin client - check SUPABASE_SERVICE_ROLE_KEY env var')
+      console.error('[getAuthContext] Failed to create admin client - check SUPABASE_SECRET_KEY env var')
       return null
     }
 
@@ -80,9 +80,9 @@ export async function getAuthContext(request: NextRequest): Promise<AuthContext 
     // Use admin client to bypass RLS - we've already verified the user exists via getUser
     // This is safe because we're only reading the profile of the authenticated user
     const { data: profile, error: profileError } = await adminClient
-      .from('profiles')
-      .select('id, email, role')
-      .eq('id', userId)
+      .from('members')
+      .select('member_id, email, role')
+      .eq('member_id', userId)
       .single()
 
     if (profileError) {
@@ -104,7 +104,7 @@ export async function getAuthContext(request: NextRequest): Promise<AuthContext 
     }
 
     return {
-      userId: profile.id,
+      userId: profile.member_id,
       email: profile.email,
       role: profile.role,
     }

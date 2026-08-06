@@ -20,12 +20,12 @@ export async function GET(request: NextRequest) {
 
     // Get total users
     const { count: totalUsers } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('*', { count: 'exact', head: true })
 
     // Get roles and creation dates
     const { data: roleStats } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('role, created_at')
       .not('role', 'is', null)
 
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
     const { count: newSignups } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', thirtyDaysAgo.toISOString())
 
@@ -58,23 +58,22 @@ export async function GET(request: NextRequest) {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
     const { count: recentSignups } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', sevenDaysAgo.toISOString())
 
     // Get users with complete profiles (have most fields filled)
     const { data: completeProfiles } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('*')
       .not('full_name', 'is', null)
-      .not('graduation_year', 'is', null)
+      .not('graduation_date', 'is', null)
       .not('major', 'is', null)
 
-    // Get users with resumes uploaded
+    // Get users with resumes uploaded (resumes now live in their own table)
     const { count: usersWithResumes } = await supabaseAdmin
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .not('resume_url', 'is', null)
+      .from('resumes')
+      .select('member_id', { count: 'exact', head: true })
 
     return NextResponse.json({
       totalUsers: totalUsers || 0,

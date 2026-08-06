@@ -5,8 +5,8 @@ import { supabase } from '@/lib/supabase'
 import type { FormField, FormFieldType } from '@/lib/supabase'
 
 interface Event {
-  id: string
-  name: string
+  event_id: string
+  event_name: string
 }
 
 interface FormConfigPanelProps {
@@ -28,9 +28,9 @@ const PROFILE_FIELDS = [
   { value: 'full_name', label: 'Full Name' },
   { value: 'email', label: 'Email' },
   { value: 'major', label: 'Major' },
-  { value: 'graduation_year', label: 'Graduation Year' },
-  { value: 'phone', label: 'Phone' },
-  { value: 'linkedin_url', label: 'LinkedIn URL' },
+  { value: 'graduation_date', label: 'Graduation Date' },
+  { value: 'phone_num', label: 'Phone' },
+  { value: 'linkedin', label: 'LinkedIn URL' },
   { value: 'bio', label: 'Bio' },
 ]
 
@@ -49,11 +49,11 @@ export function FormConfigPanel({ eventId }: FormConfigPanelProps) {
   // Load events list
   useEffect(() => {
     const loadEvents = async () => {
-      const { data } = await supabase.from('events').select('id, name').order('name')
+      const { data } = await supabase.from('events').select('event_id, event_name').order('event_name')
       if (data) {
         setEvents(data)
         if (!selectedEventId && data.length > 0) {
-          setSelectedEventId(data[0].id)
+          setSelectedEventId(data[0].event_id)
         }
       }
     }
@@ -218,7 +218,7 @@ export function FormConfigPanel({ eventId }: FormConfigPanelProps) {
           >
             <option value="">Select an event...</option>
             {events.map(event => (
-              <option key={event.id} value={event.id}>{event.name}</option>
+              <option key={event.event_id} value={event.event_id}>{event.event_name}</option>
             ))}
           </select>
         </div>

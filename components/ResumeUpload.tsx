@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/useAuth'
 
 interface ResumeUploadProps {
@@ -10,10 +10,15 @@ interface ResumeUploadProps {
   onUploadError?: (error: string) => void
 }
 
+// Shape of a row in the `resumes` table (see lib/supabase.ts Database type).
+// Resumes now live in their own table rather than on the member's profile,
+// so this is fetched separately via /api/resume rather than from user.profile.
 interface ResumeData {
-  resume_url: string | null
-  resume_file_name: string | null
-  resume_uploaded_at: string | null
+  resume?: string | null
+  file_name?: string | null
+  file_size?: number | null
+  file_type?: string | null
+  time_stamp_added?: string | null
 }
 
 export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeUploadProps) {
@@ -23,44 +28,42 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
   const [currentResume, setCurrentResume] = useState<ResumeData | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Load current resume info from user profile
-  useEffect(() => {
-    if (user?.profile) {
-      setCurrentResume({
-        resume_url: user.profile.resume_url,
-        resume_file_name: user.profile.resume_file_name,
-        resume_uploaded_at: user.profile.resume_uploaded_at
-      })
-    } else {
-      // Clear resume state if user profile doesn't have resume data
+  // Fetch the current resume info for this member from the resumes table
+  // (via the /api/resume route), rather than from the profile object.
+  const refreshResume = useCallback(async () => {
+    if (!user?.id) {
       setCurrentResume(null)
+      return
     }
-  }, [user?.profile])
-
-  // Function to refresh user profile from database
-  const refreshUserProfile = async () => {
-    if (!user?.id) return
 
     try {
-      const { authService } = await import('@/lib/auth')
-      const updatedProfile = await authService.getUserProfile(user.id)
+      const { supabase } = await import('@/lib/supabase')
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData.session?.access_token
 
-      if (updatedProfile) {
-        setCurrentResume({
-          resume_url: updatedProfile.resume_url,
-          resume_file_name: updatedProfile.resume_file_name,
-          resume_uploaded_at: updatedProfile.resume_uploaded_at
-        })
-      } else {
+      const response = await fetch(`/api/resume?userId=${user.id}`, {
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      })
+
+      if (!response.ok) {
         setCurrentResume(null)
+        return
       }
+
+      const result = await response.json()
+      setCurrentResume(result?.data ?? null)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.warn('[ResumeUpload] Failed to refresh profile:', error)
+      console.warn('[ResumeUpload] Failed to fetch resume:', error)
       // On error, clear resume state to be safe
       setCurrentResume(null)
     }
-  }
+  }, [user?.id])
+
+  // Load current resume info on mount / when the user changes
+  useEffect(() => {
+    refreshResume()
+  }, [refreshResume])
 
   const handleFileUpload = async (file: File) => {
     if (!user?.id) {
@@ -103,8 +106,8 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
         // Update local state immediately
         setCurrentResume(result.data)
         onUploadSuccess?.(result.data)
-        // Refresh profile from database to ensure consistency
-        await refreshUserProfile()
+        // Refresh from the resumes table to ensure consistency
+        await refreshResume()
       } else {
         onUploadError?.(result.error || 'Upload failed')
       }
@@ -174,9 +177,9 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
         // Clear local state immediately
         setCurrentResume(null)
 
-        // Refresh profile from database to ensure UI reflects updated state
+        // Refresh from the resumes table to ensure UI reflects updated state
         // This updates the component without reloading the page
-        await refreshUserProfile()
+        await refreshResume()
       } else {
         onUploadError?.(result.error || 'Delete failed')
       }
@@ -191,7 +194,7 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
     <div className="p-6 bg-white rounded-lg shadow-sm border">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Resume Upload</h3>
 
-      {currentResume?.resume_url ? (
+      {currentResume?.resume ? (
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
             <div className="flex items-center space-x-3">
@@ -201,15 +204,15 @@ export default function ResumeUpload({ onUploadSuccess, onUploadError }: ResumeU
                 </svg>
               </div>
               <div>
-                <p className="font-medium text-green-900">{currentResume.resume_file_name}</p>
+                <p className="font-medium text-green-900">{currentResume?.file_name}</p>
                 <p className="text-sm text-green-700">
-                  Uploaded {currentResume.resume_uploaded_at ? new Date(currentResume.resume_uploaded_at).toLocaleDateString() : 'Unknown date'}
+                  Uploaded {currentResume?.time_stamp_added ? new Date(currentResume.time_stamp_added).toLocaleDateString() : 'Unknown date'}
                 </p>
               </div>
             </div>
             <div className="flex space-x-2">
               <a
-                href={currentResume.resume_url}
+                href={currentResume.resume}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 text-sm font-medium"

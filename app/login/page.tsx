@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { authService } from '@/lib/auth'
@@ -8,6 +8,18 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/useAuth'
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-[#1a0b2e] via-[#614ea5] to-[#493b7b] flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  )
+}
+
+function LoginForm() {
   const router = useRouter()
   const { user, loading: authLoading } = useAuth()
   const searchParams = useSearchParams()
@@ -51,10 +63,7 @@ export default function LoginPage() {
         if (error) throw error
 
         if (user) {
-          await authService.createProfile(user, {
-            full_name: formData.fullName,
-            role: 'non_member'
-          })
+          // The on_auth_user_created trigger creates the members row automatically.
           router.push(nextPath)
         }
       }

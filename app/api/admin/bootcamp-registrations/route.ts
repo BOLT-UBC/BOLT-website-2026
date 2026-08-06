@@ -24,23 +24,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Service role key not configured' }, { status: 500 })
     }
 
-    // Build the query - join with profiles to get user info
+    // Build the query - join with members to get user info
     let query = supabaseAdmin
-      .from('event_registrations')
+      .from('event_attendance')
       .select(`
-        id,
+        registration_id,
         status,
         registered_at,
         notes,
         application_responses,
-        profiles:user_id (
-          id,
+        members:member_id (
+          member_id,
           email,
           full_name,
-          graduation_year,
+          graduation_date,
           major,
-          phone,
-          linkedin_url
+          phone_num,
+          linkedin
         )
       `)
       .eq('event_id', BOOTCAMP_EVENT_ID)
@@ -64,21 +64,21 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter by search term if provided (search in name or email)
-    interface RegistrationWithProfile {
-      profiles: {
+    interface RegistrationWithMember {
+      members: {
         full_name: string | null
         email: string
       } | null
     }
 
-    let filteredData = (data || []) as unknown as RegistrationWithProfile[]
+    let filteredData = (data || []) as unknown as RegistrationWithMember[]
     if (search) {
       const searchLower = search.toLowerCase()
       filteredData = filteredData.filter((reg) => {
-        const profile = reg.profiles
-        if (!profile) return false
-        const name = profile.full_name?.toLowerCase() || ''
-        const email = profile.email?.toLowerCase() || ''
+        const member = reg.members
+        if (!member) return false
+        const name = member.full_name?.toLowerCase() || ''
+        const email = member.email?.toLowerCase() || ''
         return name.includes(searchLower) || email.includes(searchLower)
       })
     }
@@ -133,24 +133,24 @@ export async function PATCH(request: NextRequest) {
 
     // Update the registration
     const { data, error } = await supabaseAdmin
-      .from('event_registrations')
+      .from('event_attendance')
       .update(updates)
-      .eq('id', registrationId)
+      .eq('registration_id', registrationId)
       .eq('event_id', BOOTCAMP_EVENT_ID)
       .select(`
-        id,
+        registration_id,
         status,
         registered_at,
         notes,
         application_responses,
-        profiles:user_id (
-          id,
+        members:member_id (
+          member_id,
           email,
           full_name,
-          graduation_year,
+          graduation_date,
           major,
-          phone,
-          linkedin_url
+          phone_num,
+          linkedin
         )
       `)
       .single()
@@ -205,9 +205,9 @@ export async function POST(request: NextRequest) {
 
     // Bulk update registrations
     const { data, error } = await supabaseAdmin
-      .from('event_registrations')
+      .from('event_attendance')
       .update({ status })
-      .in('id', registrationIds)
+      .in('registration_id', registrationIds)
       .eq('event_id', BOOTCAMP_EVENT_ID)
       .select()
 

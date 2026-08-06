@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@supabase/supabase-js": "^2.76.1",
+    "@supabase/supabase-js": "^2.109.0",
     "@types/node": "^24.9.1",
     "autoprefixer": "^10.4.21",
     "next": "^16.1.1",

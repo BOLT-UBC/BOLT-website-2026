@@ -28,13 +28,13 @@ export async function POST(request: NextRequest) {
     const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
-        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+        error: 'Service role key not configured. Please add SUPABASE_SECRET_KEY to your environment variables.'
       }, { status: 500 })
     }
 
-    // Update the user's role in the profiles table using service role (bypasses RLS)
+    // Update the user's role in the members table using service role (bypasses RLS)
     const { data, error } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .update({ role })
       .eq('email', email.toLowerCase().trim())
       .select()

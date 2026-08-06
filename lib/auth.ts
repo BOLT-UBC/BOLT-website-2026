@@ -1,21 +1,19 @@
 import { supabase } from './supabase'
+import type { Database } from './supabase'
 import type { User } from '@supabase/supabase-js'
 
 export interface AuthUser extends User {
   profile?: {
-    id: string
+    member_id: string
     email: string
     full_name: string | null
-    avatar_url: string | null
+    avatar: string | null
     role: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
     team_id: string | null
-    graduation_year: number | null
+    graduation_date: string | null
     major: string | null
-    phone: string | null
-    linkedin_url: string | null
-    resume_url: string | null
-    resume_file_name: string | null
-    resume_uploaded_at: string | null
+    phone_num: string | null
+    linkedin: string | null
   }
 }
 
@@ -112,44 +110,47 @@ export const authService = {
   // Get user profile
   async getUserProfile(userId: string) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .select(`
         *,
         teams:team_id (
-          id,
-          name
+          team_id,
+          team_name
         )
       `)
-      .eq('id', userId)
+      .eq('member_id', userId)
       .single()
 
     if (error) throw error
     return data
   },
 
-  // Create user profile after signup
+  // Create user profile. Only used as a fallback for the rare case where the
+  // on_auth_user_created trigger's row isn't visible yet by the time the
+  // client fetches it; RLS restricts member inserts to admins, so this will
+  // fail (and be caught by the caller) once the trigger's row already exists.
   async createProfile(user: User, additionalData?: {
     full_name?: string
     role?: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
     team_id?: string
-    graduation_year?: number
+    graduation_date?: string
     major?: string
-    phone?: string
-    linkedin_url?: string
+    phone_num?: string
+    linkedin?: string
   }) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .insert({
-        id: user.id,
+        member_id: user.id,
         email: user.email!,
         full_name: additionalData?.full_name || user.user_metadata?.full_name,
-        avatar_url: user.user_metadata?.avatar_url,
+        avatar: user.user_metadata?.avatar_url,
         role: additionalData?.role || 'non_member',
         team_id: additionalData?.team_id,
-        graduation_year: additionalData?.graduation_year,
+        graduation_date: additionalData?.graduation_date,
         major: additionalData?.major,
-        phone: additionalData?.phone,
-        linkedin_url: additionalData?.linkedin_url
+        phone_num: additionalData?.phone_num,
+        linkedin: additionalData?.linkedin
       })
       .select()
       .single()
@@ -161,19 +162,19 @@ export const authService = {
   // Update user profile
   async updateProfile(userId: string, updates: {
     full_name?: string
-    avatar_url?: string
+    avatar?: string
     team_id?: string
-    graduation_year?: number
+    graduation_date?: string
     major?: string
-    phone?: string
-    linkedin_url?: string
+    phone_num?: string
+    linkedin?: string
     bio?: string
     pronouns?: string
     discord_username?: string
     ubc_student_id?: string
   }) {
     // Input validation and sanitization
-    const sanitizedUpdates: Record<string, string | number | null> = {}
+    const sanitizedUpdates: Database['public']['Tables']['members']['Update'] = {}
 
     if (updates.full_name) {
       sanitizedUpdates.full_name = this.sanitizeInput(updates.full_name)
@@ -181,31 +182,31 @@ export const authService = {
     if (updates.major) {
       sanitizedUpdates.major = this.sanitizeInput(updates.major)
     }
-    if (updates.phone) {
+    if (updates.phone_num) {
       // Basic phone validation
       const phoneRegex = /^[+]?[1-9][\d]{0,15}$/
-      if (!phoneRegex.test(updates.phone.replace(/[\s\-()]/g, ''))) {
+      if (!phoneRegex.test(updates.phone_num.replace(/[\s\-()]/g, ''))) {
         throw new Error('Invalid phone number format')
       }
-      sanitizedUpdates.phone = updates.phone.replace(/[^\d+()\s]/g, '')
+      sanitizedUpdates.phone_num = updates.phone_num.replace(/[^\d+()\s]/g, '')
     }
-    if (updates.linkedin_url) {
+    if (updates.linkedin) {
       // Basic URL validation
       try {
-        new URL(updates.linkedin_url)
-        sanitizedUpdates.linkedin_url = updates.linkedin_url
+        new URL(updates.linkedin)
+        sanitizedUpdates.linkedin = updates.linkedin
       } catch {
         throw new Error('Invalid LinkedIn URL format')
       }
     }
-    if (updates.graduation_year !== undefined) {
-      sanitizedUpdates.graduation_year = updates.graduation_year
+    if (updates.graduation_date !== undefined) {
+      sanitizedUpdates.graduation_date = updates.graduation_date
     }
     if (updates.team_id) {
       sanitizedUpdates.team_id = updates.team_id
     }
-    if (updates.avatar_url) {
-      sanitizedUpdates.avatar_url = updates.avatar_url
+    if (updates.avatar) {
+      sanitizedUpdates.avatar = updates.avatar
     }
     if (updates.bio !== undefined) {
       sanitizedUpdates.bio = updates.bio ? this.sanitizeInput(updates.bio) : null
@@ -221,9 +222,9 @@ export const authService = {
     }
 
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .update(sanitizedUpdates)
-      .eq('id', userId)
+      .eq('member_id', userId)
       .select()
       .single()
 
@@ -275,20 +276,24 @@ export const authService = {
     if (error) throw error
   },
 
-  // Delete user account
+  // Delete user account. Runs through the API route because deleting the
+  // auth user requires the service-role admin client, which can never be
+  // used from a browser module.
   async deleteAccount(userId: string) {
-    // First, delete the user's profile (this will cascade to related data)
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .delete()
-      .eq('id', userId)
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) throw new Error('Not authenticated')
 
-    if (profileError) throw profileError
+    const response = await fetch(`/api/account/delete?userId=${userId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${session.access_token}`
+      }
+    })
 
-    // Then delete the auth user
-    const { error: authError } = await supabase.auth.admin.deleteUser(userId)
-
-    if (authError) throw authError
+    const result = await response.json()
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to delete account')
+    }
 
     return { success: true }
   },
@@ -296,9 +301,9 @@ export const authService = {
   // Check if user is admin
   async isAdmin(userId: string) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .select('role')
-      .eq('id', userId)
+      .eq('member_id', userId)
       .single()
 
     if (error) throw error
@@ -308,13 +313,12 @@ export const authService = {
   // Check if user is executive or admin
   async isExecutiveOrAdmin(userId: string) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .select('role')
-      .eq('id', userId)
+      .eq('member_id', userId)
       .single()
 
     if (error) throw error
     return data?.role === 'executive_member' || data?.role === 'admin'
   }
 }
-

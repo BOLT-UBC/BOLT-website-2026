@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
 import { isValidUUID } from '@/lib/validation'
-import { getAuthContext } from '@/lib/serverAuth'
+import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
 
 // Delete user account
 export async function DELETE(request: NextRequest) {
@@ -33,14 +32,22 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Verify the user exists and get their profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, email, role, resume_url')
-      .eq('id', userId)
+    const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service role key not configured' },
+        { status: 500 }
+      )
+    }
+
+    // Verify the member exists
+    const { data: member, error: memberError } = await supabaseAdmin
+      .from('members')
+      .select('member_id, role')
+      .eq('member_id', userId)
       .single()
 
-    if (profileError || !profile) {
+    if (memberError || !member) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -57,50 +64,48 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Check if user is trying to delete an admin account (prevent this for security)
-    if (profile.role === 'admin') {
+    if (member.role === 'admin') {
       return NextResponse.json(
         { error: 'Admin accounts cannot be deleted through this endpoint' },
         { status: 403 }
       )
     }
 
-    // Delete user's resume file from storage if it exists
-    if (profile.resume_url) {
-      try {
-        // Extract file path from URL
-        const url = new URL(profile.resume_url)
-        const pathParts = url.pathname.split('/')
-        const fileName = pathParts[pathParts.length - 1] // Get file name
+    // Delete the resume file from storage if one exists
+    const { data: resume } = await supabaseAdmin
+      .from('resumes')
+      .select('resume')
+      .eq('member_id', userId)
+      .single()
 
-        await supabase.storage
-          .from('bolt-resumes-2025')
+    if (resume?.resume) {
+      try {
+        const url = new URL(resume.resume)
+        const pathParts = url.pathname.split('/')
+        const fileName = pathParts[pathParts.length - 1]
+
+        await supabaseAdmin.storage
+          .from('bolt-resumes-2026')
           .remove([`${userId}/${fileName}`])
       } catch {
         // Log error but don't fail the deletion
-        // Note: Resume file deletion failed, but user deletion continues
       }
     }
 
-    // Delete user's profile (this will cascade to related data due to foreign key constraints)
-    const { error: deleteProfileError } = await supabase
-      .from('profiles')
-      .delete()
-      .eq('id', userId)
+    // Delete the auth user; ON DELETE CASCADE cleans up members, resumes,
+    // and event_attendance rows automatically.
+    const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(userId)
 
-    if (deleteProfileError) {
+    if (deleteUserError) {
       return NextResponse.json(
-        { error: 'Failed to delete user profile', details: deleteProfileError.message },
+        { error: 'Failed to delete account', details: deleteUserError.message },
         { status: 500 }
       )
     }
 
-    // Note: We cannot delete the auth user from the client side for security reasons
-    // The auth user will remain in Supabase auth but will be orphaned
-    // In production, you might want to implement a server-side admin function to clean up orphaned auth users
-
     return NextResponse.json({
       success: true,
-      message: 'Account deleted successfully. Note: Authentication data may remain for security purposes.'
+      message: 'Account deleted successfully'
     })
   } catch (error) {
     return NextResponse.json(

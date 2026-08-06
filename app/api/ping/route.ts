@@ -5,8 +5,8 @@ export async function GET() {
   try {
     // Simple query to keep Supabase connection alive
     const { data, error } = await supabase
-      .from('profiles')
-      .select('id')
+      .from('members')
+      .select('member_id')
       .limit(1)
 
     if (error) {
@@ -44,8 +44,8 @@ export async function GET() {
 export async function HEAD() {
   try {
     await supabase
-      .from('profiles')
-      .select('id')
+      .from('members')
+      .select('member_id')
       .limit(1)
 
     return new NextResponse(null, { status: 200 })

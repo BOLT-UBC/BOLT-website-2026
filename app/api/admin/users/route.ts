@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     // Build the query
     let query = supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('*')
       .order('created_at', { ascending: false })
 
@@ -39,12 +39,15 @@ export async function GET(request: NextRequest) {
       query = query.eq('role', role)
     }
     if (graduationYear) {
-      query = query.eq('graduation_year', parseInt(graduationYear))
+      const year = parseInt(graduationYear)
+      query = query
+        .gte('graduation_date', `${year}-01-01`)
+        .lt('graduation_date', `${year + 1}-01-01`)
     }
 
     // Get total count for pagination
     const { count } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('*', { count: 'exact', head: true })
 
     // Apply pagination

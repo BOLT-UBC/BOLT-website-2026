@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { profileService } from '@/lib/database'
 import { isValidUUID, validateFile, checkRateLimit } from '@/lib/validation'
 import { getAuthContext, getSupabaseAdmin } from '@/lib/serverAuth'
 
-// Get user's resume info from profile
+// Get user's resume info from the resumes table
 export async function GET(request: NextRequest) {
   try {
     // AuthN required
@@ -43,14 +42,35 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const profile = await profileService.getById(userId)
+    const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service role key not configured' },
+        { status: 500 }
+      )
+    }
+
+    const { data: resume, error: resumeError } = await supabaseAdmin
+      .from('resumes')
+      .select('resume, file_name, file_size, file_type, time_stamp_added')
+      .eq('member_id', userId)
+      .maybeSingle()
+
+    if (resumeError) {
+      return NextResponse.json(
+        { error: 'Failed to fetch resume', details: resumeError.message },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({
       success: true,
       data: {
-        resume_url: profile.resume_url,
-        resume_file_name: profile.resume_file_name,
-        resume_uploaded_at: profile.resume_uploaded_at
+        resume_url: resume?.resume || null,
+        file_name: resume?.file_name || null,
+        file_size: resume?.file_size || null,
+        file_type: resume?.file_type || null,
+        time_stamp_added: resume?.time_stamp_added || null
       }
     })
   } catch (error) {
@@ -143,7 +163,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get admin client for profile operations
+    // Get admin client for resumes table operations
     const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -155,7 +175,7 @@ export async function POST(request: NextRequest) {
     // Create authenticated Supabase client for storage operations
     // We need to use the user's access token for storage upload (RLS policies)
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
     const accessToken = request.headers.get('authorization')?.replace('Bearer ', '') || null
 
     if (!supabaseUrl || !supabaseAnonKey) {
@@ -180,7 +200,7 @@ export async function POST(request: NextRequest) {
     // Use admin client for listing/deleting to ensure it works reliably
     try {
       const { data: existingFiles, error: listError } = await supabaseAdmin.storage
-        .from('bolt-resumes-2025')
+        .from('bolt-resumes-2026')
         .list(userId, {
           limit: 100,
           sortBy: { column: 'created_at', order: 'desc' }
@@ -193,7 +213,7 @@ export async function POST(request: NextRequest) {
         // Delete all files in the user's folder
         const filesToDelete = existingFiles.map(f => `${userId}/${f.name}`)
         const { error: deleteError } = await supabaseAdmin.storage
-          .from('bolt-resumes-2025')
+          .from('bolt-resumes-2026')
           .remove(filesToDelete)
 
         if (deleteError) {
@@ -212,7 +232,7 @@ export async function POST(request: NextRequest) {
 
     // Upload new file using user's token (respects storage RLS policies)
     const { error: uploadError } = await storageClient.storage
-      .from('bolt-resumes-2025')
+      .from('bolt-resumes-2026')
       .upload(fileName, file, {
         cacheControl: '3600',
         upsert: false
@@ -230,7 +250,7 @@ export async function POST(request: NextRequest) {
       let errorMessage = 'Failed to upload file to storage'
       const errorMsg = uploadError.message || String(uploadError)
       if (errorMsg.includes('Bucket not found') || errorMsg.includes('does not exist')) {
-        errorMessage = 'Storage bucket "bolt-resumes-2025" does not exist. Please create it in Supabase dashboard.'
+        errorMessage = 'Storage bucket "bolt-resumes-2026" does not exist. Please create it in Supabase dashboard.'
       } else if (errorMsg.includes('new row violates row-level security') || errorMsg.includes('RLS')) {
         errorMessage = 'Storage bucket permissions not configured. Please set up RLS policies for the bucket.'
       } else if (errorMsg) {
@@ -245,33 +265,35 @@ export async function POST(request: NextRequest) {
 
     // Get public URL
     const { data: urlData } = storageClient.storage
-      .from('bolt-resumes-2025')
+      .from('bolt-resumes-2026')
       .getPublicUrl(fileName)
 
-    // Update profile with resume info using admin client to bypass RLS
-    const { data: updatedProfile, error: updateError } = await supabaseAdmin
-      .from('profiles')
-      .update({
-      resume_url: urlData.publicUrl,
-      resume_file_name: file.name,
-      resume_uploaded_at: new Date().toISOString()
-    })
-      .eq('id', userId)
+    // Upsert the resumes row (unique constraint on member_id) using admin client to bypass RLS
+    const { data: updatedResume, error: updateError } = await supabaseAdmin
+      .from('resumes')
+      .upsert({
+        member_id: userId,
+        resume: urlData.publicUrl,
+        file_name: file.name,
+        file_size: file.size,
+        file_type: file.type,
+        time_stamp_added: new Date().toISOString()
+      }, { onConflict: 'member_id' })
       .select()
       .single()
 
     if (updateError) {
       // eslint-disable-next-line no-console
-      console.error('[resume/POST] Profile update error:', updateError)
+      console.error('[resume/POST] Resume upsert error:', updateError)
       return NextResponse.json(
-        { error: 'Failed to update profile', details: updateError.message },
+        { error: 'Failed to update resume', details: updateError.message },
         { status: 500 }
       )
     }
 
-    if (!updatedProfile) {
+    if (!updatedResume) {
       return NextResponse.json(
-        { error: 'Failed to update profile - no data returned' },
+        { error: 'Failed to update resume - no data returned' },
         { status: 500 }
       )
     }
@@ -279,9 +301,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        resume_url: updatedProfile.resume_url,
-        resume_file_name: updatedProfile.resume_file_name,
-        resume_uploaded_at: updatedProfile.resume_uploaded_at
+        resume_url: updatedResume.resume,
+        file_name: updatedResume.file_name,
+        file_size: updatedResume.file_size,
+        file_type: updatedResume.file_type,
+        time_stamp_added: updatedResume.time_stamp_added
       }
     })
   } catch (error) {
@@ -344,7 +368,7 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Get admin client to fetch profile and delete from storage
+    // Get admin client to fetch the resumes row and delete from storage
     const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -356,7 +380,7 @@ export async function DELETE(request: NextRequest) {
     // Delete ALL files from storage for this user using admin client
     try {
       const { data: existingFiles, error: listError } = await supabaseAdmin.storage
-        .from('bolt-resumes-2025')
+        .from('bolt-resumes-2026')
         .list(userId, {
           limit: 100,
           sortBy: { column: 'created_at', order: 'desc' }
@@ -369,7 +393,7 @@ export async function DELETE(request: NextRequest) {
         // Delete all files in the user's folder
         const filesToDelete = existingFiles.map(f => `${userId}/${f.name}`)
         const { error: deleteError } = await supabaseAdmin.storage
-          .from('bolt-resumes-2025')
+          .from('bolt-resumes-2026')
           .remove(filesToDelete)
 
         if (deleteError) {
@@ -383,41 +407,27 @@ export async function DELETE(request: NextRequest) {
     } catch (storageError) {
       // eslint-disable-next-line no-console
       console.warn('[resume/DELETE] Storage delete exception:', storageError)
-      // Continue with profile update even if storage delete fails
+      // Continue with resumes row delete even if storage delete fails
     }
 
-    // Clear resume info from profile using admin client to bypass RLS
-    const { data: updatedProfile, error: updateError } = await supabaseAdmin
-      .from('profiles')
-      .update({
-      resume_url: null,
-      resume_file_name: null,
-      resume_uploaded_at: null
-    })
-      .eq('id', userId)
-      .select()
-      .single()
+    // Delete the resumes row using admin client to bypass RLS
+    const { error: deleteRowError } = await supabaseAdmin
+      .from('resumes')
+      .delete()
+      .eq('member_id', userId)
 
-    if (updateError) {
+    if (deleteRowError) {
       // eslint-disable-next-line no-console
-      console.error('[resume/DELETE] Profile update error:', updateError)
+      console.error('[resume/DELETE] Resume row delete error:', deleteRowError)
       return NextResponse.json(
-        { error: 'Failed to update profile', details: updateError.message },
-        { status: 500 }
-      )
-    }
-
-    if (!updatedProfile) {
-      return NextResponse.json(
-        { error: 'Failed to update profile - no data returned' },
+        { error: 'Failed to delete resume', details: deleteRowError.message },
         { status: 500 }
       )
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Resume deleted successfully',
-      data: updatedProfile
+      message: 'Resume deleted successfully'
     })
   } catch (error) {
     return NextResponse.json(

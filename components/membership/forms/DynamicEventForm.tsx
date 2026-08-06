@@ -8,9 +8,9 @@ interface Profile {
   full_name: string | null
   email: string
   major: string | null
-  graduation_year: number | null
-  phone: string | null
-  linkedin_url: string | null
+  graduation_date: string | null
+  phone_num: string | null
+  linkedin: string | null
   bio: string | null
 }
 
@@ -29,7 +29,7 @@ const DEFAULT_FIELDS: FormField[] = [
   { id: 'full_name', label: 'Full Name', type: 'text', required: true, order: 0, profileField: 'full_name', placeholder: 'e.g. John Doe' },
   { id: 'email', label: 'Email', type: 'email', required: true, order: 1, profileField: 'email', placeholder: 'name@gmail.com' },
   { id: 'major', label: 'Major', type: 'text', required: true, order: 2, profileField: 'major', placeholder: 'e.g. Computer Science' },
-  { id: 'graduation_year', label: 'Graduation Year', type: 'number', required: false, order: 3, profileField: 'graduation_year', placeholder: 'e.g. 2027' },
+  { id: 'graduation_date', label: 'Graduation Date', type: 'date', required: false, order: 3, profileField: 'graduation_date', placeholder: 'e.g. 2027-05-01' },
   { id: 'notes', label: 'Notes', type: 'textarea', required: false, order: 4, placeholder: 'Anything else you would like to let us know?' },
 ]
 

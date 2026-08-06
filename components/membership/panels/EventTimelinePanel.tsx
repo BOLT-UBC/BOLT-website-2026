@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 
 interface Event {
-  id: string
-  name: string
+  event_id: string
+  event_name: string
 }
 
 interface TimelineMilestone {
@@ -34,11 +34,11 @@ export function EventTimelinePanel({ eventId }: EventTimelinePanelProps) {
   // Load events list
   useEffect(() => {
     const loadEvents = async () => {
-      const { data } = await supabase.from('events').select('id, name').order('name')
+      const { data } = await supabase.from('events').select('event_id, event_name').order('event_name')
       if (data) {
         setEvents(data)
         if (!selectedEventId && data.length > 0) {
-          setSelectedEventId(data[0].id)
+          setSelectedEventId(data[0].event_id)
         }
       }
     }
@@ -201,7 +201,7 @@ export function EventTimelinePanel({ eventId }: EventTimelinePanelProps) {
           >
             <option value="">Select an event...</option>
             {events.map(event => (
-              <option key={event.id} value={event.id}>{event.name}</option>
+              <option key={event.event_id} value={event.event_id}>{event.event_name}</option>
             ))}
           </select>
         </div>

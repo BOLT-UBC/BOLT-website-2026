@@ -3,19 +3,19 @@ import { supabase } from '@/lib/supabase'
 import type { UserProfile, AdminStats } from '../types'
 
 interface BootcampRegistration {
-  id: string
+  registration_id: string
   status: 'pending' | 'confirmed' | 'cancelled'
   registered_at: string
   notes: string | null
   application_responses?: Record<string, unknown>
-  profiles: {
-    id: string
+  members: {
+    member_id: string
     email: string
     full_name: string | null
-    graduation_year: number | null
+    graduation_date: string | null
     major: string | null
-    phone: string | null
-    linkedin_url: string | null
+    phone_num: string | null
+    linkedin: string | null
   } | null
 }
 
@@ -162,7 +162,9 @@ export function useAdminData(profileRole: string | undefined, activeTab: string,
       if (bulkAction === 'role') {
         updates.role = bulkValue
       } else if (bulkAction === 'graduation_year') {
-        updates.graduation_year = parseInt(bulkValue)
+        // The API only accepts graduation_date (DATE column); bulkValue is a
+        // bare year from the admin UI, so anchor it to Jan 1 of that year.
+        updates.graduation_date = `${parseInt(bulkValue)}-01-01`
       }
 
       const { data: sessionData } = await supabase.auth.getSession()

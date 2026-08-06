@@ -1,15 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || ''
+const supabaseServiceRoleKey = process.env.SUPABASE_SECRET_KEY || ''
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
 // Service role client for admin operations (bypasses RLS)
 // Only create if service role key is available
 export const supabaseAdmin = supabaseServiceRoleKey
-  ? createClient(supabaseUrl, supabaseServiceRoleKey, {
+  ? createClient<Database>(supabaseUrl, supabaseServiceRoleKey, {
       auth: {
         autoRefreshToken: false,
         persistSession: false
@@ -29,7 +29,7 @@ export interface FormField {
   options?: string[] // For select fields
   defaultValue?: string | number | boolean
   order: number
-  profileField?: string // Maps to profile field (e.g., 'full_name', 'major', 'graduation_year')
+  profileField?: string // Maps to a members column (e.g., 'full_name', 'major', 'graduation_date')
 }
 
 export interface TimelineMilestone {
@@ -45,163 +45,206 @@ export interface TimelineMilestone {
 export interface Database {
   public: {
     Tables: {
-      profiles: {
+      members: {
         Row: {
-          id: string
+          member_id: string
           email: string
           full_name: string | null
-          avatar_url: string | null
+          avatar: string | null
           role: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
           team_id: string | null
-          graduation_year: number | null
+          graduation_date: string | null
+          faculty: string | null
           major: string | null
-          phone: string | null
-          linkedin_url: string | null
+          phone_num: string | null
+          linkedin: string | null
           bio: string | null
           pronouns: string | null
           discord_username: string | null
           ubc_student_id: string | null
-          resume_url: string | null
-          resume_file_name: string | null
-          resume_uploaded_at: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
-          id: string
+          member_id: string
           email: string
           full_name?: string | null
-          avatar_url?: string | null
+          avatar?: string | null
           role?: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
           team_id?: string | null
-          graduation_year?: number | null
+          graduation_date?: string | null
+          faculty?: string | null
           major?: string | null
-          phone?: string | null
-          linkedin_url?: string | null
+          phone_num?: string | null
+          linkedin?: string | null
           bio?: string | null
           pronouns?: string | null
           discord_username?: string | null
           ubc_student_id?: string | null
-          resume_url?: string | null
-          resume_file_name?: string | null
-          resume_uploaded_at?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
-          id?: string
+          member_id?: string
           email?: string
           full_name?: string | null
-          avatar_url?: string | null
+          avatar?: string | null
           role?: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
           team_id?: string | null
-          graduation_year?: number | null
+          graduation_date?: string | null
+          faculty?: string | null
           major?: string | null
-          phone?: string | null
-          linkedin_url?: string | null
+          phone_num?: string | null
+          linkedin?: string | null
           bio?: string | null
           pronouns?: string | null
           discord_username?: string | null
           ubc_student_id?: string | null
-          resume_url?: string | null
-          resume_file_name?: string | null
-          resume_uploaded_at?: string | null
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       teams: {
         Row: {
-          id: string
-          name: string
+          team_id: string
+          team_name: string
           description: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
-          id?: string
-          name: string
+          team_id?: string
+          team_name: string
           description?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
-          id?: string
-          name?: string
+          team_id?: string
+          team_name?: string
           description?: string | null
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       events: {
         Row: {
-          id: string
-          name: string
+          event_id: string
+          event_name: string
           description: string | null
           image_url: string | null
-          date: string | null
+          event_date: string | null
           location: string | null
           max_capacity: number | null
           registration_open: boolean
           registration_deadline: string | null
+          applications_open_date: string | null
+          application_deadline_date: string | null
+          decision_release_date: string | null
+          confirmation_due_date: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
-          id?: string
-          name: string
+          event_id?: string
+          event_name: string
           description?: string | null
           image_url?: string | null
-          date?: string | null
+          event_date?: string | null
           location?: string | null
           max_capacity?: number | null
           registration_open?: boolean
           registration_deadline?: string | null
+          applications_open_date?: string | null
+          application_deadline_date?: string | null
+          decision_release_date?: string | null
+          confirmation_due_date?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
-          id?: string
-          name?: string
+          event_id?: string
+          event_name?: string
           description?: string | null
           image_url?: string | null
-          date?: string | null
+          event_date?: string | null
           location?: string | null
           max_capacity?: number | null
           registration_open?: boolean
           registration_deadline?: string | null
+          applications_open_date?: string | null
+          application_deadline_date?: string | null
+          decision_release_date?: string | null
+          confirmation_due_date?: string | null
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
-      event_registrations: {
+      event_attendance: {
         Row: {
-          id: string
+          registration_id: string
           event_id: string
-          user_id: string
+          member_id: string
+          attending: boolean
           status: 'pending' | 'confirmed' | 'cancelled'
           registered_at: string
           notes: string | null
           application_responses: Record<string, unknown>
         }
         Insert: {
-          id?: string
+          registration_id?: string
           event_id: string
-          user_id: string
+          member_id: string
+          attending?: boolean
           status?: 'pending' | 'confirmed' | 'cancelled'
           registered_at?: string
           notes?: string | null
           application_responses?: Record<string, unknown>
         }
         Update: {
-          id?: string
+          registration_id?: string
           event_id?: string
-          user_id?: string
+          member_id?: string
+          attending?: boolean
           status?: 'pending' | 'confirmed' | 'cancelled'
           registered_at?: string
           notes?: string | null
           application_responses?: Record<string, unknown>
         }
+        Relationships: []
+      }
+      resumes: {
+        Row: {
+          resume_id: string
+          member_id: string
+          resume: string | null
+          file_name: string | null
+          file_size: number | null
+          file_type: string | null
+          time_stamp_added: string
+        }
+        Insert: {
+          resume_id?: string
+          member_id: string
+          resume?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          time_stamp_added?: string
+        }
+        Update: {
+          resume_id?: string
+          member_id?: string
+          resume?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          time_stamp_added?: string
+        }
+        Relationships: []
       }
       application_form_configs: {
         Row: {
@@ -225,6 +268,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
       event_timeline: {
         Row: {
@@ -257,91 +301,72 @@ export interface Database {
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
-      partners: {
+      announcements: {
         Row: {
           id: string
-          name: string
-          logo_url: string | null
-          website_url: string | null
-          description: string | null
-          tier: 'platinum' | 'gold' | 'silver' | 'bronze'
+          title: string
+          content: string
+          created_by: string | null
+          is_pinned: boolean
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
-          name: string
-          logo_url?: string | null
-          website_url?: string | null
-          description?: string | null
-          tier?: 'platinum' | 'gold' | 'silver' | 'bronze'
+          title: string
+          content: string
+          created_by?: string | null
+          is_pinned?: boolean
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
-          name?: string
-          logo_url?: string | null
-          website_url?: string | null
-          description?: string | null
-          tier?: 'platinum' | 'gold' | 'silver' | 'bronze'
+          title?: string
+          content?: string
+          created_by?: string | null
+          is_pinned?: boolean
           created_at?: string
           updated_at?: string
         }
+        Relationships: []
       }
-      newsletter_subscribers: {
+      resources: {
         Row: {
           id: string
-          email: string
-          subscribed_at: string
-          active: boolean
+          title: string
+          description: string | null
+          link: string
+          display_order: number
+          created_by: string | null
+          created_at: string
         }
         Insert: {
           id?: string
-          email: string
-          subscribed_at?: string
-          active?: boolean
+          title: string
+          description?: string | null
+          link: string
+          display_order?: number
+          created_by?: string | null
+          created_at?: string
         }
         Update: {
           id?: string
-          email?: string
-          subscribed_at?: string
-          active?: boolean
+          title?: string
+          description?: string | null
+          link?: string
+          display_order?: number
+          created_by?: string | null
+          created_at?: string
         }
-      }
-      resume_uploads: {
-        Row: {
-          id: string
-          user_id: string
-          file_name: string
-          file_url: string
-          file_size: number
-          file_type: string
-          uploaded_at: string
-          is_active: boolean
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          file_name: string
-          file_url: string
-          file_size: number
-          file_type: string
-          uploaded_at?: string
-          is_active?: boolean
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          file_name?: string
-          file_url?: string
-          file_size?: number
-          file_type?: string
-          uploaded_at?: string
-          is_active?: boolean
-        }
+        Relationships: []
       }
     }
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
   }
 }

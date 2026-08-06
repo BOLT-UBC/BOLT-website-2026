@@ -9,7 +9,7 @@ export const teamService = {
     const { data, error } = await supabase
       .from('teams')
       .select('*')
-      .order('name')
+      .order('team_name')
 
     if (error) throw error
     return data
@@ -19,7 +19,7 @@ export const teamService = {
     const { data, error } = await supabase
       .from('teams')
       .select('*')
-      .eq('id', id)
+      .eq('team_id', id)
       .single()
 
     if (error) throw error
@@ -41,7 +41,7 @@ export const teamService = {
     const { data, error } = await supabase
       .from('teams')
       .update(updates)
-      .eq('id', id)
+      .eq('team_id', id)
       .select()
       .single()
 
@@ -53,22 +53,22 @@ export const teamService = {
     const { error } = await supabase
       .from('teams')
       .delete()
-      .eq('id', id)
+      .eq('team_id', id)
 
     if (error) throw error
   }
 }
 
-// Profile service
+// Profile (members table) service
 export const profileService = {
   async getAll() {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .select(`
         *,
         teams:team_id (
-          id,
-          name
+          team_id,
+          team_name
         )
       `)
       .order('full_name')
@@ -79,15 +79,15 @@ export const profileService = {
 
   async getById(id: string) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .select(`
         *,
         teams:team_id (
-          id,
-          name
+          team_id,
+          team_name
         )
       `)
-      .eq('id', id)
+      .eq('member_id', id)
       .single()
 
     if (error) throw error
@@ -96,12 +96,12 @@ export const profileService = {
 
   async getByTeam(teamId: string) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .select(`
         *,
         teams:team_id (
-          id,
-          name
+          team_id,
+          team_name
         )
       `)
       .eq('team_id', teamId)
@@ -111,9 +111,9 @@ export const profileService = {
     return data
   },
 
-  async create(profile: Tables['profiles']['Insert']) {
+  async create(profile: Tables['members']['Insert']) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .insert(profile)
       .select()
       .single()
@@ -122,11 +122,11 @@ export const profileService = {
     return data
   },
 
-  async update(id: string, updates: Tables['profiles']['Update']) {
+  async update(id: string, updates: Tables['members']['Update']) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('members')
       .update(updates)
-      .eq('id', id)
+      .eq('member_id', id)
       .select()
       .single()
 
@@ -136,9 +136,9 @@ export const profileService = {
 
   async delete(id: string) {
     const { error } = await supabase
-      .from('profiles')
+      .from('members')
       .delete()
-      .eq('id', id)
+      .eq('member_id', id)
 
     if (error) throw error
   }
@@ -150,7 +150,7 @@ export const eventService = {
     const { data, error } = await supabase
       .from('events')
       .select('*')
-      .order('date', { ascending: false })
+      .order('event_date', { ascending: false })
 
     if (error) throw error
     return data
@@ -160,7 +160,7 @@ export const eventService = {
     const { data, error } = await supabase
       .from('events')
       .select('*')
-      .eq('id', id)
+      .eq('event_id', id)
       .single()
 
     if (error) throw error
@@ -171,9 +171,9 @@ export const eventService = {
     const { data, error } = await supabase
       .from('events')
       .select('*')
-      .gte('date', new Date().toISOString())
+      .gte('event_date', new Date().toISOString())
       .eq('registration_open', true)
-      .order('date', { ascending: true })
+      .order('event_date', { ascending: true })
 
     if (error) throw error
     return data
@@ -194,7 +194,7 @@ export const eventService = {
     const { data, error } = await supabase
       .from('events')
       .update(updates)
-      .eq('id', id)
+      .eq('event_id', id)
       .select()
       .single()
 
@@ -206,21 +206,21 @@ export const eventService = {
     const { error } = await supabase
       .from('events')
       .delete()
-      .eq('id', id)
+      .eq('event_id', id)
 
     if (error) throw error
   }
 }
 
-// Event registration service
+// Event registration service (backed by event_attendance)
 export const eventRegistrationService = {
   async getByEvent(eventId: string) {
     const { data, error } = await supabase
-      .from('event_registrations')
+      .from('event_attendance')
       .select(`
         *,
-        profiles:user_id (
-          id,
+        members:member_id (
+          member_id,
           full_name,
           email
         )
@@ -234,17 +234,17 @@ export const eventRegistrationService = {
 
   async getByUser(userId: string) {
     const { data, error } = await supabase
-      .from('event_registrations')
+      .from('event_attendance')
       .select(`
         *,
         events:event_id (
-          id,
-          name,
-          date,
+          event_id,
+          event_name,
+          event_date,
           location
         )
       `)
-      .eq('user_id', userId)
+      .eq('member_id', userId)
       .order('registered_at', { ascending: false })
 
     if (error) throw error
@@ -253,10 +253,10 @@ export const eventRegistrationService = {
 
   async register(eventId: string, userId: string, notes?: string) {
     const { data, error } = await supabase
-      .from('event_registrations')
+      .from('event_attendance')
       .insert({
         event_id: eventId,
-        user_id: userId,
+        member_id: userId,
         notes
       })
       .select()
@@ -268,9 +268,9 @@ export const eventRegistrationService = {
 
   async updateStatus(id: string, status: 'pending' | 'confirmed' | 'cancelled') {
     const { data, error } = await supabase
-      .from('event_registrations')
+      .from('event_attendance')
       .update({ status })
-      .eq('id', id)
+      .eq('registration_id', id)
       .select()
       .single()
 
@@ -280,9 +280,9 @@ export const eventRegistrationService = {
 
   async cancel(id: string) {
     const { data, error } = await supabase
-      .from('event_registrations')
+      .from('event_attendance')
       .update({ status: 'cancelled' })
-      .eq('id', id)
+      .eq('registration_id', id)
       .select()
       .single()
 
@@ -290,61 +290,3 @@ export const eventRegistrationService = {
     return data
   }
 }
-
-// Partner service
-export const partnerService = {
-  async getAll() {
-    const { data, error } = await supabase
-      .from('partners')
-      .select('*')
-      .order('tier', { ascending: false })
-
-    if (error) throw error
-    return data
-  },
-
-  async getByTier(tier: 'platinum' | 'gold' | 'silver' | 'bronze') {
-    const { data, error } = await supabase
-      .from('partners')
-      .select('*')
-      .eq('tier', tier)
-      .order('name')
-
-    if (error) throw error
-    return data
-  },
-
-  async create(partner: Tables['partners']['Insert']) {
-    const { data, error } = await supabase
-      .from('partners')
-      .insert(partner)
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
-  },
-
-  async update(id: string, updates: Tables['partners']['Update']) {
-    const { data, error } = await supabase
-      .from('partners')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
-  },
-
-  async delete(id: string) {
-    const { error } = await supabase
-      .from('partners')
-      .delete()
-      .eq('id', id)
-
-    if (error) throw error
-  }
-}
-
-

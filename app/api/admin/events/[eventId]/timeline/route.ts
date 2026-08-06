@@ -30,8 +30,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Verify event exists
     const { data: event, error: eventError } = await supabaseAdmin
       .from('events')
-      .select('id, name')
-      .eq('id', eventId)
+      .select('event_id, event_name')
+      .eq('event_id', eventId)
       .single()
 
     if (eventError || !event) {
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({
       milestones: milestones || [],
-      event: { id: event.id, name: event.name }
+      event: { id: event.event_id, name: event.event_name }
     })
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -92,8 +92,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     // Verify event exists
     const { data: event, error: eventError } = await supabaseAdmin
       .from('events')
-      .select('id')
-      .eq('id', eventId)
+      .select('event_id')
+      .eq('event_id', eventId)
       .single()
 
     if (eventError || !event) {
@@ -235,8 +235,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Verify event exists
     const { data: event, error: eventError } = await supabaseAdmin
       .from('events')
-      .select('id')
-      .eq('id', eventId)
+      .select('event_id')
+      .eq('event_id', eventId)
       .single()
 
     if (eventError || !event) {

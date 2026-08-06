@@ -13,12 +13,12 @@ export async function GET() {
       )
     }
 
-    // Fetch announcements with profile join
+    // Fetch announcements with member join
     const { data: initialData, error } = await supabaseAdmin
       .from('announcements')
       .select(`
         *,
-        profiles:created_by (
+        members:created_by (
           full_name,
           email
         )
@@ -33,24 +33,24 @@ export async function GET() {
       )
     }
 
-    // If join doesn't work, fetch profiles separately and merge
+    // If join doesn't work, fetch members separately and merge
     let data = initialData
     if (data) {
-      // Check if profiles data is missing and fetch separately if needed
-      const announcementsWithMissingProfiles = data.filter(a => !a.profiles && a.created_by)
+      // Check if member data is missing and fetch separately if needed
+      const announcementsWithMissingMembers = data.filter(a => !a.members && a.created_by)
 
-      if (announcementsWithMissingProfiles.length > 0) {
-        const userIds = announcementsWithMissingProfiles.map(a => a.created_by).filter(Boolean) as string[]
-        const { data: profilesData } = await supabaseAdmin
-          .from('profiles')
-          .select('id, full_name, email')
-          .in('id', userIds)
+      if (announcementsWithMissingMembers.length > 0) {
+        const userIds = announcementsWithMissingMembers.map(a => a.created_by).filter(Boolean) as string[]
+        const { data: membersData } = await supabaseAdmin
+          .from('members')
+          .select('member_id, full_name, email')
+          .in('member_id', userIds)
 
-        if (profilesData) {
-          const profilesMap = new Map(profilesData.map(p => [p.id, { full_name: p.full_name, email: p.email }]))
+        if (membersData) {
+          const membersMap = new Map(membersData.map(m => [m.member_id, { full_name: m.full_name, email: m.email }]))
           data = data.map(announcement => ({
             ...announcement,
-            profiles: announcement.profiles || (announcement.created_by ? profilesMap.get(announcement.created_by) || null : null)
+            members: announcement.members || (announcement.created_by ? membersMap.get(announcement.created_by) || null : null)
           }))
         }
       }
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
-        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+        error: 'Service role key not configured. Please add SUPABASE_SECRET_KEY to your environment variables.'
       }, { status: 500 })
     }
 
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
       })
       .select(`
         *,
-        profiles:created_by (
+        members:created_by (
           full_name,
           email
         )

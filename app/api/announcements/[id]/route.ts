@@ -31,7 +31,7 @@ export async function PUT(
     const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
-        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+        error: 'Service role key not configured. Please add SUPABASE_SECRET_KEY to your environment variables.'
       }, { status: 500 })
     }
 
@@ -47,7 +47,7 @@ export async function PUT(
       .eq('id', id)
       .select(`
         *,
-        profiles:created_by (
+        members:created_by (
           full_name,
           email
         )
@@ -104,7 +104,7 @@ export async function DELETE(
     const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
-        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+        error: 'Service role key not configured. Please add SUPABASE_SECRET_KEY to your environment variables.'
       }, { status: 500 })
     }
 

@@ -139,7 +139,7 @@ export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
             (() => {
               // Filter to only show upcoming event
               const bootcampEvent = events.find(event =>
-                event.name.toLowerCase().includes('bolt bootcamp')
+                event.event_name.toLowerCase().includes('bolt bootcamp')
               )
 
               if (!bootcampEvent) {
@@ -154,19 +154,23 @@ export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
                 )
               }
 
-              const config = getEventConfig(bootcampEvent.name, bootcampEvent.description || undefined)
-              const eventRoute = getPortalEventRoute(bootcampEvent.name)
+              const config = getEventConfig(bootcampEvent.event_name, bootcampEvent.description || undefined)
               const eventMonth = eventMonths[config.titleAccent]
-              const applicationRoute = getPortalEventRoute(bootcampEvent.name)
-              const learnMoreRoute = '/events/bolt-bootcamp'   
+              const applicationRoute = getPortalEventRoute(bootcampEvent.event_name)
+              const learnMoreRoute = '/events/bolt-bootcamp'
               const primaryCta = { label: 'Register Now', href: applicationRoute }
-               
 
               return (
                 <div onClick={(e) => e.stopPropagation()}>
                   <EventCard
-                    key={bootcampEvent.id}
-                    event={bootcampEvent}
+                    key={bootcampEvent.event_id}
+                    event={{
+                      id: bootcampEvent.event_id,
+                      name: bootcampEvent.event_name,
+                      description: bootcampEvent.description,
+                      date: bootcampEvent.event_date,
+                      location: bootcampEvent.location,
+                    }}
                     config={config}
                     eventRoute={learnMoreRoute}
                     eventMonth={eventMonth}
@@ -251,9 +255,9 @@ export function HomePanel({ events, onSwitchTab }: HomePanelProps) {
                   </p>
                   <p className="font-medium">
                     {(() => {
-                      const profile = Array.isArray(selectedAnnouncement.profiles)
-                        ? selectedAnnouncement.profiles[0]
-                        : selectedAnnouncement.profiles
+                      const profile = Array.isArray(selectedAnnouncement.members)
+                        ? selectedAnnouncement.members[0]
+                        : selectedAnnouncement.members
                       return profile
                         ? `By ${profile.full_name || profile.email}`
                         : selectedAnnouncement.created_by

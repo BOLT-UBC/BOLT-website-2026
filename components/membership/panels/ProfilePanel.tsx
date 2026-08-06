@@ -34,15 +34,14 @@ export function ProfilePanel({
     const fields = [
       profile.full_name,
       profile.email,
-      profile.graduation_year,
+      profile.graduation_date,
       profile.major,
-      profile.phone,
-      profile.linkedin_url,
+      profile.phone_num,
+      profile.linkedin,
       profile.bio,
       profile.pronouns,
       profile.discord_username,
       profile.ubc_student_id,
-      profile.resume_url,
     ]
 
     const completedFields = fields.filter(field => field !== null && field !== '').length
@@ -54,15 +53,14 @@ export function ProfilePanel({
 
   if (profile) {
     if (!profile.full_name) missingFields.push('Full Name')
-    if (!profile.graduation_year) missingFields.push('Graduation Year')
+    if (!profile.graduation_date) missingFields.push('Graduation Date')
     if (!profile.major) missingFields.push('Major')
-    if (!profile.phone) missingFields.push('Phone')
-    if (!profile.linkedin_url) missingFields.push('LinkedIn')
+    if (!profile.phone_num) missingFields.push('Phone')
+    if (!profile.linkedin) missingFields.push('LinkedIn')
     if (!profile.bio) missingFields.push('Bio')
     if (!profile.pronouns) missingFields.push('Pronouns')
     if (!profile.discord_username) missingFields.push('Discord Username')
     if (!profile.ubc_student_id) missingFields.push('UBC Student ID')
-    if (!profile.resume_url) missingFields.push('Resume')
   }
 
   const FieldIcon = ({ children }: { children: React.ReactNode }) => (
@@ -179,16 +177,13 @@ export function ProfilePanel({
                 <svg className="w-4 h-4 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                Graduation Year
+                Graduation Date
               </label>
               <input
-                type="number"
-                value={editForm.graduation_year}
-                onChange={(e) => setEditForm({ ...editForm, graduation_year: e.target.value })}
+                type="date"
+                value={editForm.graduation_date}
+                onChange={(e) => setEditForm({ ...editForm, graduation_date: e.target.value })}
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
-                placeholder="e.g., 2025"
-                min="2020"
-                max="2030"
               />
             </div>
 
@@ -233,8 +228,8 @@ export function ProfilePanel({
               </label>
               <input
                 type="tel"
-                value={editForm.phone}
-                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                value={editForm.phone_num}
+                onChange={(e) => setEditForm({ ...editForm, phone_num: e.target.value })}
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
                 placeholder="Enter your phone number"
               />
@@ -249,8 +244,8 @@ export function ProfilePanel({
               </label>
               <input
                 type="url"
-                value={editForm.linkedin_url}
-                onChange={(e) => setEditForm({ ...editForm, linkedin_url: e.target.value })}
+                value={editForm.linkedin}
+                onChange={(e) => setEditForm({ ...editForm, linkedin: e.target.value })}
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
                 placeholder="https://linkedin.com/in/yourname"
               />
@@ -416,7 +411,7 @@ export function ProfilePanel({
               </FieldIcon>
               <div className="flex-1 min-w-0">
                 <label className="block text-white/50 mb-1 text-xs">Graduation Year</label>
-                <p className="text-white text-sm">{profile?.graduation_year ? `Class of ${profile.graduation_year}` : <span className="text-white/40">Not provided</span>}</p>
+                <p className="text-white text-sm">{profile?.graduation_date ? `Class of ${new Date(profile.graduation_date).getFullYear()}` : <span className="text-white/40">Not provided</span>}</p>
               </div>
             </div>
 
@@ -452,7 +447,7 @@ export function ProfilePanel({
               </FieldIcon>
               <div className="flex-1 min-w-0">
                 <label className="block text-white/50 mb-1 text-xs">Phone</label>
-                <p className="text-white text-sm">{profile?.phone || <span className="text-white/40">Not provided</span>}</p>
+                <p className="text-white text-sm">{profile?.phone_num || <span className="text-white/40">Not provided</span>}</p>
               </div>
             </div>
 
@@ -465,9 +460,9 @@ export function ProfilePanel({
               <div className="flex-1 min-w-0">
                 <label className="block text-white/50 mb-1 text-xs">LinkedIn</label>
                 <p className="text-white text-sm">
-                  {profile?.linkedin_url ? (
-                    <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline break-all">
-                      {profile.linkedin_url}
+                  {profile?.linkedin ? (
+                    <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline break-all">
+                      {profile.linkedin}
                     </a>
                   ) : (
                     <span className="text-white/40">Not provided</span>

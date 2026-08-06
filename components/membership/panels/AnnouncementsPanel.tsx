@@ -257,7 +257,7 @@ export function AnnouncementsPanel({ userRole }: AnnouncementsPanelProps) {
                     <p className="text-white/70 mb-2 whitespace-pre-wrap">{announcement.content}</p>
                     <p className="text-white/50 text-sm">
                       {new Date(announcement.created_at).toLocaleDateString()}
-                      {announcement.profiles && ` • By ${announcement.profiles.full_name || announcement.profiles.email}`}
+                      {announcement.members && ` • By ${announcement.members.full_name || announcement.members.email}`}
                     </p>
                   </div>
                   <div className="flex gap-2 ml-4">

@@ -250,7 +250,7 @@ export function AdminPanel({
                     checked={selectedUsers.length === adminUsers.length && adminUsers.length > 0}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedUsers(adminUsers.map(user => user.id))
+                        setSelectedUsers(adminUsers.map(user => user.member_id))
                       } else {
                         setSelectedUsers([])
                       }
@@ -267,16 +267,16 @@ export function AdminPanel({
             </thead>
             <tbody>
               {adminUsers.map((user) => (
-                <tr key={user.id} className="border-b border-white/10 hover:bg-white/5">
+                <tr key={user.member_id} className="border-b border-white/10 hover:bg-white/5">
                   <td className="py-3 px-2">
                     <input
                       type="checkbox"
-                      checked={selectedUsers.includes(user.id)}
+                      checked={selectedUsers.includes(user.member_id)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelectedUsers([...selectedUsers, user.id])
+                          setSelectedUsers([...selectedUsers, user.member_id])
                         } else {
-                          setSelectedUsers(selectedUsers.filter(id => id !== user.id))
+                          setSelectedUsers(selectedUsers.filter(id => id !== user.member_id))
                         }
                       }}
                       className="rounded"
@@ -289,7 +289,7 @@ export function AdminPanel({
                       {getRoleDisplayName(user.role)}
                     </span>
                   </td>
-                  <td className="py-3 px-2">{user.graduation_year || 'N/A'}</td>
+                  <td className="py-3 px-2">{user.graduation_date ? new Date(user.graduation_date).getFullYear() : 'N/A'}</td>
                   <td className="py-3 px-2 text-sm text-white/70">
                     {new Date(user.created_at).toLocaleDateString()}
                   </td>

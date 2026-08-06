@@ -4,7 +4,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Navbar from "components/Navbar";
 import Footer from "components/Footer";
-import { supabase } from "@/lib/supabase";
+import { supabase, type Database } from "@/lib/supabase";
 import { useRouter, usePathname } from "next/navigation";
 import { Timeline } from "@/components/membership/Timeline";
 import { useAuth } from "@/lib/useAuth";
@@ -51,7 +51,7 @@ export default function BoltBootcampRegistrationPage() {
   const [timeline, setTimeline] = useState<any[]>([]);
   const [deadline, setDeadline] = useState<string | null>("2026-02-27T00:00:00");
   const [existingRegistration, setExistingRegistration] = useState<{
-    id: string
+    registration_id: string
     status: string
     registered_at: string
     notes: string | null
@@ -144,8 +144,9 @@ export default function BoltBootcampRegistrationPage() {
         router.push(`/login?next=${encodeURIComponent(pathname)}`);
         return;
       }
-      const { data: reg } = await supabase.from("event_registrations").select("*")
-        .eq("event_id", BOOTCAMP_EVENT_ID).eq("user_id", data.session.user.id).single();
+      const { data: reg } = await supabase.from("event_attendance").select("*")
+        .eq("event_id", BOOTCAMP_EVENT_ID).eq("member_id", data.session.user.id)
+        .single<Database['public']['Tables']['event_attendance']['Row']>();
 
       if (reg) {
         setExistingRegistration(reg);
@@ -161,8 +162,8 @@ export default function BoltBootcampRegistrationPage() {
     if (!user) return;
     setIsSubmitting(true);
     try {
-      await supabase.from("event_registrations").upsert({
-        event_id: BOOTCAMP_EVENT_ID, user_id: user.id, status: "pending", application_responses: formData,
+      await supabase.from("event_attendance").upsert({
+        event_id: BOOTCAMP_EVENT_ID, member_id: user.id, status: "pending", application_responses: formData,
       });
       setCurrentStep("status");
       window.scrollTo(0, 0);

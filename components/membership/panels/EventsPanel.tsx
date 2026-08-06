@@ -14,14 +14,14 @@ interface EventsPanelProps {
 }
 
 interface UserRegistration {
-  id: string
+  registration_id: string
   event_id: string
   status: 'pending' | 'confirmed' | 'cancelled'
   registered_at: string
   events: {
-    id: string
-    name: string
-    date: string | null
+    event_id: string
+    event_name: string
+    event_date: string | null
     location: string | null
   }
 }
@@ -88,9 +88,9 @@ export function EventsPanel({ events, userId }: EventsPanelProps) {
         {events.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {events.slice(0, 8).map((event) => {
-                const config = getEventConfig(event.name, event.description || undefined)
-                const applicationRoute = getPortalEventRoute(event.name)
-                const isBootcamp = event.name.toLowerCase().includes('bootcamp')
+                const config = getEventConfig(event.event_name, event.description || undefined)
+                const applicationRoute = getPortalEventRoute(event.event_name)
+                const isBootcamp = event.event_name.toLowerCase().includes('bootcamp')
                 const learnMoreRoute = isBootcamp ? '/events/bolt-bootcamp' : applicationRoute
                 const eventMonth = eventMonths[config.titleAccent]
                 const primaryCta = isBootcamp
@@ -98,8 +98,14 @@ export function EventsPanel({ events, userId }: EventsPanelProps) {
                 : undefined
                 return (
                 <EventCard
-                key={event.id}
-                event={event}
+                key={event.event_id}
+                event={{
+                  id: event.event_id,
+                  name: event.event_name,
+                  description: event.description,
+                  date: event.event_date,
+                  location: event.location,
+                }}
                 config={config}
                 eventRoute={learnMoreRoute}
                 eventMonth={eventMonth}
@@ -129,16 +135,16 @@ export function EventsPanel({ events, userId }: EventsPanelProps) {
           ) : registrations.length > 0 ? (
             <div className="space-y-3">
               {registrations.map((registration) => {
-                const eventRoute = getEventRoute(registration.events.name)
+                const eventRoute = getEventRoute(registration.events.event_name)
                 return (
                   <div
-                    key={registration.id}
+                    key={registration.registration_id}
                     className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
                     onClick={() => router.push(eventRoute)}
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-white font-semibold text-sm mb-1">{registration.events.name}</h3>
+                        <h3 className="text-white font-semibold text-sm mb-1">{registration.events.event_name}</h3>
                         <p className="text-white/60 text-xs">
                           Registered {new Date(registration.registered_at).toLocaleDateString('en-US', {
                             month: 'short',

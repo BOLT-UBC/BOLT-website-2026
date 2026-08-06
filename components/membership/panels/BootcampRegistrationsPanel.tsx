@@ -3,19 +3,19 @@
 import React, { useState } from 'react'
 
 interface Registration {
-  id: string
+  registration_id: string
   status: 'pending' | 'confirmed' | 'cancelled'
   registered_at: string
   notes: string | null
   application_responses?: Record<string, unknown>
-  profiles: {
-    id: string
+  members: {
+    member_id: string
     email: string
     full_name: string | null
-    graduation_year: number | null
+    graduation_date: string | null
     major: string | null
-    phone: string | null
-    linkedin_url: string | null
+    phone_num: string | null
+    linkedin: string | null
   } | null
 }
 
@@ -88,7 +88,7 @@ export function BootcampRegistrationsPanel({
       setEditingNotes(null)
       setEditingResponses(null)
     } else {
-      const registration = registrations.find(r => r.id === registrationId)
+      const registration = registrations.find(r => r.registration_id === registrationId)
       setExpandedRow(registrationId)
       setEditingNotes({ id: registrationId, value: registration?.notes || '' })
       setEditingResponses({ id: registrationId, value: registration?.application_responses || {} })
@@ -236,7 +236,7 @@ export function BootcampRegistrationsPanel({
                       checked={selectedRegistrations.length === registrations.length && registrations.length > 0}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelectedRegistrations(registrations.map(reg => reg.id))
+                          setSelectedRegistrations(registrations.map(reg => reg.registration_id))
                         } else {
                           setSelectedRegistrations([])
                         }
@@ -255,24 +255,24 @@ export function BootcampRegistrationsPanel({
               </thead>
               <tbody>
                 {registrations.map((registration) => {
-                  const profile = registration.profiles
+                  const profile = registration.members
                   if (!profile) return null
 
-                  const isExpanded = expandedRow === registration.id
+                  const isExpanded = expandedRow === registration.registration_id
                   const hasCustomResponses = registration.application_responses && Object.keys(registration.application_responses).length > 0
 
                   return (
-                    <React.Fragment key={registration.id}>
+                    <React.Fragment key={registration.registration_id}>
                       <tr className={`border-b border-white/10 hover:bg-white/5 ${isExpanded ? 'bg-white/5' : ''}`}>
                         <td className="py-3 px-2">
                           <input
                             type="checkbox"
-                            checked={selectedRegistrations.includes(registration.id)}
+                            checked={selectedRegistrations.includes(registration.registration_id)}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedRegistrations([...selectedRegistrations, registration.id])
+                                setSelectedRegistrations([...selectedRegistrations, registration.registration_id])
                               } else {
-                                setSelectedRegistrations(selectedRegistrations.filter(id => id !== registration.id))
+                                setSelectedRegistrations(selectedRegistrations.filter(id => id !== registration.registration_id))
                               }
                             }}
                             className="rounded"
@@ -281,12 +281,12 @@ export function BootcampRegistrationsPanel({
                         <td className="py-3 px-2 font-medium">{profile.full_name || 'N/A'}</td>
                         <td className="py-3 px-2 text-sm">{profile.email}</td>
                         <td className="py-3 px-2 text-sm">{profile.major || 'N/A'}</td>
-                        <td className="py-3 px-2 text-sm">{profile.graduation_year || 'N/A'}</td>
+                        <td className="py-3 px-2 text-sm">{profile.graduation_date ? new Date(profile.graduation_date).getFullYear() : 'N/A'}</td>
                         <td className="py-3 px-2">
                           <select
                             value={registration.status}
                             onChange={(e) =>
-                              onUpdateStatus(registration.id, e.target.value as 'pending' | 'confirmed' | 'cancelled')
+                              onUpdateStatus(registration.registration_id, e.target.value as 'pending' | 'confirmed' | 'cancelled')
                             }
                             className={`px-2 py-1 rounded text-xs font-medium border ${getStatusColor(registration.status)} bg-transparent focus:outline-none focus:ring-2 focus:ring-white/50`}
                           >
@@ -301,7 +301,7 @@ export function BootcampRegistrationsPanel({
                         <td className="py-3 px-2">
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => toggleRowExpand(registration.id)}
+                              onClick={() => toggleRowExpand(registration.registration_id)}
                               className={`p-1.5 rounded hover:bg-white/10 transition-colors ${isExpanded ? 'bg-white/10 text-blue-300' : 'text-white/50'}`}
                               title="Edit details"
                             >
@@ -309,9 +309,9 @@ export function BootcampRegistrationsPanel({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                               </svg>
                             </button>
-                            {profile.linkedin_url && (
+                            {profile.linkedin && (
                               <a
-                                href={profile.linkedin_url}
+                                href={profile.linkedin}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-1.5 rounded hover:bg-white/10 text-blue-300 hover:text-blue-200"
@@ -342,14 +342,14 @@ export function BootcampRegistrationsPanel({
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                   <label className="block text-white/60 text-xs mb-1">Phone</label>
-                                  <div className="text-white text-sm">{profile.phone || 'Not provided'}</div>
+                                  <div className="text-white text-sm">{profile.phone_num || 'Not provided'}</div>
                                 </div>
                                 <div>
                                   <label className="block text-white/60 text-xs mb-1">LinkedIn</label>
                                   <div className="text-white text-sm truncate">
-                                    {profile.linkedin_url ? (
-                                      <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">
-                                        {profile.linkedin_url}
+                                    {profile.linkedin ? (
+                                      <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">
+                                        {profile.linkedin}
                                       </a>
                                     ) : 'Not provided'}
                                   </div>
@@ -364,14 +364,14 @@ export function BootcampRegistrationsPanel({
                               <div>
                                 <label className="block text-white/80 text-sm mb-2">Admin Notes</label>
                                 <textarea
-                                  value={editingNotes?.id === registration.id ? editingNotes.value : registration.notes || ''}
-                                  onChange={(e) => setEditingNotes({ id: registration.id, value: e.target.value })}
+                                  value={editingNotes?.id === registration.registration_id ? editingNotes.value : registration.notes || ''}
+                                  onChange={(e) => setEditingNotes({ id: registration.registration_id, value: e.target.value })}
                                   placeholder="Add notes about this registration..."
                                   rows={2}
                                   className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 resize-none"
                                 />
                                 <button
-                                  onClick={() => handleSaveNotes(registration.id)}
+                                  onClick={() => handleSaveNotes(registration.registration_id)}
                                   className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
                                 >
                                   Save Notes
@@ -394,7 +394,7 @@ export function BootcampRegistrationsPanel({
                                     </button>
                                   </div>
                                   
-                                  {editingResponses?.id === registration.id && Object.keys(editingResponses.value).length > 0 ? (
+                                  {editingResponses?.id === registration.registration_id && Object.keys(editingResponses.value).length > 0 ? (
                                     <div className="space-y-2">
                                       {Object.entries(editingResponses.value).map(([key, value]) => (
                                         <div key={key} className="flex items-center gap-2">
@@ -416,7 +416,7 @@ export function BootcampRegistrationsPanel({
                                         </div>
                                       ))}
                                       <button
-                                        onClick={() => handleSaveResponses(registration.id)}
+                                        onClick={() => handleSaveResponses(registration.registration_id)}
                                         className="mt-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
                                       >
                                         Save Responses

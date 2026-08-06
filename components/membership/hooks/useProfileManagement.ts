@@ -9,10 +9,10 @@ export function useProfileManagement(user: AuthUser | null, profile: UserProfile
   const [editForm, setEditForm] = useState<EditForm>({
     full_name: '',
     email: '',
-    graduation_year: '',
+    graduation_date: '',
     major: '',
-    phone: '',
-    linkedin_url: '',
+    phone_num: '',
+    linkedin: '',
     bio: '',
     pronouns: '',
     discord_username: '',
@@ -24,10 +24,10 @@ export function useProfileManagement(user: AuthUser | null, profile: UserProfile
       setEditForm({
         full_name: profile.full_name || '',
         email: user.email || '',
-        graduation_year: profile.graduation_year?.toString() || '',
+        graduation_date: profile.graduation_date || '',
         major: profile.major || '',
-        phone: profile.phone || '',
-        linkedin_url: profile.linkedin_url || '',
+        phone_num: profile.phone_num || '',
+        linkedin: profile.linkedin || '',
         bio: profile.bio || '',
         pronouns: profile.pronouns || '',
         discord_username: profile.discord_username || '',
@@ -51,16 +51,14 @@ export function useProfileManagement(user: AuthUser | null, profile: UserProfile
       }
 
       // Update profile data - convert empty strings to null, trim whitespace
-      // Prepare update data - convert empty strings to null
-      const graduationYearValue = editForm.graduation_year.trim()
-      const graduationYear = graduationYearValue ? (isNaN(parseInt(graduationYearValue)) ? null : parseInt(graduationYearValue)) : null
+      const graduationDate = editForm.graduation_date.trim() || null
 
       const updatedProfile = await profileService.update(user.id, {
         full_name: editForm.full_name.trim() || null,
-        graduation_year: graduationYear,
+        graduation_date: graduationDate,
         major: editForm.major.trim() || null,
-        phone: editForm.phone.trim() || null,
-        linkedin_url: editForm.linkedin_url.trim() || null,
+        phone_num: editForm.phone_num.trim() || null,
+        linkedin: editForm.linkedin.trim() || null,
         bio: editForm.bio.trim() || null,
         pronouns: editForm.pronouns.trim() || null,
         discord_username: editForm.discord_username.trim() || null,

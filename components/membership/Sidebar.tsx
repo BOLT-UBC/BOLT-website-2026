@@ -2,12 +2,12 @@ import React from 'react'
 import Image from 'next/image'
 import { RoleBadge, UserRole } from './RoleBadge'
 
-export interface SidebarTeam { id: string; name: string; }
+export interface SidebarTeam { team_id: string; team_name: string; }
 export interface SidebarProfile {
-  id: string
+  member_id: string
   email: string
   full_name: string | null
-  avatar_url: string | null
+  avatar: string | null
   role: UserRole
   team_id: string | null
 }
@@ -92,8 +92,8 @@ export function Sidebar({
         {!collapsed && (
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-              {profile?.avatar_url ? (
-                <Image src={profile.avatar_url} alt="Profile" width={40} height={40} className="rounded-full" />
+              {profile?.avatar ? (
+                <Image src={profile.avatar} alt="Profile" width={40} height={40} className="rounded-full" />
               ) : (
                 <div className="text-lg font-bold text-white">{profile?.full_name?.charAt(0) || email?.charAt(0) || 'U'}</div>
               )}
@@ -106,8 +106,8 @@ export function Sidebar({
         )}
         {collapsed && (
           <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-            {profile?.avatar_url ? (
-              <Image src={profile.avatar_url} alt="Profile" width={40} height={40} className="rounded-full" />
+            {profile?.avatar ? (
+              <Image src={profile.avatar} alt="Profile" width={40} height={40} className="rounded-full" />
             ) : (
               <div className="text-lg font-bold text-white">{profile?.full_name?.charAt(0) || email?.charAt(0) || 'U'}</div>
             )}
@@ -137,7 +137,7 @@ export function Sidebar({
             <RoleBadge role={(profile?.role || 'non_member') as UserRole} />
             {profile?.team_id && (
               <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
-                {teams.find(t => t.id === profile.team_id)?.name || 'Team Member'}
+                {teams.find(t => t.team_id === profile.team_id)?.team_name || 'Team Member'}
               </span>
             )}
           </div>

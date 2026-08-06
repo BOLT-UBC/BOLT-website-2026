@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     // Get total users
     const { count: totalUsers } = await supabaseAdmin
-      .from('profiles')
+      .from('members')
       .select('*', { count: 'exact', head: true })
 
     // Get upcoming events count
@@ -35,11 +35,11 @@ export async function GET(request: NextRequest) {
       .from('events')
       .select('*', { count: 'exact', head: true })
 
-    // Get users with resumes uploaded (for community engagement)
+    // Get users with resumes uploaded (for community engagement) —
+    // resumes now live in their own table, keyed one-to-one by member_id
     const { count: usersWithResumes } = await supabaseAdmin
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .not('resume_url', 'is', null)
+      .from('resumes')
+      .select('member_id', { count: 'exact', head: true })
 
     return NextResponse.json({
       totalMembers: totalUsers || 0,

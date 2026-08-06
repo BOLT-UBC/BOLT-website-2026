@@ -30,26 +30,41 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (updates.graduation_year) {
-      const year = parseInt(updates.graduation_year)
-      if (isNaN(year)) {
-        return NextResponse.json({ error: 'Graduation year must be a valid number' }, { status: 400 })
+    if (updates.graduation_date) {
+      const date = new Date(updates.graduation_date)
+      if (isNaN(date.getTime())) {
+        return NextResponse.json({ error: 'Graduation date must be a valid date' }, { status: 400 })
       }
+    }
+
+    // Column allowlist: only these fields may be set via this endpoint.
+    // The caller-supplied `updates` object must never be passed straight
+    // into `.update()` with the service-role client.
+    const allowedColumns = ['role', 'graduation_date'] as const
+    const safeUpdates: Record<string, unknown> = {}
+    for (const key of allowedColumns) {
+      if (updates[key] !== undefined) {
+        safeUpdates[key] = updates[key]
+      }
+    }
+
+    if (Object.keys(safeUpdates).length === 0) {
+      return NextResponse.json({ error: 'No valid updates provided' }, { status: 400 })
     }
 
     // Check if service role client is available
     const supabaseAdmin = getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json({
-        error: 'Service role key not configured. Please add SUPABASE_SERVICE_ROLE_KEY to your environment variables.'
+        error: 'Service role key not configured. Please add SUPABASE_SECRET_KEY to your environment variables.'
       }, { status: 500 })
     }
 
     // Update all users using service role (bypasses RLS)
     const { data, error } = await supabaseAdmin
-      .from('profiles')
-      .update(updates)
-      .in('id', userIds)
+      .from('members')
+      .update(safeUpdates)
+      .in('member_id', userIds)
       .select()
 
     if (error) {

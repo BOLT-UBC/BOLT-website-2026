@@ -108,12 +108,41 @@ export default function MembershipPortal() {
     )
   }
 
+  // Gate non-members out of the full member portal - they haven't been
+  // approved yet, so show an "awaiting approval" message instead of the
+  // full panel set.
+  if (profile && profile.role === 'non_member') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#1a0b2e] via-[#614ea5] to-[#493b7b] flex items-center justify-center">
+        <div className="text-center text-white max-w-lg px-6">
+          <h1 className="text-4xl font-bold mb-4">Awaiting Approval</h1>
+          <p className="text-xl mb-6">
+            Thanks for signing up! Your account is currently pending membership approval.
+            You&apos;ll get full access to the member portal once an admin approves your membership.
+          </p>
+          <button
+            onClick={async () => {
+              try {
+                await authService.signOut()
+              } finally {
+                router.push('/')
+              }
+            }}
+            className="px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   // Convert profile to SidebarProfile format
   const sidebarProfile: SidebarProfile | null = profile ? {
-    id: profile.id,
+    member_id: profile.member_id,
     email: profile.email,
     full_name: profile.full_name,
-    avatar_url: profile.avatar_url,
+    avatar: profile.avatar,
     role: profile.role as 'non_member' | 'bolt_member' | 'executive_member' | 'admin',
     team_id: profile.team_id,
   } : null

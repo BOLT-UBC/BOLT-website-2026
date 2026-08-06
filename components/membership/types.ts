@@ -1,40 +1,52 @@
 export interface UserProfile {
-  id: string
+  member_id: string
   email: string
   full_name: string | null
-  avatar_url: string | null
+  avatar: string | null
   role: 'non_member' | 'bolt_member' | 'executive_member' | 'admin'
   team_id: string | null
-  graduation_year: number | null
+  graduation_date: string | null
+  faculty: string | null
   major: string | null
-  phone: string | null
-  linkedin_url: string | null
+  phone_num: string | null
+  linkedin: string | null
   bio: string | null
   pronouns: string | null
   discord_username: string | null
   ubc_student_id: string | null
-  resume_url: string | null
-  resume_file_name: string | null
-  resume_uploaded_at: string | null
   created_at: string
   updated_at: string
 }
 
+export interface Resume {
+  resume_id: string
+  member_id: string
+  resume: string | null
+  file_name: string | null
+  file_size: number | null
+  file_type: string | null
+  time_stamp_added: string
+}
+
 export interface Event {
-  id: string
-  name: string
+  event_id: string
+  event_name: string
   description: string | null
   image_url: string | null
-  date: string | null
+  event_date: string | null
   location: string | null
   max_capacity: number | null
   registration_open: boolean
   registration_deadline: string | null
+  applications_open_date: string | null
+  application_deadline_date: string | null
+  decision_release_date: string | null
+  confirmation_due_date: string | null
 }
 
 export interface Team {
-  id: string
-  name: string
+  team_id: string
+  team_name: string
   description: string | null
 }
 
@@ -53,10 +65,10 @@ export interface AdminStats {
 export interface EditForm {
   full_name: string
   email: string
-  graduation_year: string
+  graduation_date: string
   major: string
-  phone: string
-  linkedin_url: string
+  phone_num: string
+  linkedin: string
   bio: string
   pronouns: string
   discord_username: string
@@ -71,7 +83,7 @@ export interface Announcement {
   is_pinned: boolean
   created_at: string
   updated_at: string
-  profiles?: {
+  members?: {
     full_name: string | null
     email: string
   } | null
