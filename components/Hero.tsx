@@ -6,7 +6,7 @@ import Button from "./Button";
 import SpaceScene from "./SpaceScene";
 import Navbar from "./Navbar";
 import MembershipBanner from "./MembershipBanner";
-import { SITE_URLS } from "../lib/config";
+import { SITE_URLS, IS_DEV_ENVIRONMENT } from "../lib/config";
 
 const Hero: React.FC = () => {
   const spaceSceneRef = useRef<{
@@ -44,8 +44,8 @@ const Hero: React.FC = () => {
       <div className="flex justify-start items-center mt-8 lg:mt-0 relative z-30 w-full">
         <div className="flex flex-col justify-center items-start max-w-3xl p-4 md:p-6 gap-4 relative">
           <div className="flex items-center gap-6">
-            <h1 className="font-inter text-6xl md:text-8xl font-bold text-red-600 leading-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
-              BOLT DEV SERVER
+            <h1 className={`font-inter text-6xl md:text-8xl font-bold leading-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.8)] ${IS_DEV_ENVIRONMENT ? "text-red-600" : "text-white"}`}>
+              {IS_DEV_ENVIRONMENT ? "BOLT DEV SERVER" : "BOLT"}
             </h1>
             <Image
               src="/images/Logo.webp"

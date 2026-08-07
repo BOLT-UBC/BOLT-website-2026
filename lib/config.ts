@@ -33,3 +33,10 @@ export const getCopyrightText = (): string => {
   return `Copyright © BOLT UBC ${new Date().getFullYear()}`;
 };
 
+/**
+ * True on any deployment other than the real prod domain (staging previews,
+ * localhost). Derived from NEXT_PUBLIC_SITE_URL so dev/prod visual markers
+ * can live in shared code instead of diverging per-branch.
+ */
+export const IS_DEV_ENVIRONMENT = !(process.env.NEXT_PUBLIC_SITE_URL ?? '').includes('boltubc.com');
+
