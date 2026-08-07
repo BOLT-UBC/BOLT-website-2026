@@ -309,10 +309,10 @@ ALTER TABLE resources ENABLE ROW LEVEL SECURITY;
 ALTER TABLE application_form_configs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE event_timeline ENABLE ROW LEVEL SECURITY;
 
--- members: no "allow insert for anyone" policy — only the SECURITY DEFINER
--- trigger and admins may insert. That redundant WITH CHECK (true) policy
--- from the old schema is intentionally not ported; it nullified the
--- admin-only check below it.
+-- members: intentionally no blanket "allow insert for anyone" policy — that
+-- redundant WITH CHECK (true) policy from the old schema nullified the
+-- admin-only check below it. Self-insert is scoped to auth.uid() = member_id
+-- instead, added in 20260807000000_allow_self_insert_members.sql.
 DROP POLICY IF EXISTS "Users can view all profiles" ON members;
 CREATE POLICY "Users can view all profiles" ON members FOR SELECT USING (true);
 
