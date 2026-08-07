@@ -73,7 +73,10 @@ export const authService = {
     })
 
     if (error) throw error
-    return { user: data.user, error: null }
+    // session is null when email confirmation is required — the caller
+    // uses this to decide whether to show a "check your email" message
+    // instead of treating signup as an immediate sign-in.
+    return { user: data.user, session: data.session, error: null }
   },
 
   // Sign in with email and password

@@ -27,6 +27,7 @@ function LoginForm() {
   const [isLogin, setIsLogin] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [checkEmailMessage, setCheckEmailMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -46,12 +47,14 @@ function LoginForm() {
       [name]: value
     }))
     setError(null)
+    setCheckEmailMessage(null)
   }
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setCheckEmailMessage(null)
 
     try {
       if (isLogin) {
@@ -59,10 +62,13 @@ function LoginForm() {
         if (error) throw error
         router.push(nextPath)
       } else {
-        const { user, error } = await authService.signUp(formData.email, formData.password, formData.fullName)
+        const { user, session, error } = await authService.signUp(formData.email, formData.password, formData.fullName)
         if (error) throw error
 
-        if (user) {
+        if (user && !session) {
+          // Email confirmation is required — there's no active session yet.
+          setCheckEmailMessage(`We sent a confirmation link to ${formData.email}. Check your inbox (and spam folder) to verify your account before signing in.`)
+        } else if (user) {
           // The on_auth_user_created trigger creates the members row automatically.
           router.push(nextPath)
         }
@@ -223,12 +229,18 @@ function LoginForm() {
               </div>
             )}
 
+            {checkEmailMessage && (
+              <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-3">
+                <p className="text-green-100 text-sm">{checkEmailMessage}</p>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !!checkEmailMessage}
               className="w-full px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
+              {loading ? 'Please wait...' : checkEmailMessage ? 'Check your email' : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
@@ -241,6 +253,7 @@ function LoginForm() {
               onClick={() => {
                 setIsLogin(!isLogin)
                 setError(null)
+                setCheckEmailMessage(null)
                 setFormData({ email: '', password: '', fullName: '' })
               }}
               className="text-white font-medium hover:text-white/80 transition-colors ml-1"
