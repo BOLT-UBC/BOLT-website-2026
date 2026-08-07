@@ -68,7 +68,11 @@ export const authService = {
       options: {
         data: {
           full_name: sanitizedFullName
-        }
+        },
+        // Without this, the confirmation email falls back to the
+        // project's default Site URL instead of wherever the user
+        // actually signed up from.
+        emailRedirectTo: `${window.location.origin}/login`
       }
     })
 
