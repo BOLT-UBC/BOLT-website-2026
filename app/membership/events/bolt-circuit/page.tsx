@@ -4,7 +4,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Navbar from "components/Navbar";
 import Footer from "components/Footer";
-import { supabase } from "@/lib/supabase";
+import { supabase, type Database } from "@/lib/supabase";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/useAuth";
 import { StepIndicator } from "@/components/membership/StepIndicator";
@@ -51,7 +51,7 @@ export default function BoltCircuitRegistrationPage() {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [deadline] = useState<string | null>("2027-01-23T23:59:59");
   const [existingRegistration, setExistingRegistration] = useState<{
-    id: string;
+    registration_id: string;
     status: string;
     registered_at: string;
     notes: string | null;
@@ -167,11 +167,11 @@ export default function BoltCircuitRegistrationPage() {
       }
   
       const { data: reg, error: registrationError } = await supabase
-        .from("event_registrations")
-        .select("*")
-        .eq("event_id", CIRCUIT_EVENT_ID)
-        .eq("user_id", data.session.user.id)
-        .maybeSingle();
+    .from("event_attendance")
+    .select("*")
+     .eq("event_id", CIRCUIT_EVENT_ID)
+     .eq("member_id", data.session.user.id)
+     .single<Database["public"]["Tables"]["event_attendance"]["Row"]>();
   
       if (registrationError) {
         console.error(
@@ -200,15 +200,15 @@ export default function BoltCircuitRegistrationPage() {
 
     try {
       const { error } = await supabase
-        .from("event_registrations")
-        .upsert({
-          event_id: CIRCUIT_EVENT_ID,
-          user_id: user.id,
-          status: "pending",
-          application_responses: formData,
-        });
-
-      if (error) throw error;
+      .from("event_attendance")
+      .upsert({
+        event_id: CIRCUIT_EVENT_ID,
+        member_id: user.id,
+        status: "pending",
+        application_responses: formData,
+      });
+    
+    if (error) throw error;
 
       setCurrentStep("status");
       window.scrollTo(0, 0);
