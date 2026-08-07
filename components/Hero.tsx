@@ -8,14 +8,21 @@ import Navbar from "./Navbar";
 import MembershipBanner from "./MembershipBanner";
 import { SITE_URLS } from "../lib/config";
 
-
 const Hero: React.FC = () => {
-  const spaceSceneRef = useRef<{ createExplosion: (_x: number, _y: number) => void }>(null);
+  const spaceSceneRef = useRef<{
+    createExplosion: (_x: number, _y: number) => void;
+  }>(null);
 
   const handleHeroClick = (e: React.MouseEvent) => {
     // Don't trigger explosion if clicking on buttons, interactive elements, or the membership banner
     const target = e.target as HTMLElement;
-    if (target.closest('button') || target.closest('a') || target.closest('[role="button"]') || target.closest('[id="Membership"]') || target.closest('[id="Membership-inline"]')) {
+    if (
+      target.closest("button") ||
+      target.closest("a") ||
+      target.closest('[role="button"]') ||
+      target.closest('[id="Membership"]') ||
+      target.closest('[id="Membership-inline"]')
+    ) {
       return;
     }
 
@@ -38,7 +45,7 @@ const Hero: React.FC = () => {
         <div className="flex flex-col justify-center items-start max-w-3xl p-4 md:p-6 gap-4 relative">
           <div className="flex items-center gap-6">
             <h1 className="font-inter text-6xl md:text-8xl font-bold text-white leading-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
-              BOLT
+              BOLT DEV SERVER
             </h1>
             <Image
               src="/images/Logo.webp"
@@ -51,16 +58,20 @@ const Hero: React.FC = () => {
             />
           </div>
           <h2 className="font-inter text-3xl md:text-5xl font-bold text-white leading-snug">
-            UBC's <span className="text-[#e879f9] uppercase">Largest</span> Data Club
+            UBC's <span className="text-[#e879f9] uppercase">Largest</span> Data
+            Club
           </h2>
           <p className="font-inter text-sm md:text-base font-normal text-white/90 leading-relaxed max-w-2xl">
-            Empowering UBC students to harness the power of data through hands-on workshops, case competitions, and networking events. Join us to develop practical analytics skills and connect with industry professionals.
+            Empowering UBC students to harness the power of data through
+            hands-on workshops, case competitions, and networking events. Join
+            us to develop practical analytics skills and connect with industry
+            professionals.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Button
               text="BECOME A MEMBER"
               onClick={() => {
-                if (typeof window !== 'undefined') {
+                if (typeof window !== "undefined") {
                   window.open(SITE_URLS.membership, "_blank");
                 }
               }}
@@ -68,7 +79,7 @@ const Hero: React.FC = () => {
             <Button
               text="PARTNER WITH US"
               onClick={() => {
-                if (typeof window !== 'undefined') {
+                if (typeof window !== "undefined") {
                   window.location.href = SITE_URLS.sponsorEmail;
                 }
               }}
