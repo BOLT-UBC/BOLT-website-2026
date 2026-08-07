@@ -44,7 +44,7 @@ const Hero: React.FC = () => {
       <div className="flex justify-start items-center mt-8 lg:mt-0 relative z-30 w-full">
         <div className="flex flex-col justify-center items-start max-w-3xl p-4 md:p-6 gap-4 relative">
           <div className="flex items-center gap-6">
-            <h1 className="font-inter text-6xl md:text-8xl font-bold text-red leading-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
+            <h1 className="font-inter text-6xl md:text-8xl font-bold text-red-600 leading-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]">
               BOLT DEV SERVER
             </h1>
             <Image
