@@ -142,7 +142,7 @@ export default function BoltCircuitPage() {
                 />
                 <img 
                   src="/events/bootcamp.webp"
-                  alt="BOLT Bootcamp"
+                  alt="BOLT Circuit"
                   className={`
                     relative z-10 w-[90%] h-[90%] object-cover
                     transition-transform duration-700 ease-out
@@ -152,20 +152,14 @@ export default function BoltCircuitPage() {
               </div>
 
               <div className="p-6 space-y-4">
-                <a
-                  href={'/membership/events/bolt-circuit'}
-                  target="_blank"
-                  rel="noreferrer"
-                  onMouseEnter={() => setIsLaunching(true)}
-                  onMouseLeave={() => setIsLaunching(false)}
-                  className="group relative flex w-full items-center justify-center rounded-xl bg-[#07001e] py-4 transition-all duration-300 border border-white/20 hover:border-white/50 hover:bg-[#260101] overflow-hidden shadow-[0_18px_48px_rgba(70,25,143,0.25)]"
-                >
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12)_0%,transparent_70%)]" />
-                  <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <span className="relative z-10 font-bold text-white tracking-widest uppercase text-sm sm:text-base">
-                    Apply Now
-                  </span>
-                </a>
+              <button
+              disabled
+              className="flex w-full cursor-not-allowed items-center justify-center rounded-xl bg-[#07001e] py-4 border border-white/10 opacity-50"
+              >
+                <span className="font-bold text-white tracking-widest uppercase text-sm sm:text-base">
+                    Registration Closed
+                    </span>
+                    </button>
               </div>
 
               {/* Sponsors Section (Modified to match width) */}

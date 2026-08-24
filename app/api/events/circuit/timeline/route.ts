@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from('events')
       .select('applications_open_date, application_deadline_date, decision_release_date, confirmation_due_date, event_date')
-      .eq('id', CIRCUIT_EVENT_ID)
+      .eq('event_id', CIRCUIT_EVENT_ID)
       .single()
 
     if (error) {
@@ -78,7 +78,7 @@ export async function PATCH(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from('events')
       .update(updates)
-      .eq('id', CIRCUIT_EVENT_ID)
+      .eq('event_id', CIRCUIT_EVENT_ID)
       .select('applications_open_date, application_deadline_date, decision_release_date, confirmation_due_date, event_date')
       .single()
 
