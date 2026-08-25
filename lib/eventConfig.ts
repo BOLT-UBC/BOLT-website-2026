@@ -30,10 +30,10 @@ export const eventPreviewConfigs: Record<string, EventConfig> = {
     accentBorder: "border-white/15",
     glow: "shadow-[0_0_25px_rgba(255,136,76,0.35)]"
   },
-  'bolt circuit': {
-    titleAccent: "BOLT Circuit",
-    subtitle: "Analytics case competition",
-    footer: "Team-based challenges",
+  'byte university': {
+    titleAccent: "Byte University",
+    subtitle: "Workshops & Industry networking",
+    footer: "Industry-led workshops",
     backgroundImage: "/events/byte.png",
     gradient: "from-[#03111f] via-[#073455] to-[#0b5b86]",
     accentBg: "bg-white/12",
@@ -55,7 +55,7 @@ export const eventPreviewConfigs: Record<string, EventConfig> = {
 export const eventMonths: Record<string, string> = {
   "First Byte": "October",
   "BOLT Connect": "November",
-  "BOLT Circuit": "March",
+  "Byte University": "March",
   "BOLT Bootcamp": "March"
 }
 
@@ -63,7 +63,7 @@ export function getEventConfig(eventName: string, eventDescription?: string): Ev
   const name = eventName.toLowerCase()
   if (name.includes('first byte')) return eventPreviewConfigs['first byte']
   if (name.includes('bolt connect')) return eventPreviewConfigs['bolt connect']
-  if (name.includes('bolt circuit')) return eventPreviewConfigs['bolt circuit']
+  if (name.includes('byte university')) return eventPreviewConfigs['byte university']
   if (name.includes('bolt bootcamp')) return eventPreviewConfigs['bolt bootcamp']
   // Default fallback
   return {
@@ -82,7 +82,7 @@ export function getEventRoute(eventName: string): string {
   const name = eventName.toLowerCase()
   if (name.includes('first byte')) return '/events/first-byte'
   if (name.includes('bolt connect')) return '/events/bolt-connect'
-  if (name.includes('bolt circuit')) return '/events/bolt-circuit'
+  if (name.includes('byte university')) return '/events/bolt-circuit'
   if (name.includes('bolt bootcamp')) return '/events/bolt-bootcamp'
   return '/events'
 }

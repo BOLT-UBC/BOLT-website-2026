@@ -241,7 +241,7 @@ export default function BoltCircuitRegistrationPage() {
           <h1 className="text-3xl font-bold text-white tracking-tight">
             {currentStep === "status"
               ? "Application Status"
-              : "BOLT Circuit Registration"}
+              : "Byte University Registration"}
           </h1>
 
           <p className="mt-2 text-slate-400">
@@ -370,7 +370,7 @@ export default function BoltCircuitRegistrationPage() {
                       icon: "✓",
                       title: "Application Confirmed!",
                       message:
-                        "Congratulations! Your spot in BOLT Circuit is secured. We will send you further details via email shortly.",
+                        "Congratulations! Your spot in Byte University is secured. We will send you further details via email shortly.",
                     },
                     cancelled: {
                       style:

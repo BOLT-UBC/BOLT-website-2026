@@ -27,16 +27,16 @@ export default function BoltCircuitPage() {
   const timeline = [
     {
       name: "Registration Opens",
-      date: "Jan 15",
-      dateISO: "2027-01-15",
-      description: "Apply to Circuit using the membership portal"
+      date: "TBA",
+      dateISO: "TBA",
+      description: "Apply to Byte University using the membership portal"
     },
     {
       name: "Registration Closes",
-      date: "Jan 23",
-      dateISO: "2027-01-23",
-      description: "Deadline to apply for Circuit."
-    },
+      date: "TBA",
+      dateISO: "TBA",
+      description: "Deadline to apply for Byte University."
+    }
    
   ];
 
@@ -55,20 +55,22 @@ export default function BoltCircuitPage() {
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] items-start">
             <div className="space-y-6">
               <header className="space-y-4">
-                <h1 className="font-inter font-bold text-5xl sm:text-6xl lg:text-7xl leading-tight">
-                  BOLT <span className="font-extrabold tracking-widest bg-gradient-to-b from-zinc-100 via-zinc-300 to-zinc-500 bg-clip-text text-transparent animate-glint">Circuit</span>
-                </h1>
+              <h1 className="font-inter font-extrabold text-5xl sm:text-6xl lg:text-7xl leading-tight tracking-tight">
+  <span className="bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(168,85,247,0.35)]">
+    Byte University
+  </span>
+</h1>
                 <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-white/85 max-w-2xl text-justify"></p>
               </header>
 
               {/* ABOUT Section */}
               <section className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <h3 className="text-3xl font-bold">About Circuit</h3>
+                  <h3 className="text-3xl font-bold">About Byte University</h3>
                   <div className="h-[2px] flex-1 bg-gradient-to-r from-purple-500/50 to-transparent"></div>
                 </div>
                 <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-white/85 max-w-2xl text-justify">
-                Circuit is BOLT UBC's annual analytics workshop event designed to prepare students for future case competitions and careers in data-driven business. Through a series of specialized workshops led by industry professionals, participants will develop practical analytical skills, collaborate with peers, and apply their learning to solve a real-world business case. Whether you're new to analytics or looking to sharpen your skills before Bootcamp, Circuit provides an opportunity to explore, learn, and connect.
+                Byte University connects students with industry professionals from leading companies such as Google, Deloitte, and Mastercard for an afternoon of hands-on professional development. Participants select one of three concurrent workshops aligned with their interests, followed by an open networking session with speakers.
                 </p>
               </section>
               <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
@@ -78,7 +80,7 @@ export default function BoltCircuitPage() {
                 </div>
                 <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
                   <span className="text-xs uppercase tracking-wide text-purple-200/80">Format</span>
-                  <span className="text-white font-semibold">Workshops + Case Challenge</span>
+                  <span className="text-white font-semibold">Workshops + Open Networking</span>
                 </div>
                 <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
                   <span className="text-xs uppercase tracking-wide text-purple-200/80">Duration</span>
@@ -142,7 +144,7 @@ export default function BoltCircuitPage() {
                 />
                 <img 
                   src="/events/bootcamp.webp"
-                  alt="BOLT Circuit"
+                  alt="Byte University"
                   className={`
                     relative z-10 w-[90%] h-[90%] object-cover
                     transition-transform duration-700 ease-out

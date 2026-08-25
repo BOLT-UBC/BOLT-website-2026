@@ -16,7 +16,7 @@ const Events: React.FC = () => {
   const eventDescriptions = [
     "An introductory workshop series for beginners covering fundamental data analysis tools, Excel, SQL, and data visualization basics.",
     "Connect with like-minded data enthusiasts, industry professionals, and alumni. Network and discover career opportunities in analytics.",
-    "An intensive case competition where teams tackle real-world business problems using data analytics and present solutions to industry judges.",
+    "Learn directly from industry professionals through hands-on workshops & open networking.",
     "Our flagship bootcamp introducing students to data analytics through hands-on projects and mentorship from industry professionals."
   ];
 
