@@ -463,7 +463,7 @@ SELECT v.event_name, v.description, v.image_url, v.registration_open
 FROM (VALUES
   ('First Byte', 'Introduction to BOLT and tech careers', 'byte.webp', true),
   ('BOLT Connect', 'Networking event with industry professionals', 'bolt-connect.webp', true),
-  ('BOLT Circuit', 'Technical workshops and competitions', 'bolt-circuit.webp', true)
+  ('Byte University', 'Workshops and open networking with industry professionals', 'bolt-circuit.webp', true)
 ) AS v(event_name, description, image_url, registration_open)
 WHERE NOT EXISTS (SELECT 1 FROM events e WHERE e.event_name = v.event_name);
 

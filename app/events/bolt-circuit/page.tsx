@@ -5,7 +5,7 @@ import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import EventTimeline from "@/components/EventTimeline";
 
-export default function BoltBootcampPage() {
+export default function BoltCircuitPage() {
   const [isLaunching, setIsLaunching] = useState(false)
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,41 +26,18 @@ export default function BoltBootcampPage() {
   // Timeline props
   const timeline = [
     {
-      name: "Applications Open",
-      date: "Jan 15",
-      dateISO: "2026-01-15",
-      description: "Apply to Bootcamp using the membership portal"
+      name: "Registration Opens",
+      date: "TBA",
+      dateISO: "TBA",
+      description: "Apply to Byte University using the membership portal"
     },
     {
-      name: "Application Closes",
-      date: "Feb 18",
-      dateISO: "2026-02-18",
-      description: "Deadline to apply for Bootcamp."
-    },
-    {
-      name: "Case Release",
-      date: "Feb 28",
-      dateISO: "2026-02-28",
-      description: "Case and dataset are released to all students"
-    },
-    {
-      name: "Workshop Series",
-      date: "Mar 1",
-      dateISO: "2026-03-01",
-      description: "Learn more about data analysis through our workshops"
-    },
-    {
-      name: "First Round Submission Closes",
-      date: "Mar 5",
-      dateISO: "2026-03-05",
-      description: "Deadline for submitting your case presentations."
-    },
-    {
-      name: "Bootcamp Main Event",
-      date: "Mar 7",
-      dateISO: "2026-03-07",
-      description: "Qualified teams will pitch in front of a panel of judges."
+      name: "Registration Closes",
+      date: "TBA",
+      dateISO: "TBA",
+      description: "Deadline to apply for Byte University."
     }
+   
   ];
 
   const sponsors = [
@@ -78,33 +55,36 @@ export default function BoltBootcampPage() {
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] items-start">
             <div className="space-y-6">
               <header className="space-y-4">
-                <h1 className="font-inter font-bold text-5xl sm:text-6xl lg:text-7xl leading-tight">
-                  BOLT <span className="font-extrabold tracking-widest bg-gradient-to-b from-zinc-100 via-zinc-300 to-zinc-500 bg-clip-text text-transparent animate-glint">BOOTCAMP</span>
-                </h1>
+              <h1 className="font-inter font-extrabold text-5xl sm:text-6xl lg:text-7xl leading-tight tracking-tight">
+  <span className="bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(168,85,247,0.35)]">
+    Byte University
+  </span>
+</h1>
+                <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-white/85 max-w-2xl text-justify"></p>
               </header>
 
               {/* ABOUT Section */}
               <section className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <h3 className="text-3xl font-bold">About Bootcamp</h3>
+                  <h3 className="text-3xl font-bold">About Byte University</h3>
                   <div className="h-[2px] flex-1 bg-gradient-to-r from-purple-500/50 to-transparent"></div>
                 </div>
-                <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-white/85 max-w-2xl">
-                Bootcamp is our largest annual case competition event. All students are welcome to join this thrilling week-long event with a variety of workshops, and collaborate with your peers to take down one of our most challenging cases yet.
+                <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-white/85 max-w-2xl text-justify">
+                Byte University connects students with industry professionals from leading companies such as Google, Deloitte, and Mastercard for an afternoon of hands-on professional development. Participants select one of three concurrent workshops aligned with their interests, followed by an open networking session with speakers.
                 </p>
               </section>
               <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
                 <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
                   <span className="text-xs uppercase tracking-wide text-purple-200/80">Experience Level</span>
-                  <span className="text-white font-semibold">Intermediate</span>
+                  <span className="text-white font-semibold">Beginner-Intermediate</span>
                 </div>
                 <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
                   <span className="text-xs uppercase tracking-wide text-purple-200/80">Format</span>
-                  <span className="text-white font-semibold">Workshops + Datathon</span>
+                  <span className="text-white font-semibold">Workshops + Open Networking</span>
                 </div>
                 <div className="flex flex-col rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm sm:text-base shadow-[0_18px_48px_rgba(70,25,143,0.25)]">
                   <span className="text-xs uppercase tracking-wide text-purple-200/80">Duration</span>
-                  <span className="text-white font-semibold">1 Week</span>
+                  <span className="text-white font-semibold">1 Day Event</span>
                 </div>
               </div>
 
@@ -164,7 +144,7 @@ export default function BoltBootcampPage() {
                 />
                 <img 
                   src="/events/bootcamp.webp"
-                  alt="BOLT Bootcamp"
+                  alt="Byte University"
                   className={`
                     relative z-10 w-[90%] h-[90%] object-cover
                     transition-transform duration-700 ease-out
@@ -174,20 +154,14 @@ export default function BoltBootcampPage() {
               </div>
 
               <div className="p-6 space-y-4">
-                <a
-                  href={'/membership/events/bolt-bootcamp'}
-                  target="_blank"
-                  rel="noreferrer"
-                  onMouseEnter={() => setIsLaunching(true)}
-                  onMouseLeave={() => setIsLaunching(false)}
-                  className="group relative flex w-full items-center justify-center rounded-xl bg-[#07001e] py-4 transition-all duration-300 border border-white/20 hover:border-white/50 hover:bg-[#260101] overflow-hidden shadow-[0_18px_48px_rgba(70,25,143,0.25)]"
-                >
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12)_0%,transparent_70%)]" />
-                  <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <span className="relative z-10 font-bold text-white tracking-widest uppercase text-sm sm:text-base">
-                    Apply Now
-                  </span>
-                </a>
+              <button
+              disabled
+              className="flex w-full cursor-not-allowed items-center justify-center rounded-xl bg-[#07001e] py-4 border border-white/10 opacity-50"
+              >
+                <span className="font-bold text-white tracking-widest uppercase text-sm sm:text-base">
+                    Registration Closed
+                    </span>
+                    </button>
               </div>
 
               {/* Sponsors Section (Modified to match width) */}
