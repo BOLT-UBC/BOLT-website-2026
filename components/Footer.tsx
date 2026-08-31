@@ -2,184 +2,473 @@
 
 import { memo } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { SOCIAL_LINKS, SITE_URLS, getCopyrightText } from "../lib/config";
+import {
+  SOCIAL_LINKS,
+  SITE_URLS,
+  getCopyrightText,
+} from "../lib/config";
 
 function Footer() {
   const router = useRouter();
   const pathname = usePathname();
-  const isTeamPage = pathname === '/team';
-  const isEventPage = pathname.startsWith('/events/');
+
+  const isTeamPage = pathname === "/team";
+  const isEventPage = pathname.startsWith("/events/");
   const isNotHomePage = isTeamPage || isEventPage;
 
   const handleNavigation = (sectionId: string) => {
-    // If clicking on Team, navigate to team page
-    if (sectionId === 'Team') {
-      router.push('/team');
+    if (sectionId === "Team") {
+      router.push("/team");
       return;
     }
 
-    // If we're on the team page or event page, navigate to home first
     if (isNotHomePage) {
-      router.push('/');
+      router.push("/");
+
       setTimeout(() => {
-        if (typeof document !== 'undefined') {
-          const element = document.getElementById(sectionId);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
-      }, 100);
-    } else {
-      if (typeof document !== 'undefined') {
         const element = document.getElementById(sectionId);
+
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          element.scrollIntoView({
+            behavior: "smooth",
+          });
         }
-      }
+      }, 150);
+
+      return;
+    }
+
+    const element = document.getElementById(sectionId);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+      });
     }
   };
 
   return (
-    <div className="w-full bg-gradient-to-r from-[#614ea5] to-[#493b7b] text-white py-12 md:py-12">
-      <div className="max-w-7xl mx-auto px-6 sm:px-6 md:px-8">
-        {/* Footer Navigation - Single Row */}
-        <div className="flex flex-col lg:flex-row justify-between items-center lg:items-center gap-8 mb-8">
-          {/* Social Links - Left Side */}
-          <div className="flex flex-col gap-4 items-center lg:items-start">
-            <div className="flex items-center gap-6">
-            <a
-              href={SOCIAL_LINKS.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+    <footer
+      className="
+        relative
+        w-full
+        overflow-hidden
+        bg-[#0b0612]
+        text-white
+      "
+    >
+      {/* ====================================================== */}
+      {/* BACKGROUND                                             */}
+      {/* ====================================================== */}
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          -left-40
+          top-0
+          h-[400px]
+          w-[400px]
+          rounded-full
+          bg-purple-700/15
+          blur-[140px]
+        "
+      />
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          -right-40
+          bottom-0
+          h-[400px]
+          w-[400px]
+          rounded-full
+          bg-violet-600/10
+          blur-[140px]
+        "
+      />
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-x-0
+          top-0
+          h-px
+          bg-gradient-to-r
+          from-transparent
+          via-purple-400/40
+          to-transparent
+        "
+      />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-14 sm:px-8 md:py-16">
+
+        {/* ==================================================== */}
+        {/* MAIN FOOTER                                          */}
+        {/* ==================================================== */}
+
+        <div
+          className="
+            flex
+            flex-col
+            gap-10
+            lg:flex-row
+            lg:items-center
+            lg:justify-between
+          "
+        >
+
+          {/* -------------------------------------------------- */}
+          {/* SOCIALS                                            */}
+          {/* -------------------------------------------------- */}
+
+          <div className="flex flex-col items-center gap-5 lg:items-start">
+
+            <div className="flex items-center gap-4">
+
+              {/* LinkedIn */}
+              <a
+                href={SOCIAL_LINKS.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/5
+                  text-white/75
+                  transition-all
+                  duration-300
+                  hover:border-purple-400/30
+                  hover:bg-purple-500/15
+                  hover:text-white
+                  hover:-translate-y-0.5
+                "
               >
-                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z" />
-              </svg>
-            </a>
-            <a
-              href={SITE_URLS.contactEmail}
-              aria-label="Email"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14ZM8.1 18v-7H5.5v7h2.6ZM6.8 9.9c.85 0 1.55-.7 1.55-1.55S7.65 6.8 6.8 6.8s-1.55.7-1.55 1.55S5.95 9.9 6.8 9.9ZM18.5 18v-3.84c0-2.07-.45-3.66-2.91-3.66-1.18 0-1.97.65-2.29 1.27h-.04V11h-2.49v7h2.6v-3.47c0-.91.17-1.79 1.3-1.79 1.12 0 1.13 1.04 1.13 1.85V18h2.7Z" />
+                </svg>
+              </a>
+
+              {/* Email — fixed */}
+              <a
+                href={SITE_URLS.contactEmail}
+                aria-label="Email"
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/5
+                  text-white/75
+                  transition-all
+                  duration-300
+                  hover:border-purple-400/30
+                  hover:bg-purple-500/15
+                  hover:text-white
+                  hover:-translate-y-0.5
+                "
               >
-                <path d="M4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20zM20 8l-7.475 4.675q-.125.075-.262.113t-.263.037t-.262-.037t-.263-.113L4 8v10h16zm-8 3l8-5H4z" />
-              </svg>
-            </a>
-            <a
-              href={SOCIAL_LINKS.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="3"
+                    y="5"
+                    width="18"
+                    height="14"
+                    rx="2"
+                  />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
+              </a>
+
+              {/* Instagram */}
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/5
+                  text-white/75
+                  transition-all
+                  duration-300
+                  hover:border-purple-400/30
+                  hover:bg-purple-500/15
+                  hover:text-white
+                  hover:-translate-y-0.5
+                "
               >
-                <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3" />
-              </svg>
-            </a>
-            <a
-              href={SOCIAL_LINKS.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="3"
+                    y="3"
+                    width="18"
+                    height="18"
+                    rx="5"
+                  />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle
+                    cx="17.5"
+                    cy="6.5"
+                    r="0.8"
+                    fill="currentColor"
+                    stroke="none"
+                  />
+                </svg>
+              </a>
+
+              {/* Facebook */}
+              <a
+                href={SOCIAL_LINKS.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/5
+                  text-white/75
+                  transition-all
+                  duration-300
+                  hover:border-purple-400/30
+                  hover:bg-purple-500/15
+                  hover:text-white
+                  hover:-translate-y-0.5
+                "
               >
-                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95" />
-              </svg>
-            </a>
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M13.5 21v-8h2.75l.4-3h-3.15V8.08c0-.87.24-1.46 1.5-1.46h1.6V3.94c-.28-.04-1.24-.12-2.36-.12-2.34 0-3.94 1.43-3.94 4.06V10H7.65v3h2.65v8h3.2Z" />
+                </svg>
+              </a>
+
             </div>
-            <p className="font-inter text-white/60 text-xs">{getCopyrightText()}</p>
+
+            <p className="font-inter text-xs text-white/40">
+              {getCopyrightText()}
+            </p>
           </div>
 
-          {/* Navigation Directories - Right Side */}
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm max-w-md lg:max-w-none mx-auto lg:mx-0">
-            <button onClick={() => handleNavigation('About')} className="font-inter text-white/80 hover:text-white transition-colors">
-              About
-            </button>
-            <button onClick={() => handleNavigation('Team')} className="font-inter text-white/80 hover:text-white transition-colors">
-              Team
-            </button>
-            <button onClick={() => handleNavigation('Events')} className="font-inter text-white/80 hover:text-white transition-colors">
-              Events
-            </button>
-            <button onClick={() => handleNavigation('Partners')} className="font-inter text-white/80 hover:text-white transition-colors">
-              Partners
-            </button>
-            <button onClick={() => handleNavigation('Solutions')} className="font-inter text-white/80 hover:text-white transition-colors">
-              Solutions
-            </button>
-            <a href={SITE_URLS.membership} target="_blank" rel="noopener noreferrer" className="font-inter text-white/80 hover:text-white transition-colors">
+          {/* ================================================== */}
+          {/* NAVIGATION                                         */}
+          {/* ================================================== */}
+
+          <div
+            className="
+              flex
+              max-w-xl
+              flex-wrap
+              items-center
+              justify-center
+              gap-x-6
+              gap-y-4
+              lg:justify-end
+            "
+          >
+            {[
+              ["About", "About"],
+              ["Team", "Team"],
+              ["Events", "Events"],
+              ["Partners", "Partners"],
+              ["Solutions", "Solutions"],
+            ].map(([label, id]) => (
+              <button
+                key={id}
+                onClick={() => handleNavigation(id)}
+                className="
+                  font-inter
+                  text-sm
+                  text-white/55
+                  transition-colors
+                  duration-200
+                  hover:text-white
+                "
+              >
+                {label}
+              </button>
+            ))}
+
+            <a
+              href={SITE_URLS.membership}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                font-inter
+                text-sm
+                text-white/55
+                transition-colors
+                duration-200
+                hover:text-white
+              "
+            >
               Membership
             </a>
-            <a href={SITE_URLS.contactEmail} className="font-inter text-white/80 hover:text-white transition-colors">
+
+            <a
+              href={SITE_URLS.contactEmail}
+              className="
+                font-inter
+                text-sm
+                text-white/55
+                transition-colors
+                duration-200
+                hover:text-white
+              "
+            >
               Contact
             </a>
           </div>
         </div>
 
-        {/* Land Acknowledgement - Bottom */}
-        <div className="pt-12 mt-8">
-          <p className="font-inter text-xs text-white/80 leading-relaxed text-center mx-auto mb-3">
-            UBC BOLT respectfully acknowledges that we are located on the traditional, ancestral, and unceded territory of the xʷməθkʷəy̓əm (Musqueam) people. The Musqueam people have been stewards of this land since time immemorial. We are grateful for the opportunity to live, work, and learn on this territory, and we are committed to building respectful relationships with Indigenous peoples and communities.
+        {/* ==================================================== */}
+        {/* DIVIDER                                              */}
+        {/* ==================================================== */}
+
+        <div className="my-10 h-px bg-white/[0.07]" />
+
+        {/* ==================================================== */}
+        {/* LAND ACKNOWLEDGEMENT                                 */}
+        {/* ==================================================== */}
+
+        <div className="mx-auto max-w-5xl text-center">
+
+          <p
+            className="
+              mx-auto
+              mb-4
+              max-w-4xl
+              font-inter
+              text-xs
+              leading-relaxed
+              text-white/45
+            "
+          >
+            UBC BOLT respectfully acknowledges that we are located on
+            the traditional, ancestral, and unceded territory of the
+            xʷməθkʷəy̓əm (Musqueam) people. The Musqueam people have
+            been stewards of this land since time immemorial. We are
+            grateful for the opportunity to live, work, and learn on
+            this territory, and we are committed to building respectful
+            relationships with Indigenous peoples and communities.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 text-xs">
+
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+
             <a
               href="https://indigenous.ubc.ca/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-inter text-white/70 hover:text-white underline transition-colors"
+              className="
+                font-inter
+                text-xs
+                text-white/40
+                underline
+                underline-offset-2
+                transition-colors
+                hover:text-purple-300
+              "
             >
               UBC Indigenous Portal
             </a>
+
             <a
               href="https://www.musqueam.bc.ca/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-inter text-white/70 hover:text-white underline transition-colors"
+              className="
+                font-inter
+                text-xs
+                text-white/40
+                underline
+                underline-offset-2
+                transition-colors
+                hover:text-purple-300
+              "
             >
               Musqueam Indian Band
             </a>
+
             <a
               href="https://native-land.ca/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-inter text-white/70 hover:text-white underline transition-colors"
+              className="
+                font-inter
+                text-xs
+                text-white/40
+                underline
+                underline-offset-2
+                transition-colors
+                hover:text-purple-300
+              "
             >
               Native Land Digital
             </a>
+
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }
 
-Footer.displayName = 'Footer';
+Footer.displayName = "Footer";
 
 export default memo(Footer);

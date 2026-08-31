@@ -9,12 +9,16 @@
       "image": "bolt-connect.webp"
     },
     {
-      "name": "BOLT Circuit",
-      "image": "bolt-circuit.webp"
+      "name": "Fin-Tech Night",
+      "image": "fin-tech-night.webp"
     },
     {
       "name": "BOLT Bootcamp",
       "image": "bootcamp.webp"
+    },
+    {
+      "name": "Byte University",
+      "image": "byte-university.webp"
     }
   ]
 }

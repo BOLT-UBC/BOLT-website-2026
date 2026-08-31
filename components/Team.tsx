@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import { Member, TeamData } from "../types/types";
 import { getProfileUrl } from "../lib/assets";
 
-// Import with type assertion for JSON data
 import teamDataJson from "../lib/team.json";
+
 const teamData = teamDataJson as unknown as TeamData;
 
 const Team: React.FC = () => {
   const [allMembers, setAllMembers] = useState<Member[]>([]);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+
   const navigate = useRouter();
 
   useEffect(() => {
@@ -22,122 +23,315 @@ const Team: React.FC = () => {
         profilepic: exec.profilepic,
       }))
     );
+
     setAllMembers(members);
   }, []);
 
-  // Split members into two halves for two carousels
-  const firstHalf = allMembers.slice(0, Math.ceil(allMembers.length / 2));
-  const secondHalf = allMembers.slice(Math.ceil(allMembers.length / 2));
+  const firstHalf = allMembers.slice(
+    0,
+    Math.ceil(allMembers.length / 2)
+  );
+
+  const secondHalf = allMembers.slice(
+    Math.ceil(allMembers.length / 2)
+  );
 
   const handleImageLoad = (index: number) => {
     setLoadedImages((prev) => new Set(prev).add(index));
   };
 
   return (
-    <div className="w-full py-20 md:py-24 bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7] flex flex-col items-center overflow-hidden relative" id="Team">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 mb-8 md:mb-12">
-        <h1 className="font-inter text-2xl sm:text-3xl font-bold text-black mb-4 md:mb-6 leading-tight">Meet Our Team</h1>
+    <section
+      id="Team"
+      className="
+        relative
+        w-full
+        overflow-hidden
+        bg-[#07020f]
+        py-20
+        text-white
+        md:py-24
+      "
+    >
+      {/* Background */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[-15%] top-[10%] h-[450px] w-[450px] rounded-full bg-purple-700/15 blur-[140px]" />
+
+        <div className="absolute right-[-15%] top-[30%] h-[500px] w-[500px] rounded-full bg-violet-600/15 blur-[150px]" />
+
+        <div
+          className="absolute inset-0 opacity-35"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle, rgba(255,255,255,.9) 1px, transparent 1.5px),
+              radial-gradient(circle, rgba(190,120,255,.7) 1px, transparent 1.5px)
+            `,
+            backgroundSize: "180px 180px, 260px 260px",
+            backgroundPosition: "20px 30px, 90px 120px",
+          }}
+        />
       </div>
 
-      <div className="w-full">
-        <div className="w-full flex flex-col items-center gap-4">
-          {/* First Carousel - Scrolling Right */}
-          <div className="relative w-full">
-            {/* Left fade */}
-            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#f8f7f3] to-transparent z-10 pointer-events-none"></div>
-            {/* Right fade */}
-            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#f0ede7] to-transparent z-10 pointer-events-none"></div>
-            <div className="w-full overflow-hidden">
-              <div className="flex gap-8 py-4 scroll-right">
-                {[...firstHalf, ...firstHalf].map((member, index) => (
-                  <div key={`first-${index}`} className="flex-shrink-0 flex flex-col items-center hover:-translate-y-2 transition-all duration-300 cursor-pointer group active:scale-95 active:-translate-y-1">
-                    <div className="relative">
-                      <div className={`w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 transition-opacity duration-300 ${
-                        loadedImages.has(index) ? "opacity-100" : "opacity-70"
-                      }`}>
+      {/* Header */}
+      <div className="relative z-10 mx-auto mb-10 max-w-6xl px-6 md:mb-12 md:px-8">
+        <p className="mb-3 font-inter text-xs font-semibold uppercase tracking-[0.25em] text-purple-300 sm:text-sm">
+          The People Behind BOLT
+        </p>
+
+        <h1 className="font-inter text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+          Meet Our{" "}
+          <span className="bg-gradient-to-r from-purple-300 via-fuchsia-400 to-purple-500 bg-clip-text text-transparent">
+            Team
+          </span>
+        </h1>
+
+        <div className="mt-5 h-[2px] w-20 bg-gradient-to-r from-purple-500 to-transparent" />
+      </div>
+
+      {/* Carousels */}
+      <div className="relative z-10 w-full">
+        <div className="flex flex-col gap-5">
+          {/* First Row */}
+          <div className="relative w-full overflow-hidden">
+            <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-20 bg-gradient-to-r from-[#07020f] to-transparent md:w-32" />
+
+            <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-20 bg-gradient-to-l from-[#07020f] to-transparent md:w-32" />
+
+            <div className="overflow-hidden">
+              <div className="flex w-max gap-6 py-4 md:gap-8 scroll-right">
+                {[...firstHalf, ...firstHalf].map((member, index) => {
+                  const imageIndex = index % firstHalf.length;
+
+                  return (
+                    <div
+                      key={`first-${index}`}
+                      className="
+                        group
+                        flex
+                        w-[150px]
+                        flex-shrink-0
+                        cursor-pointer
+                        flex-col
+                        items-center
+                        transition-all
+                        duration-300
+                        hover:-translate-y-2
+                      "
+                    >
+                      {/* Profile */}
+                      <div
+                        className={`
+                          relative
+                          h-24
+                          w-24
+                          overflow-hidden
+                          rounded-full
+                          border
+                          border-white/15
+                          bg-white/[0.04]
+                          shadow-[0_0_25px_rgba(125,45,255,0.08)]
+                          transition-all
+                          duration-300
+                          group-hover:border-purple-400/50
+                          group-hover:shadow-[0_0_30px_rgba(125,45,255,0.25)]
+                          ${
+                            loadedImages.has(imageIndex)
+                              ? "opacity-100"
+                              : "opacity-70"
+                          }
+                        `}
+                      >
                         <img
-                          src={getProfileUrl(member.profilepic || 'default.webp')}
+                          src={getProfileUrl(
+                            member.profilepic || "default.webp"
+                          )}
                           alt={`${member.name} - ${member.title} at BOLT UBC`}
                           loading="lazy"
                           decoding="async"
-                          onLoad={() => handleImageLoad(index)}
-                          className="w-full h-full object-cover"
-                          width="80"
-                          height="80"
+                          onLoad={() => handleImageLoad(imageIndex)}
+                          className="h-full w-full object-cover"
+                          width="96"
+                          height="96"
                         />
                       </div>
+
+                      {/* Name */}
+                      <div
+                        className="
+                          mt-4
+                          w-full
+                          rounded-xl
+                          border
+                          border-white/10
+                          bg-white/[0.04]
+                          px-3
+                          py-3
+                          text-center
+                          backdrop-blur-xl
+                          transition-all
+                          duration-300
+                          group-hover:border-purple-400/25
+                          group-hover:bg-white/[0.06]
+                        "
+                      >
+                        <div className="font-inter text-sm font-medium text-white">
+                          {member.name}
+                        </div>
+
+                        <div className="mt-1 font-inter text-xs text-white/45">
+                          {member.title}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-center mt-3 bg-white/20 backdrop-blur-md rounded-lg px-3 py-2 border border-white/30 shadow-lg group-hover:shadow-xl group-hover:shadow-purple-500/25 transition-all duration-300 group-active:shadow-lg group-active:shadow-purple-500/30 group-active:bg-white/30">
-                      <div className="font-inter text-black font-medium text-sm">{member.name}</div>
-                      <div className="font-inter text-gray-700 text-xs">{member.title}</div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          {/* Second Carousel - Scrolling Left */}
-          <div className="relative w-full">
-            {/* Left fade */}
-            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#f8f7f3] to-transparent z-10 pointer-events-none"></div>
-            {/* Right fade */}
-            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#f0ede7] to-transparent z-10 pointer-events-none"></div>
-            <div className="w-full overflow-hidden">
-              <div className="flex gap-8 py-4 scroll-left">
-                {[...secondHalf, ...secondHalf].map((member, index) => (
-                  <div key={`second-${index}`} className="flex-shrink-0 flex flex-col items-center hover:-translate-y-2 transition-all duration-300 cursor-pointer group active:scale-95 active:-translate-y-1">
-                    <div className="relative">
-                      <div className={`w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 transition-opacity duration-300 ${
-                        loadedImages.has(index + firstHalf.length) ? "opacity-100" : "opacity-70"
-                      }`}>
+          {/* Second Row */}
+          <div className="relative w-full overflow-hidden">
+            <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-20 bg-gradient-to-r from-[#07020f] to-transparent md:w-32" />
+
+            <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-20 bg-gradient-to-l from-[#07020f] to-transparent md:w-32" />
+
+            <div className="overflow-hidden">
+              <div className="flex w-max gap-6 py-4 md:gap-8 scroll-left">
+                {[...secondHalf, ...secondHalf].map((member, index) => {
+                  const imageIndex = index + firstHalf.length;
+
+                  return (
+                    <div
+                      key={`second-${index}`}
+                      className="
+                        group
+                        flex
+                        w-[150px]
+                        flex-shrink-0
+                        cursor-pointer
+                        flex-col
+                        items-center
+                        transition-all
+                        duration-300
+                        hover:-translate-y-2
+                      "
+                    >
+                      <div
+                        className={`
+                          relative
+                          h-24
+                          w-24
+                          overflow-hidden
+                          rounded-full
+                          border
+                          border-white/15
+                          bg-white/[0.04]
+                          shadow-[0_0_25px_rgba(125,45,255,0.08)]
+                          transition-all
+                          duration-300
+                          group-hover:border-purple-400/50
+                          group-hover:shadow-[0_0_30px_rgba(125,45,255,0.25)]
+                          ${
+                            loadedImages.has(imageIndex)
+                              ? "opacity-100"
+                              : "opacity-70"
+                          }
+                        `}
+                      >
                         <img
-                          src={getProfileUrl(member.profilepic || 'default.webp')}
+                          src={getProfileUrl(
+                            member.profilepic || "default.webp"
+                          )}
                           alt={`${member.name} - ${member.title} at BOLT UBC`}
                           loading="lazy"
                           decoding="async"
-                          onLoad={() => handleImageLoad(index + firstHalf.length)}
-                          className="w-full h-full object-cover"
-                          width="80"
-                          height="80"
+                          onLoad={() => handleImageLoad(imageIndex)}
+                          className="h-full w-full object-cover"
+                          width="96"
+                          height="96"
                         />
                       </div>
+
+                      <div
+                        className="
+                          mt-4
+                          w-full
+                          rounded-xl
+                          border
+                          border-white/10
+                          bg-white/[0.04]
+                          px-3
+                          py-3
+                          text-center
+                          backdrop-blur-xl
+                          transition-all
+                          duration-300
+                          group-hover:border-purple-400/25
+                          group-hover:bg-white/[0.06]
+                        "
+                      >
+                        <div className="font-inter text-sm font-medium text-white">
+                          {member.name}
+                        </div>
+
+                        <div className="mt-1 font-inter text-xs text-white/45">
+                          {member.title}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-center mt-3 bg-white/20 backdrop-blur-md rounded-lg px-3 py-2 border border-white/30 shadow-lg group-hover:shadow-xl group-hover:shadow-purple-500/25 transition-all duration-300 group-active:shadow-lg group-active:shadow-purple-500/30 group-active:bg-white/30">
-                      <div className="font-inter text-black font-medium text-sm">{member.name}</div>
-                      <div className="font-inter text-gray-700 text-xs">{member.title}</div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
-          </div>
-
-          {/* View More Button */}
-          <div className="mt-8">
-            <button
-              onClick={() => navigate.push('/team')}
-              className="bg-black/20 backdrop-blur-lg text-white font-inter font-semibold px-8 py-3 rounded-full transition-all duration-200 hover:bg-black/30 shadow-lg hover:shadow-xl hover:shadow-purple-500/25 flex items-center gap-2 group"
-            >
-              View More
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              >
-                <path d="M7 17L17 7M17 7H7M17 7V17"/>
-              </svg>
-            </button>
           </div>
         </div>
+
+        {/* Button */}
+        <div className="relative z-30 mt-10 flex justify-center">
+          <button
+            onClick={() => navigate.push("/team")}
+            className="
+              group
+              flex
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-white/15
+              bg-white/[0.05]
+              px-8
+              py-3
+              font-inter
+              text-sm
+              font-semibold
+              text-white
+              backdrop-blur-lg
+              transition-all
+              duration-300
+              hover:border-purple-400/40
+              hover:bg-purple-500/15
+              hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]
+            "
+          >
+            View More
+
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            >
+              <path d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

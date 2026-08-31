@@ -30,11 +30,11 @@ export const eventPreviewConfigs: Record<string, EventConfig> = {
     accentBorder: "border-white/15",
     glow: "shadow-[0_0_25px_rgba(255,136,76,0.35)]"
   },
-  'bolt circuit': {
-    titleAccent: "BOLT Circuit",
-    subtitle: "Analytics case competition",
-    footer: "Team-based challenges",
-    backgroundImage: "/events/byte.png",
+  'fin-tech night': {
+    titleAccent: "Fin-Tech Night",
+    subtitle: "Evening of fintech insights",
+    footer: "Industry networking",
+    backgroundImage: "/events/fin-tech.webp",
     gradient: "from-[#03111f] via-[#073455] to-[#0b5b86]",
     accentBg: "bg-white/12",
     accentBorder: "border-white/15",
@@ -49,22 +49,34 @@ export const eventPreviewConfigs: Record<string, EventConfig> = {
     accentBg: "bg-white/12",
     accentBorder: "border-white/15",
     glow: "shadow-[0_0_25px_rgba(134,201,255,0.25)]"
-  }
+  },
+  'byte university': {
+   titleAccent: "Byte University",
+   subtitle: "Your subtitle here",
+   footer: "Your category here",
+   backgroundImage: "/events/byte-university.webp",
+   gradient: "from-[#321070] via-[#482a9f] to-[#221247]",
+   accentBg: "bg-white/15",
+   accentBorder: "border-white/10",
+   glow: "shadow-[0_0_25px_rgba(123,97,255,0.35)]"
+ },
 }
 
 export const eventMonths: Record<string, string> = {
   "First Byte": "October",
   "BOLT Connect": "November",
   "BOLT Circuit": "March",
-  "BOLT Bootcamp": "March"
+  "BOLT Bootcamp": "March",
+  "Byte University": "November"
 }
 
 export function getEventConfig(eventName: string, eventDescription?: string): EventConfig {
   const name = eventName.toLowerCase()
   if (name.includes('first byte')) return eventPreviewConfigs['first byte']
   if (name.includes('bolt connect')) return eventPreviewConfigs['bolt connect']
-  if (name.includes('bolt circuit')) return eventPreviewConfigs['bolt circuit']
+  if (name.includes('fin-tech night')) return eventPreviewConfigs['fin-tech night']
   if (name.includes('bolt bootcamp')) return eventPreviewConfigs['bolt bootcamp']
+  if (name.includes('byte university')) return eventPreviewConfigs['byte university']
   // Default fallback
   return {
     titleAccent: eventName,
@@ -82,8 +94,9 @@ export function getEventRoute(eventName: string): string {
   const name = eventName.toLowerCase()
   if (name.includes('first byte')) return '/events/first-byte'
   if (name.includes('bolt connect')) return '/events/bolt-connect'
-  if (name.includes('bolt circuit')) return '/events/bolt-circuit'
+  if (name.includes('fin-tech night')) return '/events/fin-tech-night'
   if (name.includes('bolt bootcamp')) return '/events/bolt-bootcamp'
+  if (name.includes('byte university')) return '/events/byte-university'
   return '/events'
 }
 

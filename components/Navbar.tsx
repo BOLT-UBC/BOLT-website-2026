@@ -1,63 +1,80 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { NAVIGATION } from "../lib/constants";
 import { scrollToElement } from "../lib/dom";
 import { useAuth } from "../lib/useAuth";
 
 const Navbar: React.FC = () => {
-  const sections = useMemo(() => ["Home", "About", "Partners", "Events", "Solutions", "Team"], []);
+  const sections = useMemo(
+    () => ["Home", "About", "Partners", "Events", "Solutions", "Team"],
+    []
+  );
+
   const [activeSection, setActiveSection] = useState("Home");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [sliderStyle, setSliderStyle] = useState({ width: 0, left: 0 });
+  const [sliderStyle, setSliderStyle] = useState({
+    width: 0,
+    left: 0,
+  });
+
   const isScrolling = useRef(false);
   const navRef = useRef<HTMLUListElement>(null);
-  const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+  const buttonRefs = useRef<{
+    [key: string]: HTMLButtonElement | null;
+  }>({});
+
   const router = useRouter();
   const pathname = usePathname();
   const { user, loading } = useAuth();
 
-  // Check if we're on the team page or event page
   const isHome = pathname === "/";
-  const isMembershipPage = pathname.startsWith('/membership');
-  const isTeamPage = pathname === '/team';
-  const isEventPage = pathname.startsWith('/events/');
-  const isNotHomePage = isTeamPage || isEventPage;
+  const isMembershipPage = pathname.startsWith("/membership");
+  const isTeamPage = pathname === "/team";
+  const isEventPage = pathname.startsWith("/events/");
+  const isNotHomePage = !isHome;
 
-  // Function to update slider position
+  /* -------------------------------------------------- */
+  /* Active pill position                               */
+  /* -------------------------------------------------- */
+
   const updateSliderPosition = (sectionName: string) => {
     const activeButton = buttonRefs.current[sectionName];
     const nav = navRef.current;
 
-    if (activeButton && nav) {
-      const navRect = nav.getBoundingClientRect();
-      const buttonRect = activeButton.getBoundingClientRect();
+    if (!activeButton || !nav) return;
 
-      setSliderStyle({
-        width: buttonRect.width,
-        left: buttonRect.left - navRect.left,
-      });
-    }
+    const navRect = nav.getBoundingClientRect();
+    const buttonRect = activeButton.getBoundingClientRect();
+
+    setSliderStyle({
+      width: buttonRect.width,
+      left: buttonRect.left - navRect.left,
+    });
   };
 
   useEffect(() => {
-    // Initial slider position
-    updateSliderPosition(activeSection);
-
-    // Update slider position on window resize
-    const handleResize = () => {
-      updateSliderPosition(activeSection);
+    const update = () => {
+      requestAnimationFrame(() => {
+        updateSliderPosition(activeSection);
+      });
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }
+    update();
+
+    window.addEventListener("resize", update);
+
+    return () => {
+      window.removeEventListener("resize", update);
+    };
   }, [activeSection]);
 
+  /* -------------------------------------------------- */
+  /* Detect active section while scrolling              */
+  /* -------------------------------------------------- */
+
   useEffect(() => {
-    // Only set up scroll listener on home page
     if (isNotHomePage) {
       if (isTeamPage) {
         setActiveSection("Team");
@@ -66,203 +83,391 @@ const Navbar: React.FC = () => {
       } else if (isMembershipPage) {
         setActiveSection("Members");
       }
+
       return;
     }
 
     const handleScroll = () => {
       if (isScrolling.current) return;
-      if (typeof window === 'undefined') return;
 
       const scrollPosition = window.scrollY;
 
+      let currentSection = "Home";
+
       sections.forEach((section) => {
-        if (typeof document === 'undefined') return;
         const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (
-            scrollPosition >= offsetTop - NAVIGATION.SECTION_DETECTION_OFFSET &&
-            scrollPosition < offsetTop + offsetHeight - NAVIGATION.SECTION_DETECTION_OFFSET
-          ) {
-            setActiveSection(section);
-          }
+
+        if (!element) return;
+
+        const { offsetTop, offsetHeight } = element;
+
+        if (
+          scrollPosition >=
+            offsetTop - NAVIGATION.SECTION_DETECTION_OFFSET &&
+          scrollPosition <
+            offsetTop +
+              offsetHeight -
+              NAVIGATION.SECTION_DETECTION_OFFSET
+        ) {
+          currentSection = section;
         }
       });
+
+      setActiveSection(currentSection);
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
-  }, [sections, isNotHomePage, isTeamPage, isEventPage]);
+    handleScroll();
 
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [
+    sections,
+    isNotHomePage,
+    isTeamPage,
+    isEventPage,
+    isMembershipPage,
+  ]);
+
+  /* -------------------------------------------------- */
+  /* Navigation                                         */
+  /* -------------------------------------------------- */
 
   const scrollToSection = (sectionId: string) => {
-    // If we're on a non-home page and clicking any section, navigate to home first
+    setMenuOpen(false);
+
+    // If we're not on the homepage,
+    // return to the homepage first.
     if (!isHome) {
-        router.push('/');
-      if (sectionId != "Home") {
-        // Navigate to home and scroll to section after a short delay
-        router.push('/');
+      router.push("/");
+
+      if (sectionId !== "Home") {
         setTimeout(() => {
           scrollToElement(sectionId);
-        }, 100);
+        }, 150);
       }
-      setMenuOpen(false);
+
       return;
     }
 
-    // On home page, just scroll normally
     const success = scrollToElement(sectionId);
 
-    if (success) {
-      isScrolling.current = true;
-      setActiveSection(sectionId);
-      setMenuOpen(false);
+    if (!success) return;
 
-      setTimeout(() => {
-        isScrolling.current = false;
-        setActiveSection(sectionId);
-      }, NAVIGATION.SCROLL_ANIMATION_DURATION);
-    }
+    isScrolling.current = true;
+    setActiveSection(sectionId);
+
+    setTimeout(() => {
+      isScrolling.current = false;
+      setActiveSection(sectionId);
+    }, NAVIGATION.SCROLL_ANIMATION_DURATION);
   };
 
+  /* -------------------------------------------------- */
+  /* Mobile icons                                       */
+  /* -------------------------------------------------- */
+
   const HamburgerIcon = () => (
-    <svg width="23" height="23" viewBox="0 0 23 23">
+    <svg
+      width="23"
+      height="23"
+      viewBox="0 0 23 23"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
-        fill="transparent"
-        strokeWidth="3"
-        strokeLinecap="round"
+        d="M2 3H21"
         stroke="white"
-        d="M 2 2.5 L 20 2.5"
+        strokeWidth="2.5"
+        strokeLinecap="round"
       />
       <path
-        fill="transparent"
-        strokeWidth="3"
-        strokeLinecap="round"
+        d="M2 11.5H21"
         stroke="white"
-        d="M 2 9.423 L 20 9.423"
+        strokeWidth="2.5"
+        strokeLinecap="round"
       />
       <path
-        fill="transparent"
-        strokeWidth="3"
-        strokeLinecap="round"
+        d="M2 20H21"
         stroke="white"
-        d="M 2 16.346 L 20 16.346"
+        strokeWidth="2.5"
+        strokeLinecap="round"
       />
     </svg>
   );
 
   const CloseIcon = () => (
-    <svg width="23" height="23" viewBox="0 0 23 23">
+    <svg
+      width="23"
+      height="23"
+      viewBox="0 0 23 23"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
+        d="M3 3L20 20"
         stroke="white"
-        strokeWidth="3"
+        strokeWidth="2.5"
         strokeLinecap="round"
-        d="M 2 2 L 21 21"
       />
       <path
+        d="M20 3L3 20"
         stroke="white"
-        strokeWidth="3"
+        strokeWidth="2.5"
         strokeLinecap="round"
-        d="M 21 2 L 2 21"
       />
     </svg>
   );
+
+  /* -------------------------------------------------- */
+  /* Auth button                                        */
+  /* -------------------------------------------------- */
+
+  const AuthButton = ({ mobile = false }: { mobile?: boolean }) => {
+    if (loading) {
+      return (
+        <div
+          className={`px-4 py-2 text-white/50 text-sm ${
+            mobile ? "text-center" : ""
+          }`}
+        >
+          Loading...
+        </div>
+      );
+    }
+
+    if (user) {
+      return (
+        <button
+          onClick={() => {
+            router.push("/membership");
+            setMenuOpen(false);
+          }}
+          className="
+            relative z-10
+            rounded-full
+            px-4 py-2
+            font-roboto-mono
+            text-base
+            text-white
+            transition-all
+            duration-300
+            hover:bg-white/10
+            hover:text-white
+          "
+        >
+          Members
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={() => {
+          router.push("/login");
+          setMenuOpen(false);
+        }}
+        className="
+          relative z-10
+          rounded-full
+          px-4 py-2
+          font-roboto-mono
+          text-base
+          text-white
+          transition-all
+          duration-300
+          hover:bg-white/10
+          hover:text-white
+        "
+      >
+        Login
+      </button>
+    );
+  };
+
   return (
     <>
-    <nav className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-black/20 backdrop-blur-lg px-4 py-2.5 rounded-full z-[1000] shadow-lg hidden md:block">
-      <ul className="flex gap-4 list-none m-0 p-0 relative" ref={navRef}>
-        <div
-          className="absolute top-1/2 transform -translate-y-1/2 h-10 bg-black/15 rounded-full transition-all duration-300 ease-out z-[1] backdrop-blur-md"
-          style={{
-            width: sliderStyle.width,
-            left: sliderStyle.left,
-          }}
-        />
-        {sections.map((section) => (
-          <li key={section}>
-            <button
-              ref={(el) => {
-                buttonRefs.current[section] = el;
-              }}
-              onClick={() => scrollToSection(section)}
-              className={`bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] ${
-                activeSection === section ? "font-bold text-white" : ""
-              } hover:text-white/80`}
-            >
-              {section}
-            </button>
+      {/* ====================================================== */}
+      {/* DESKTOP NAVBAR                                         */}
+      {/* ====================================================== */}
+
+      <nav
+        className="
+          fixed
+          top-6
+          left-1/2
+          -translate-x-1/2
+          z-[1000]
+          hidden
+          rounded-full
+          border
+          border-white/10
+          bg-[#12091f]/65
+          px-3
+          py-2
+          shadow-[0_8px_40px_rgba(0,0,0,0.35)]
+          backdrop-blur-xl
+          md:block
+        "
+      >
+        <ul
+          ref={navRef}
+          className="relative flex list-none items-center gap-1 m-0 p-0"
+        >
+          {/* Active pill */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              top-1/2
+              -translate-y-1/2
+              h-10
+              rounded-full
+              border
+              border-purple-300/10
+              bg-purple-500/20
+              shadow-[0_0_20px_rgba(168,85,247,0.12)]
+              backdrop-blur-md
+              transition-all
+              duration-300
+              ease-out
+            "
+            style={{
+              width: sliderStyle.width,
+              left: sliderStyle.left,
+            }}
+          />
+
+          {sections.map((section) => (
+            <li key={section}>
+              <button
+                ref={(el) => {
+                  buttonRefs.current[section] = el;
+                }}
+                onClick={() => scrollToSection(section)}
+                className={`
+                  relative
+                  z-10
+                  rounded-full
+                  border-none
+                  bg-transparent
+                  px-4
+                  py-2
+                  font-roboto-mono
+                  text-sm
+                  cursor-pointer
+                  transition-all
+                  duration-300
+                  ${
+                    activeSection === section
+                      ? "font-semibold text-white"
+                      : "font-normal text-white/70"
+                  }
+                  hover:text-white
+                `}
+              >
+                {section}
+              </button>
+            </li>
+          ))}
+
+          {/* Divider */}
+          <div className="mx-1 h-6 w-px bg-white/10" />
+
+          {/* Authentication */}
+          <li>
+            <AuthButton />
           </li>
-        ))}
+        </ul>
+      </nav>
 
-        {/* Auth Buttons */}
-        <li>
-          {loading ? (
-            <div className="px-4 py-2 text-white/60 text-sm">Loading...</div>
-          ) : user ? (
-            <button
-              onClick={() => router.push('/membership')}
-              className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal relative z-[2] hover:text-white/80"
-            >
-              Members
-            </button>
-          ) : (
-            <button
-              onClick={() => router.push('/login')}
-              className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal hover:text-white/80"
-            >
-              Login
-            </button>
-          )}
-        </li>
-      </ul>
-    </nav>
+      {/* ====================================================== */}
+      {/* MOBILE MENU BUTTON                                     */}
+      {/* ====================================================== */}
 
-      {/* Mobile Menu Button */}
-      <div className="md:hidden fixed top-6 right-6 z-[1100] cursor-pointer bg-black/20 backdrop-blur-lg p-3 rounded-full shadow-lg" onClick={() => setMenuOpen(!menuOpen)}>
+      <button
+        type="button"
+        aria-label={menuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((open) => !open)}
+        className="
+          fixed
+          right-5
+          top-5
+          z-[1100]
+          flex
+          h-12
+          w-12
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-white/10
+          bg-[#12091f]/70
+          shadow-lg
+          backdrop-blur-xl
+          transition-all
+          duration-300
+          hover:bg-purple-500/20
+          md:hidden
+        "
+      >
         {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
-      </div>
+      </button>
+
+      {/* ====================================================== */}
+      {/* MOBILE MENU                                            */}
+      {/* ====================================================== */}
 
       {menuOpen && (
-        <div className="fixed inset-0 w-screen h-screen bg-black/50 backdrop-blur-lg z-[1050] flex items-center justify-center">
-          <div className="flex flex-col gap-8 text-center">
+        <div
+          className="
+            fixed
+            inset-0
+            z-[1050]
+            flex
+            h-screen
+            w-screen
+            items-center
+            justify-center
+            bg-[#08030f]/90
+            backdrop-blur-xl
+            md:hidden
+          "
+        >
+          <div className="flex flex-col items-center gap-3">
             {sections.map((section) => (
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
-                className={`bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal ${
-                  activeSection === section ? "font-bold text-white" : ""
-                }`}
+                className={`
+                  rounded-full
+                  px-6
+                  py-3
+                  font-roboto-mono
+                  text-lg
+                  transition-all
+                  duration-300
+                  ${
+                    activeSection === section
+                      ? "bg-purple-500/20 font-semibold text-white"
+                      : "text-white/70"
+                  }
+                  hover:bg-purple-500/10
+                  hover:text-white
+                `}
               >
                 {section}
               </button>
             ))}
 
-            {/* Mobile Auth */}
-            {loading ? (
-              <div className="text-white/60 text-sm px-4 py-2">Loading...</div>
-            ) : user ? (
-              <button
-                onClick={() => {
-                  router.push('/membership');
-                  setMenuOpen(false);
-                }}
-                className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal"
-              >
-                Members
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  router.push('/login');
-                  setMenuOpen(false);
-                }}
-                className="bg-none border-none text-white font-roboto-mono text-base cursor-pointer transition-all duration-300 px-4 py-2 rounded-3xl font-normal"
-              >
-                Login
-              </button>
-            )}
+            <div className="my-2 h-px w-24 bg-white/10" />
+
+            <AuthButton mobile />
           </div>
         </div>
       )}

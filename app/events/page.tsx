@@ -5,10 +5,15 @@ import { Event, EventsData } from "../../types/types";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { EventCard } from "../../components/EventCard";
-import { getEventConfig, getEventRoute, eventMonths } from "../../lib/eventConfig";
+import {
+  getEventConfig,
+  getEventRoute,
+  eventMonths,
+} from "../../lib/eventConfig";
 
 // Import with type assertion for JSON data
 import eventsDataJson from "../../lib/events.json";
+
 const eventsData = eventsDataJson as EventsData;
 
 export default function EventsPage() {
@@ -22,47 +27,118 @@ export default function EventsPage() {
     "An introductory workshop series for beginners covering fundamental data analysis tools, Excel, SQL, and data visualization basics.",
     "Connect with like-minded data enthusiasts, industry professionals, and alumni. Network and discover career opportunities in analytics.",
     "An intensive case competition where teams tackle real-world business problems using data analytics and present solutions to industry judges.",
-    "Our flagship bootcamp introducing students to data analytics through hands-on projects and mentorship from industry professionals."
+    "Our flagship bootcamp introducing students to data analytics through hands-on projects and mentorship from industry professionals.",
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8f7f3] to-[#f0ede7]">
+    <div
+      className="
+        relative
+        min-h-screen
+        w-full
+        overflow-hidden
+        bg-gradient-to-br
+        from-[#07001d]
+        via-[#12052f]
+        to-[#1c1041]
+        text-white
+      "
+    >
       <Navbar />
 
-      <div className="pt-24 pb-16">
+      {/* Subtle purple glow */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          bg-[radial-gradient(ellipse_55%_45%_at_50%_45%,rgba(125,45,255,0.16)_0%,rgba(88,30,180,0.08)_35%,transparent_70%)]
+        "
+      />
+
+      {/* Page Content */}
+      <main className="relative z-10 pt-24 pb-16">
         <div className="w-full max-w-6xl mx-auto px-6 sm:px-6 md:px-8">
+          {/* Page Heading */}
           <div className="text-center mb-12">
-            <h1 className="font-inter text-3xl md:text-4xl font-bold text-black mb-4">
+            <p
+              className="
+                font-inter
+                text-xs
+                sm:text-sm
+                font-semibold
+                uppercase
+                tracking-[0.25em]
+                text-purple-300
+                mb-3
+              "
+            >
+              Explore
+            </p>
+
+            <h1
+              className="
+                font-inter
+                text-3xl
+                md:text-4xl
+                font-bold
+                text-white
+                mb-4
+              "
+            >
               Our Events
             </h1>
-            <p className="font-inter text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover all the exciting events and programs BOLT UBC has to offer
+
+            <p
+              className="
+                font-inter
+                text-lg
+                text-white/70
+                max-w-2xl
+                mx-auto
+              "
+            >
+              Discover all the exciting events and programs BOLT UBC has to
+              offer
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-7">
+          {/* Events Grid */}
+          <div
+            className="
+              grid
+              grid-cols-1
+              sm:grid-cols-2
+              lg:grid-cols-2
+              gap-6
+              md:gap-7
+            "
+          >
             {EVENTS.map((event, index) => {
-              const config = getEventConfig(event.name)
-              const eventRoute = getEventRoute(event.name)
-              const eventMonth = eventMonths[config.titleAccent]
+              const config = getEventConfig(event.name);
+              const eventRoute = getEventRoute(event.name);
+              const eventMonth = eventMonths[config.titleAccent];
 
               return (
                 <EventCard
                   key={event.name}
-                  event={{ ...event, id: event.name, description: eventDescriptions[index] }}
+                  event={{
+                    ...event,
+                    id: event.name,
+                    description: eventDescriptions[index],
+                  }}
                   config={config}
                   eventRoute={eventRoute}
                   eventMonth={eventMonth}
-                  isDarkMode={false}
+                  isDarkMode={true}
                 />
-              )
+              );
             })}
           </div>
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>
   );
 }
-
