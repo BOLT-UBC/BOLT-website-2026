@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { TeamData, Team as TeamType, Member } from "../../types/types";
 import { getProfileUrl } from "../../lib/assets";
 import Navbar from "../../components/Navbar";
@@ -76,14 +77,12 @@ export default function TeamPage() {
                   {presidents.map((member, index) => (
                     <div key={index} className="text-center px-1 py-2 min-w-[120px]">
                       <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden">
-                    <img
+                    <Image
                       src={getProfileUrl(member.profilepic || 'default.webp')}
                       alt={`${member.name} - ${member.title} at BOLT UBC`}
                       className="w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                          width="64"
-                          height="64"
+                      width={64}
+                      height={64}
                     />
                   </div>
                       <h3 className="font-inter text-xs font-bold text-black mb-1">
@@ -139,14 +138,12 @@ export default function TeamPage() {
                   {leadershipMembers.map((member, index) => (
                     <div key={index} className="text-center px-1 py-2 min-w-[120px]">
                       <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden">
-                        <img
+                        <Image
                           src={getProfileUrl(member.profilepic || 'default.webp')}
                           alt={`${member.name} - ${member.title} at BOLT UBC`}
                           className="w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                          width="64"
-                          height="64"
+                          width={64}
+                          height={64}
                         />
                       </div>
                       <h3 className="font-inter text-xs font-bold text-black mb-1">
@@ -211,14 +208,12 @@ export default function TeamPage() {
                     className="text-center p-4 min-w-[120px]"
                 >
                     <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden">
-                    <img
+                    <Image
                       src={getProfileUrl(member.profilepic || 'default.webp')}
                       alt={`${member.name} - ${member.title} at BOLT UBC`}
                       className="w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                        width="64"
-                        height="64"
+                      width={64}
+                      height={64}
                     />
                   </div>
                     <h3 className="font-inter text-xs font-bold text-black mb-1">

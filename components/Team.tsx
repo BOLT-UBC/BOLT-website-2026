@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Member, TeamData } from "../types/types";
 import { getProfileUrl } from "../lib/assets";
 
@@ -12,8 +13,10 @@ const teamData = teamDataJson as unknown as TeamData;
 const Team: React.FC = () => {
   const [allMembers, setAllMembers] = useState<Member[]>([]);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [isVisible, setIsVisible] = useState(false);
 
   const navigate = useRouter();
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const members = teamData.teams.flatMap((team) =>
@@ -25,6 +28,23 @@ const Team: React.FC = () => {
     );
 
     setAllMembers(members);
+  }, []);
+
+  // Only run the scrolling marquee animation while the section is
+  // actually on screen, so it isn't burning main-thread/GPU work
+  // while the user is scrolling through unrelated sections.
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: "200px 0px" }
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
   }, []);
 
   const firstHalf = allMembers.slice(
@@ -43,6 +63,7 @@ const Team: React.FC = () => {
   return (
     <section
       id="Team"
+      ref={sectionRef}
       className="
         relative
         w-full
@@ -98,7 +119,12 @@ const Team: React.FC = () => {
             <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-20 bg-gradient-to-l from-[#07020f] to-transparent md:w-32" />
 
             <div className="overflow-hidden">
-              <div className="flex w-max gap-6 py-4 md:gap-8 scroll-right">
+              <div
+                className="flex w-max gap-6 py-4 will-change-transform md:gap-8 scroll-right"
+                style={{
+                  animationPlayState: isVisible ? "running" : "paused",
+                }}
+              >
                 {[...firstHalf, ...firstHalf].map((member, index) => {
                   const imageIndex = index % firstHalf.length;
 
@@ -141,17 +167,15 @@ const Team: React.FC = () => {
                           }
                         `}
                       >
-                        <img
+                        <Image
                           src={getProfileUrl(
                             member.profilepic || "default.webp"
                           )}
                           alt={`${member.name} - ${member.title} at BOLT UBC`}
-                          loading="lazy"
-                          decoding="async"
                           onLoad={() => handleImageLoad(imageIndex)}
                           className="h-full w-full object-cover"
-                          width="96"
-                          height="96"
+                          width={96}
+                          height={96}
                         />
                       </div>
 
@@ -167,7 +191,6 @@ const Team: React.FC = () => {
                           px-3
                           py-3
                           text-center
-                          backdrop-blur-xl
                           transition-all
                           duration-300
                           group-hover:border-purple-400/25
@@ -196,7 +219,12 @@ const Team: React.FC = () => {
             <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-20 bg-gradient-to-l from-[#07020f] to-transparent md:w-32" />
 
             <div className="overflow-hidden">
-              <div className="flex w-max gap-6 py-4 md:gap-8 scroll-left">
+              <div
+                className="flex w-max gap-6 py-4 will-change-transform md:gap-8 scroll-left"
+                style={{
+                  animationPlayState: isVisible ? "running" : "paused",
+                }}
+              >
                 {[...secondHalf, ...secondHalf].map((member, index) => {
                   const imageIndex = index + firstHalf.length;
 
@@ -238,17 +266,15 @@ const Team: React.FC = () => {
                           }
                         `}
                       >
-                        <img
+                        <Image
                           src={getProfileUrl(
                             member.profilepic || "default.webp"
                           )}
                           alt={`${member.name} - ${member.title} at BOLT UBC`}
-                          loading="lazy"
-                          decoding="async"
                           onLoad={() => handleImageLoad(imageIndex)}
                           className="h-full w-full object-cover"
-                          width="96"
-                          height="96"
+                          width={96}
+                          height={96}
                         />
                       </div>
 
@@ -263,7 +289,6 @@ const Team: React.FC = () => {
                           px-3
                           py-3
                           text-center
-                          backdrop-blur-xl
                           transition-all
                           duration-300
                           group-hover:border-purple-400/25

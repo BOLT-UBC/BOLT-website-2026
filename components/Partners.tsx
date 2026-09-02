@@ -165,103 +165,103 @@ const Partners: React.FC = memo(() => {
             experiences to our community.
           </p>
         </div>
+      </div>
 
-        {/* ================================================= */}
-        {/* LOGO CAROUSEL */}
-        {/* ================================================= */}
+      {/* ================================================= */}
+      {/* LOGO CAROUSEL */}
+      {/* ================================================= */}
 
-        <div className="relative w-full overflow-hidden">
-          {/* Left fade */}
-          <div
-            className="
-              pointer-events-none
-              absolute
-              left-0
-              top-0
-              z-20
-              h-full
-              w-20
-              bg-gradient-to-r
-              from-[#07020f]
-              to-transparent
-              md:w-36
-            "
-          />
+      <div className="relative z-10 w-full overflow-hidden">
+        {/* Left fade */}
+        <div
+          className="
+            pointer-events-none
+            absolute
+            left-0
+            top-0
+            z-20
+            h-full
+            w-20
+            bg-gradient-to-r
+            from-[#07020f]
+            to-transparent
+            md:w-36
+          "
+        />
 
-          {/* Right fade */}
-          <div
-            className="
-              pointer-events-none
-              absolute
-              right-0
-              top-0
-              z-20
-              h-full
-              w-20
-              bg-gradient-to-l
-              from-[#07020f]
-              to-transparent
-              md:w-36
-            "
-          />
+        {/* Right fade */}
+        <div
+          className="
+            pointer-events-none
+            absolute
+            right-0
+            top-0
+            z-20
+            h-full
+            w-20
+            bg-gradient-to-l
+            from-[#07020f]
+            to-transparent
+            md:w-36
+          "
+        />
 
-          {/* Logos */}
-          <div
-            className="
-              inline-flex
-              w-max
-              flex-nowrap
-              gap-2
-              py-5
-              md:gap-5
-              scroll-right-continuous
-            "
-          >
-            {duplicatedPartners.map((partner, index) => (
-              <div
-                key={`${partner.name}-${index}`}
+        {/* Logos */}
+        <div
+          className="
+            inline-flex
+            w-max
+            flex-nowrap
+            gap-2
+            py-5
+            md:gap-5
+            scroll-right-continuous
+          "
+        >
+          {duplicatedPartners.map((partner, index) => (
+            <div
+              key={`${partner.name}-${index}`}
+              className="
+                group
+                flex
+                h-24
+                w-32
+                flex-shrink-0
+                items-center
+                justify-center
+                rounded-2xl
+                border
+                border-white/10
+                bg-white/[0.025]
+                px-5
+                backdrop-blur-md
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:border-purple-400/30
+                hover:bg-white/[0.05]
+                hover:shadow-[0_0_30px_rgba(125,45,255,0.15)]
+                sm:h-28
+                sm:w-40
+                md:w-44
+              "
+            >
+              <img
+                src={partner.logo}
+                alt={partner.name}
                 className="
-                  group
-                  flex
-                  h-24
-                  w-32
-                  flex-shrink-0
-                  items-center
-                  justify-center
-                  rounded-2xl
-                  border
-                  border-white/10
-                  bg-white/[0.025]
-                  px-5
-                  backdrop-blur-md
-                  transition-all
-                  duration-300
-                  hover:-translate-y-1
-                  hover:border-purple-400/30
-                  hover:bg-white/[0.05]
-                  hover:shadow-[0_0_30px_rgba(125,45,255,0.15)]
-                  sm:h-28
-                  sm:w-40
-                  md:w-44
+                  max-h-12
+                  w-full
+                  object-contain
+                  sm:max-h-14
                 "
-              >
-                <img
-                  src={partner.logo}
-                  alt={partner.name}
-                  className="
-                    max-h-12
-                    w-full
-                    object-contain
-                    sm:max-h-14
-                  "
-                  loading="eager"
-                  decoding="sync"
-                  width="200"
-                  height="96"
-                />
-              </div>
-            ))}
-          </div>
+                loading="eager"
+                decoding="sync"
+                width="200"
+                height="96"
+              />
+            </div>
+          ))}
         </div>
       </div>
 
