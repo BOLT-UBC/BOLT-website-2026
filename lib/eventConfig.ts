@@ -52,8 +52,8 @@ export const eventPreviewConfigs: Record<string, EventConfig> = {
   },
   'byte university': {
    titleAccent: "Byte University",
-   subtitle: "Your subtitle here",
-   footer: "Your category here",
+   subtitle: "Industry-hosted workshops",
+   footer: "Workshop series",
    backgroundImage: "/events/byte-university.webp",
    gradient: "from-[#321070] via-[#482a9f] to-[#221247]",
    accentBg: "bg-white/15",

@@ -69,7 +69,7 @@ const DataBridge: React.FC = memo(() => {
   return (
     <section
       id="Solutions"
-      className="relative w-full overflow-hidden bg-[#07020f] py-20 text-white md:py-24"
+      className="relative w-full overflow-hidden bg-[#07020f] pb-10 pt-20 text-white md:pb-14 md:pt-24"
     >
       {/* Background glow */}
       <div className="pointer-events-none absolute inset-0">
@@ -98,7 +98,7 @@ const DataBridge: React.FC = memo(() => {
         {/* Heading */}
         <div className="mb-10 max-w-3xl md:mb-12">
           <p className="mb-3 font-inter text-xs font-semibold uppercase tracking-[0.25em] text-purple-300 sm:text-sm">
-            DataBridge
+            Byte Consulting
           </p>
 
           <h1 className="mb-5 font-inter text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
@@ -204,7 +204,7 @@ const DataBridge: React.FC = memo(() => {
         </div>
 
         {/* Disclaimer */}
-        <div className="mt-12 text-center">
+        <div className="mt-8 text-center">
           <p className="font-inter text-xs text-white/30">
             * All services are provided free of charge to local businesses as
             part of our educational mission.

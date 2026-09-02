@@ -37,8 +37,10 @@ const Events: React.FC = () => {
         w-full
         overflow-hidden
         bg-[#07020f]
-        py-20
-        md:py-24
+        pb-20
+        pt-10
+        md:pb-24
+        md:pt-14
       "
     >
       {/* ===================================================== */}

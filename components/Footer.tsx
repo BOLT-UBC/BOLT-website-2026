@@ -327,7 +327,7 @@ function Footer() {
               ["Team", "Team"],
               ["Events", "Events"],
               ["Partners", "Partners"],
-              ["Solutions", "Solutions"],
+              ["Byte Consulting", "Solutions"],
             ].map(([label, id]) => (
               <button
                 key={id}

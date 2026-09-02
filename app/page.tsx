@@ -19,14 +19,14 @@ export default function HomePage() {
       {/* Partners section */}
       <Partners />
 
+      {/* Byte Consulting (DataBridge) section */}
+      <DataBridge />
+
       {/* Events section */}
       <Events />
 
       {/* Newsletter section */}
       <Newsletter />
-
-      {/* DataBridge section */}
-      <DataBridge />
 
       {/* Team section */}
       <Team />

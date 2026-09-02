@@ -7,20 +7,16 @@ const Partners: React.FC = memo(() => {
     { name: "Google", logo: "/partners/google.webp" },
     { name: "Deloitte", logo: "/partners/deloitte.webp" },
     { name: "GeoComply", logo: "/partners/geocomply.webp" },
-    { name: "EY", logo: "/partners/ey.webp" },
-    { name: "Accenture", logo: "/partners/accenture.webp" },
-    { name: "UBC", logo: "/partners/ubc.webp" },
+    { name: "EY", logo: "/partners/ey_white.webp" },
+    { name: "Accenture", logo: "/partners/accenture_white.webp" },
+    { name: "UBC", logo: "/partners/ubc_white.webp" },
     { name: "Mastercard", logo: "/partners/mastercard.webp" },
     { name: "Red Bull", logo: "/partners/redbull.webp" },
     { name: "CGI", logo: "/partners/cgi.webp" },
     { name: "Microsoft", logo: "/partners/microsoft.webp" },
   ];
 
-  const duplicatedPartners = [
-    ...partners,
-    ...partners,
-    ...partners,
-  ];
+  const duplicatedPartners = [...partners, ...partners, ...partners];
 
   return (
     <section
@@ -165,8 +161,8 @@ const Partners: React.FC = memo(() => {
               sm:text-base
             "
           >
-            Collaborating with leading organizations to bring
-            real-world data experiences to our community.
+            Collaborating with leading organizations to bring real-world data
+            experiences to our community.
           </p>
         </div>
 
@@ -256,12 +252,6 @@ const Partners: React.FC = memo(() => {
                     max-h-12
                     w-full
                     object-contain
-                    opacity-70
-                    grayscale
-                    transition-all
-                    duration-300
-                    group-hover:opacity-100
-                    group-hover:grayscale-0
                     sm:max-h-14
                   "
                   loading="eager"

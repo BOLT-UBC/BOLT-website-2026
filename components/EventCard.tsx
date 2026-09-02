@@ -98,21 +98,8 @@ export function EventCard({
         {/* Event Content */}
         <div className="relative z-10 flex h-full flex-col justify-between p-3">
           <div>
-            <p
-              className="
-                font-inter
-                text-[8px]
-                uppercase
-                tracking-[0.25em]
-                text-white/65
-              "
-            >
-              Inside the event
-            </p>
-
             <h3
               className="
-                mt-0.5
                 font-inter
                 text-xs
                 font-bold

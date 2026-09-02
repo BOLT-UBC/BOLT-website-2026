@@ -83,7 +83,7 @@ html {
 }
 
 .scroll-right {
-  animation: scroll-right 20s linear infinite;
+  animation: scroll-right 45s linear infinite;
 }
 
 .scroll-right-continuous {
@@ -91,7 +91,7 @@ html {
 }
 
 .scroll-left {
-  animation: scroll-left 20s linear infinite;
+  animation: scroll-left 45s linear infinite;
 }
 
 /* Focus styles for accessibility */

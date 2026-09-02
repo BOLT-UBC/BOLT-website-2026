@@ -1,11 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Button from "./Button";
 import Navbar from "./Navbar";
 import { SITE_URLS } from "../lib/config";
+import { useAuth } from "../lib/useAuth";
 
 const Hero: React.FC = () => {
+  const router = useRouter();
+  const { user } = useAuth();
+
   return (
     <section
       id="Home"
@@ -206,6 +211,7 @@ const Hero: React.FC = () => {
           {/* Buttons */}
           <div
             className="
+              -ml-6
               mt-8
               flex
               flex-col
@@ -214,11 +220,10 @@ const Hero: React.FC = () => {
             "
           >
             <Button
-              text="JOIN BOLT"
+              text="MEMBERSHIP PORTAL"
               onClick={() => {
-                window.open(
-                  SITE_URLS.membership,
-                  "_blank"
+                router.push(
+                  user ? "/membership" : "/login?next=/membership"
                 );
               }}
             />
@@ -230,31 +235,6 @@ const Hero: React.FC = () => {
                 window.location.href = "/events";
               }}
             />
-          </div>
-
-          {/* Supporting text */}
-          <div
-            className="
-              mt-6
-              flex
-              flex-wrap
-              items-center
-              gap-3
-              text-sm
-              text-white/50
-            "
-          >
-            <span>
-              ◇ Free for UBC students
-            </span>
-
-            <span className="text-white/20">
-              •
-            </span>
-
-            <span>
-              No experience required
-            </span>
           </div>
         </div>
 
@@ -386,16 +366,48 @@ const Hero: React.FC = () => {
               backdrop-blur-xl
             "
           >
-            <span
-              className="
-                text-xs
-                uppercase
-                tracking-[0.2em]
-                text-purple-300
-              "
-            >
-              Membership Portal
-            </span>
+            <div className="flex items-center gap-2.5">
+              <span
+                className="
+                  flex
+                  h-8
+                  w-8
+                  flex-shrink-0
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-purple-400/30
+                  bg-purple-500/15
+                  text-purple-300
+                "
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 12l2 2 4-4" />
+                  <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" />
+                </svg>
+              </span>
+
+              <span
+                className="
+                  text-xs
+                  uppercase
+                  tracking-[0.2em]
+                  text-purple-300
+                "
+              >
+                Official Membership
+              </span>
+            </div>
 
             <h2
               className="
@@ -405,24 +417,45 @@ const Hero: React.FC = () => {
                 leading-snug
               "
             >
-              Your BOLT membership
-              <br />
-              in one place.
+              Become a BOLT member.
             </h2>
+
+            <p
+              className="
+                mt-2
+                text-sm
+                leading-relaxed
+                text-white/55
+              "
+            >
+              Unlock exclusive events, workshops, and our
+              industry network.
+            </p>
 
             <button
               type="button"
               className="
-                mt-7
+                mt-6
+                flex
+                w-full
+                items-center
+                justify-center
+                gap-2
                 rounded-xl
-                border
-                border-white/15
+                bg-gradient-to-r
+                from-purple-500
+                via-fuchsia-500
+                to-purple-600
                 px-6
                 py-4
                 text-sm
-                font-medium
+                font-semibold
+                text-white
+                shadow-lg
+                shadow-purple-900/30
                 transition
-                hover:bg-white/5
+                hover:brightness-110
+                hover:shadow-purple-500/40
               "
               onClick={() => {
                 window.open(
@@ -431,7 +464,19 @@ const Hero: React.FC = () => {
                 );
               }}
             >
-              OPEN PORTAL ↗
+              Get Membership
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M7 17L17 7M17 7H7M17 7V17" />
+              </svg>
             </button>
           </div>
         </div>

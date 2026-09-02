@@ -8,7 +8,14 @@ import { useAuth } from "../lib/useAuth";
 
 const Navbar: React.FC = () => {
   const sections = useMemo(
-    () => ["Home", "About", "Partners", "Events", "Solutions", "Team"],
+    () => [
+      { id: "Home", label: "Home" },
+      { id: "About", label: "About" },
+      { id: "Partners", label: "Partners" },
+      { id: "Solutions", label: "Byte Consulting" },
+      { id: "Events", label: "Events" },
+      { id: "Team", label: "Team" },
+    ],
     []
   );
 
@@ -94,8 +101,8 @@ const Navbar: React.FC = () => {
 
       let currentSection = "Home";
 
-      sections.forEach((section) => {
-        const element = document.getElementById(section);
+      sections.forEach(({ id }) => {
+        const element = document.getElementById(id);
 
         if (!element) return;
 
@@ -109,7 +116,7 @@ const Navbar: React.FC = () => {
               offsetHeight -
               NAVIGATION.SECTION_DETECTION_OFFSET
         ) {
-          currentSection = section;
+          currentSection = id;
         }
       });
 
@@ -240,51 +247,38 @@ const Navbar: React.FC = () => {
       );
     }
 
-    if (user) {
-      return (
-        <button
-          onClick={() => {
-            router.push("/membership");
-            setMenuOpen(false);
-          }}
-          className="
-            relative z-10
-            rounded-full
-            px-4 py-2
-            font-roboto-mono
-            text-base
-            text-white
-            transition-all
-            duration-300
-            hover:bg-white/10
-            hover:text-white
-          "
-        >
-          Members
-        </button>
-      );
-    }
-
     return (
       <button
         onClick={() => {
-          router.push("/login");
+          router.push(user ? "/membership" : "/login");
           setMenuOpen(false);
         }}
         className="
           relative z-10
+          whitespace-nowrap
           rounded-full
+          bg-transparent
           px-4 py-2
           font-roboto-mono
-          text-base
-          text-white
+          text-sm
+          font-semibold
           transition-all
           duration-300
-          hover:bg-white/10
-          hover:text-white
+          hover:opacity-80
         "
       >
-        Login
+        <span
+          className="
+            bg-gradient-to-r
+            from-purple-300
+            via-fuchsia-400
+            to-purple-500
+            bg-clip-text
+            text-transparent
+          "
+        >
+          {user ? "Members" : "Login"}
+        </span>
       </button>
     );
   };
@@ -342,13 +336,13 @@ const Navbar: React.FC = () => {
             }}
           />
 
-          {sections.map((section) => (
-            <li key={section}>
+          {sections.map(({ id, label }) => (
+            <li key={id}>
               <button
                 ref={(el) => {
-                  buttonRefs.current[section] = el;
+                  buttonRefs.current[id] = el;
                 }}
-                onClick={() => scrollToSection(section)}
+                onClick={() => scrollToSection(id)}
                 className={`
                   relative
                   z-10
@@ -359,18 +353,19 @@ const Navbar: React.FC = () => {
                   py-2
                   font-roboto-mono
                   text-sm
+                  whitespace-nowrap
                   cursor-pointer
                   transition-all
                   duration-300
                   ${
-                    activeSection === section
+                    activeSection === id
                       ? "font-semibold text-white"
                       : "font-normal text-white/70"
                   }
                   hover:text-white
                 `}
               >
-                {section}
+                {label}
               </button>
             </li>
           ))}
@@ -440,10 +435,10 @@ const Navbar: React.FC = () => {
           "
         >
           <div className="flex flex-col items-center gap-3">
-            {sections.map((section) => (
+            {sections.map(({ id, label }) => (
               <button
-                key={section}
-                onClick={() => scrollToSection(section)}
+                key={id}
+                onClick={() => scrollToSection(id)}
                 className={`
                   rounded-full
                   px-6
@@ -453,7 +448,7 @@ const Navbar: React.FC = () => {
                   transition-all
                   duration-300
                   ${
-                    activeSection === section
+                    activeSection === id
                       ? "bg-purple-500/20 font-semibold text-white"
                       : "text-white/70"
                   }
@@ -461,7 +456,7 @@ const Navbar: React.FC = () => {
                   hover:text-white
                 `}
               >
-                {section}
+                {label}
               </button>
             ))}
 

@@ -31,6 +31,7 @@ export default function MembershipPortal() {
   const [activeTab, setActiveTab] = useState('home')
   const [roleView, setRoleView] = useState<RoleView>('admin')
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   // Delete account state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -48,6 +49,11 @@ export default function MembershipPortal() {
       profileManagement.initializeForm()
     }
   }, [profile, user])
+
+  // Close the mobile sidebar drawer whenever a tab is selected
+  useEffect(() => {
+    setMobileSidebarOpen(false)
+  }, [activeTab])
 
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'DELETE') {
@@ -255,8 +261,20 @@ export default function MembershipPortal() {
       <Navbar />
 
       <div className="flex relative" style={{ paddingTop: '80px' }}>
-        {/* Fixed Left Sidebar */}
-        <div className="fixed left-0 top-0 z-40">
+        {/* Mobile sidebar toggle */}
+        <button
+          type="button"
+          onClick={() => setMobileSidebarOpen(true)}
+          className="fixed left-4 top-[92px] z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md md:hidden"
+          aria-label="Open menu"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        {/* Fixed Left Sidebar (desktop) */}
+        <div className="fixed left-0 top-0 z-40 hidden md:block">
           <Sidebar
             profile={sidebarProfile}
             email={user.email || ''}
@@ -270,12 +288,34 @@ export default function MembershipPortal() {
           />
         </div>
 
+        {/* Mobile sidebar drawer */}
+        {mobileSidebarOpen && (
+          <>
+            <div
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+              onClick={() => setMobileSidebarOpen(false)}
+            />
+            <div className="fixed left-0 top-0 z-50 md:hidden">
+              <Sidebar
+                profile={sidebarProfile}
+                email={user.email || ''}
+                teams={teams}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                roleView={roleView}
+                setRoleView={setRoleView}
+                collapsed={false}
+                onToggle={() => setMobileSidebarOpen(false)}
+              />
+            </div>
+          </>
+        )}
+
         {/* Main Content Area */}
         <div
-          className="flex-1 transition-all duration-300"
-          style={{
-            marginLeft: sidebarOpen ? '256px' : '80px'
-          }}
+          className={`min-w-0 flex-1 transition-all duration-300 ${
+            sidebarOpen ? 'md:ml-64' : 'md:ml-20'
+          }`}
         >
           <div className="min-h-[calc(100vh-80px)]">
             <div className="px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-8">
