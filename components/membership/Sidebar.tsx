@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { RoleBadge, UserRole } from './RoleBadge'
 
@@ -13,6 +13,83 @@ export interface SidebarProfile {
 }
 
 export type RoleView = 'admin' | 'executive_member' | 'bolt_member' | 'non_member'
+
+const ROLE_VIEW_OPTIONS: { value: RoleView; label: string }[] = [
+  { value: 'admin', label: 'Admin' },
+  { value: 'executive_member', label: 'Executive' },
+  { value: 'bolt_member', label: 'Bolt Member' },
+]
+
+// A fully custom dropdown, since a native <select>'s open menu is
+// rendered by the OS/browser and can't be restyled to match the
+// portal's dark purple theme.
+function RoleViewSelect({
+  value,
+  onChange,
+}: {
+  value: RoleView
+  onChange: (next: RoleView) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [open])
+
+  const current = ROLE_VIEW_OPTIONS.find((option) => option.value === value)
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs font-medium text-white transition-all hover:bg-white/15 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+      >
+        <span>{current?.label}</span>
+        <svg
+          className={`h-3.5 w-3.5 text-purple-300 transition-transform ${open ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-50 overflow-hidden rounded-lg border border-white/10 bg-[#2a1750] shadow-xl">
+          {ROLE_VIEW_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                onChange(option.value)
+                setOpen(false)
+              }}
+              className={`block w-full px-3 py-2 text-left text-xs font-medium transition-colors ${
+                option.value === value
+                  ? 'bg-purple-500/30 text-white'
+                  : 'text-white/80 hover:bg-purple-500/15 hover:text-white'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function Sidebar({
   profile,
@@ -142,20 +219,11 @@ export function Sidebar({
             )}
           </div>
           {profile?.role === 'admin' && (
-            <div className="mt-2">
-              <div className="flex items-center justify-between">
-                <span className="text-white/70 text-xs font-medium">View as:</span>
-                <select
-                  value={roleView}
-                  onChange={(e) => setRoleView(e.target.value as RoleView)}
-                  className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-xs focus:outline-none focus:ring-1 focus:ring-white/50 min-w-0 flex-1 ml-2"
-                >
-                  <option value="admin">Admin</option>
-                  <option value="executive_member">Executive</option>
-                  <option value="bolt_member">Bolt Member</option>
-                  <option value="non_member">Non-Member</option>
-                </select>
-              </div>
+            <div className="mt-3">
+              <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wider text-white/50">
+                Viewing as
+              </span>
+              <RoleViewSelect value={roleView} onChange={setRoleView} />
             </div>
           )}
         </div>
