@@ -1,36 +1,36 @@
-name: Keep Alive Ping
+name: Keep Alive
 
 on:
   schedule:
-    # Run once daily at 12:00 UTC
+    # Daily: hit the deployed site's /api/ping (exercises the app + prod DB end-to-end)
     - cron: '0 12 * * *'
-  workflow_dispatch: # Allow manual trigger
+    # Every ~3 days: write directly to both Supabase projects so neither auto-pauses
+    - cron: '0 13 */3 * *'
+  workflow_dispatch: # Allow manual trigger (runs both jobs)
 
 permissions:
   contents: read
   actions: read
 
 jobs:
-  ping:
+  site-ping:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 12 * * *'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Ping API
         run: |
-          # Check if SITE_URL secret is set
           if [ -z "${{ secrets.SITE_URL }}" ]; then
             echo "ERROR: SITE_URL secret is not set"
             exit 1
           fi
 
           SITE_URL="${{ secrets.SITE_URL }}"
-          # Remove trailing slash if present to avoid double slashes
           SITE_URL="${SITE_URL%/}"
           PING_URL="${SITE_URL}/api/ping"
           echo "Pinging: ${PING_URL}"
           echo "Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-          # Retry logic for cold starts (serverless platforms may need warm-up time)
           MAX_RETRIES=3
           RETRY_DELAY=10
           ATTEMPT=1
@@ -39,53 +39,26 @@ jobs:
           while [ $ATTEMPT -le $MAX_RETRIES ]; do
             echo "Attempt $ATTEMPT of $MAX_RETRIES..."
 
-            # Use curl with proper timeout handling and capture errors
-            CURL_ERROR=$(mktemp)
-            echo "Making request to: ${PING_URL}"
-
-            # Try curl and capture both HTTP code and errors
-            HTTP_CODE=$(curl -v -s -o /tmp/ping_response.json -w "%{http_code}" \
+            HTTP_CODE=$(curl -s -o /tmp/ping_response.json -w "%{http_code}" \
               --max-time 60 \
               --connect-timeout 30 \
               --retry 0 \
               -H "User-Agent: GitHub-Actions-Keep-Alive/1.0" \
-              "${PING_URL}" 2>"$CURL_ERROR" || echo "000")
-
-            # Show curl errors if any (limit to first 20 lines to avoid huge output)
-            if [ -s "$CURL_ERROR" ]; then
-              echo "Curl diagnostic info:"
-              head -20 "$CURL_ERROR"
-            fi
-
-            # Normalize HTTP_CODE (in case of weird formatting)
-            HTTP_CODE=$(echo "$HTTP_CODE" | tr -d '\n\r' | sed 's/^0*\([^0]\)/\1/' || echo "$HTTP_CODE")
-            if [ -z "$HTTP_CODE" ] || [ "$HTTP_CODE" = "000" ] || [ "$HTTP_CODE" = "000000" ]; then
-              HTTP_CODE="000"
-            fi
+              "${PING_URL}" || echo "000")
 
             echo "HTTP Status Code: ${HTTP_CODE}"
-            rm -f "$CURL_ERROR"
 
             if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
               echo "Ping successful! HTTP Status: $HTTP_CODE"
-              echo "Response:"
-              cat /tmp/ping_response.json 2>/dev/null | head -20 || echo "(No response body)"
+              cat /tmp/ping_response.json 2>/dev/null || echo "(No response body)"
               SUCCESS=1
               break
             else
               echo "Attempt $ATTEMPT failed with HTTP Status: $HTTP_CODE"
-              if [ "$HTTP_CODE" = "000" ]; then
-                echo "Connection failed - possible causes:"
-                echo "  - DNS resolution failed"
-                echo "  - Connection timeout"
-                echo "  - Site unreachable from GitHub Actions"
-                echo "  - SSL/TLS handshake failed"
-              fi
               if [ -f /tmp/ping_response.json ]; then
                 echo "Response body (if any):"
-                cat /tmp/ping_response.json | head -20 || echo "(Empty)"
+                cat /tmp/ping_response.json || echo "(Empty)"
               fi
-
               if [ $ATTEMPT -lt $MAX_RETRIES ]; then
                 echo "Waiting ${RETRY_DELAY}s before retry..."
                 sleep $RETRY_DELAY
@@ -100,5 +73,53 @@ jobs:
             exit 0
           else
             echo "All retry attempts failed"
+            exit 1
+          fi
+
+  supabase-keepalive:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 13 */3 * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - name: production
+            url_secret: SUPABASE_PROD_URL
+            key_secret: SUPABASE_PROD_SECRET_KEY
+          - name: dev
+            url_secret: SUPABASE_DEV_URL
+            key_secret: SUPABASE_DEV_SECRET_KEY
+    steps:
+      - name: Upsert heartbeat row (${{ matrix.project.name }})
+        env:
+          PROJECT_URL: ${{ secrets[matrix.project.url_secret] }}
+          SECRET_KEY: ${{ secrets[matrix.project.key_secret] }}
+        run: |
+          if [ -z "$PROJECT_URL" ] || [ -z "$SECRET_KEY" ]; then
+            echo "ERROR: ${{ matrix.project.url_secret }} / ${{ matrix.project.key_secret }} secret is not set"
+            exit 1
+          fi
+
+          PROJECT_URL="${PROJECT_URL%/}"
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "Upserting keep_alive row on ${{ matrix.project.name }} at ${NOW}"
+
+          HTTP_CODE=$(curl -s -o /tmp/keepalive_response.json -w "%{http_code}" \
+            --max-time 30 --connect-timeout 15 \
+            -X POST "${PROJECT_URL}/rest/v1/keep_alive" \
+            -H "apikey: ${SECRET_KEY}" \
+            -H "Authorization: Bearer ${SECRET_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: resolution=merge-duplicates" \
+            -d "{\"id\":1,\"pinged_at\":\"${NOW}\"}")
+
+          echo "HTTP Status Code: ${HTTP_CODE}"
+          cat /tmp/keepalive_response.json 2>/dev/null || true
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "Heartbeat write to ${{ matrix.project.name }} succeeded"
+          else
+            echo "Heartbeat write to ${{ matrix.project.name }} failed"
             exit 1
           fi
