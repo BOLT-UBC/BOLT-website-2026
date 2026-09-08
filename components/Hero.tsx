@@ -145,18 +145,20 @@ const Hero: React.FC = () => {
 
         <div className="flex max-w-2xl flex-col">
           {/* Eyebrow */}
-          <span
-            className="
-              mb-6
-              text-xs
-              uppercase
-              tracking-[0.28em]
-              text-purple-300
-              sm:text-sm
-            "
-          >
-            BOLT DEV SERVER
-          </span>
+          {process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" && (
+            <span
+              className="
+                mb-6
+                text-xs
+                uppercase
+                tracking-[0.28em]
+                text-purple-300
+                sm:text-sm
+              "
+            >
+              BOLT DEV SERVER
+            </span>
+          )}
 
           {/* Heading */}
           <h1

@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Expose Vercel's build-time environment (production/preview/development)
+  // to the client bundle so UI can tell prod apart from other deployments.
+  env: {
+    NEXT_PUBLIC_VERCEL_ENV: process.env.VERCEL_ENV,
+  },
+
   // Image configuration
   images: {
     remotePatterns: [
