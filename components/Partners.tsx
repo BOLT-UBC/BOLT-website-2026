@@ -11,7 +11,6 @@ const Partners: React.FC = memo(() => {
     { name: "Accenture", logo: "/partners/accenture_white.webp" },
     { name: "UBC", logo: "/partners/ubc_white.webp" },
     { name: "Mastercard", logo: "/partners/mastercard.webp" },
-    { name: "Red Bull", logo: "/partners/redbull.webp" },
     { name: "CGI", logo: "/partners/cgi.webp" },
     { name: "Microsoft", logo: "/partners/microsoft.webp" },
   ];
