@@ -56,7 +56,7 @@ export function EventCard({
       `}
       onClick={() => router.push(eventRoute)}
     >
-      {/* Event Image */}
+      {/* Event Image (clean, no overlay text) */}
       <div
         className={`
           relative
@@ -74,67 +74,16 @@ export function EventCard({
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Main Gradient Overlay */}
+        {/* Light gradient tint. Raise opacity (e.g. opacity-60) for a stronger purple tint. */}
         <div
           className={`
             absolute
             inset-0
             bg-gradient-to-br
             ${config.gradient}
-            opacity-80
+            opacity-30
           `}
         />
-
-        {/* Radial Highlight */}
-        <div
-          className="
-            absolute
-            inset-0
-            opacity-40
-            bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35)_0%,_transparent_55%)]
-          "
-        />
-
-        {/* Event Content */}
-        <div className="relative z-10 flex h-full flex-col justify-between p-3">
-          <div>
-            <h3
-              className="
-                font-inter
-                text-xs
-                font-bold
-                text-white
-              "
-            >
-              {config.titleAccent}
-            </h3>
-
-            <p className="mt-0.5 text-[9px] text-white/85">
-              {config.subtitle}
-            </p>
-          </div>
-
-          {/* Event Tag */}
-          <div
-            className={`
-              ${config.accentBg}
-              ${config.accentBorder}
-              inline-flex
-              items-center
-              self-start
-              rounded-full
-              border
-              px-2
-              py-0.5
-              text-[9px]
-              font-medium
-              text-white/90
-              backdrop-blur-md
-            `}
-          >
-            {config.footer}
-          </div>
-        </div>
 
         {/* Image Border */}
         <div
@@ -154,7 +103,8 @@ export function EventCard({
         className={`
           mx-1.5
           mt-2
-          space-y-1
+          space-y-1.5
+          pb-1
           transition-colors
           duration-300
           ${
@@ -164,12 +114,13 @@ export function EventCard({
           }
         `}
       >
-        {/* Event Name */}
+        {/* Event Name (only place the name appears) */}
         <h3
           className={`
             font-inter
-            text-[12px]
-            font-semibold
+            text-xl
+            font-bold
+            leading-tight
             ${
               isDarkMode
                 ? "text-white"
@@ -186,7 +137,7 @@ export function EventCard({
             className={`
               font-inter
               line-clamp-2
-              text-[9px]
+              text-xs
               leading-relaxed
               ${
                 isDarkMode
@@ -220,10 +171,10 @@ export function EventCard({
                 border
                 border-white/20
                 bg-white/5
-                px-3
-                py-1
+                px-4
+                py-1.5
                 font-inter
-                text-[10px]
+                text-xs
                 font-semibold
                 text-white
                 backdrop-blur-lg
@@ -262,10 +213,10 @@ export function EventCard({
               border
               border-white/20
               bg-white/5
-              px-3
-              py-1
+              px-4
+              py-1.5
               font-inter
-              text-[10px]
+              text-xs
               font-semibold
               text-white
               backdrop-blur-lg
@@ -280,8 +231,8 @@ export function EventCard({
             Learn More
 
             <svg
-              width="8"
-              height="8"
+              width="10"
+              height="10"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

@@ -57,7 +57,7 @@ export default function FirstBytePage() {
     },
   ];
 
-  const sponsors = [{ name: "TBA", image: "/images/Logo.webp" }];
+  const sponsors = [{ name: "Mastercard", image: "/events/mastercard.png" }];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#07001d] via-[#12053a] to-[#1c1041] text-white selection:bg-purple-500/30">
@@ -175,17 +175,13 @@ export default function FirstBytePage() {
                       key={idx}
                       className="group relative flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/20 transition-all text-center"
                     >
-                      <div className="w-16 h-16 rounded-xl overflow-hidden mb-3 ring-1 ring-white/10">
+                      <div className="w-full h-24 mb-3 flex items-center justify-center">
                         <img
                           src={sponsor.image}
                           alt={sponsor.name}
-                          className="w-full h-full object-cover"
+                          className="max-h-full max-w-full object-contain"
                         />
                       </div>
-
-                      <h5 className="font-bold text-white text-sm">
-                        {sponsor.name}
-                      </h5>
                     </div>
                   ))}
 
