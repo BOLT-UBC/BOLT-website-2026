@@ -13,52 +13,51 @@ export default function FirstBytePage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const highlights = [
-    {
-      id: 1,
-      title: "Beginner-Friendly Format",
-      description: [
-        "No prior data analytics experience required — this event is built for first- and second-year students.",
-      ],
-    },
-    {
-      id: 2,
-      title: "Real-World Datasets",
-      description: [
-        "Work in teams to explore and analyze real datasets, guided by BOLT mentors along the way.",
-      ],
-    },
-    {
-      id: 3,
-      title: "Low-Pressure Environment",
-      description: [
-        "Focused on learning and hands-on practice rather than competition — a great first step into analytics.",
-      ],
-    },
-  ];
-
   const timeline = [
     {
-      name: "Applications Open",
-      date: "TBA",
-      dateISO: "2026-09-15",
-      description: "Apply to FirstByte using the membership portal.",
+      name: "Registrations Open",
+      date: "Wednesday, September 30",
+      dateISO: "2026-09-30",
+      description: "Register for FirstByte using the membership portal.",
+      cta: {
+        label: "Sign Up",
+        href: "https://docs.google.com/forms/d/e/1FAIpQLScUD_0WTiar7YLFGphfmix-ZP0Xz6CO9tga0ZGrHHSlq1p3Aw/viewform",
+      },
     },
     {
-      name: "Applications Close",
-      date: "TBA",
+      name: "Case Released",
+      date: "Wednesday, October 7",
+      dateISO: "2026-10-07",
+      description: "The case is released to all registered competitors.",
+    },
+    {
+      name: "Registrations Close",
+      date: "Saturday, October 10 at 11:59 PM",
       dateISO: "2026-10-10",
-      description: "Deadline to apply for FirstByte.",
+      description: "Deadline for competitors to register for FirstByte.",
+    },
+    {
+      name: "Workshop",
+      date: "TBD",
+      dateISO: "", // fill in once the date is confirmed
+      description: "Prep workshop for competitors. Date to be announced.",
+    },
+    {
+      name: "Submissions Due",
+      date: "Thursday, October 15 at 11:59 PM",
+      dateISO: "2026-10-15",
+      description: "Final deadline to submit your case solution.",
     },
     {
       name: "FirstByte Datathon",
-      date: "Oct 17",
+      date: "Saturday, October 17",
       dateISO: "2026-10-17",
-      description: "Teams work through the dataset and present their findings.",
+      description:
+        "Event day at the Big 4 Conference Centre, Sauder School of Business. Teams present their findings.",
     },
   ];
 
-  const sponsors = [{ name: "TBA", image: "/images/Logo.webp" }];
+  const sponsors = [{ name: "Mastercard", image: "/events/mastercard.png" }];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#07001d] via-[#12053a] to-[#1c1041] text-white selection:bg-purple-500/30">
@@ -123,52 +122,12 @@ export default function FirstBytePage() {
 
               {/* Timeline Section */}
               <EventTimeline timeline={timeline} />
-
-              {/* Highlights Section */}
-              <section className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <h3 className="text-3xl font-bold">What to Expect</h3>
-                  <div className="h-[2px] flex-1 bg-gradient-to-r from-purple-500/50 to-transparent"></div>
-                </div>
-
-                <div className="grid gap-6">
-                  {highlights.map((h) => (
-                    <div
-                      key={h.id}
-                      className="group relative rounded-2xl border border-white/10 bg-gradient-to-r from-white/5 to-transparent p-6 transition-all hover:bg-white/[0.08] hover:translate-x-1"
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 font-bold shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                          {h.id}
-                        </div>
-
-                        <div className="flex-1">
-                          <h4 className="text-xl font-bold text-white mb-3">
-                            {h.title}
-                          </h4>
-
-                          <ul className="space-y-2">
-                            {h.description.map((point, index) => (
-                              <li
-                                key={index}
-                                className="flex items-start gap-2 text-white/70 text-sm leading-relaxed"
-                              >
-                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-purple-500 shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
-                                {point}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
             </div>
 
             <aside className="top-32 space-y-8">
               {/* Hero Image Section */}
-              <div className="relative w-full aspect-[1/1] flex items-center justify-center mb-32">
+              {/* -mb-28 pulls the Apply Now button up. Try -mb-20 (less) or -mb-36 (more). */}
+              <div className="relative w-full aspect-[1/1] flex items-center justify-center -mb-28">
                 <Image
                   src="/events/byte-2.png"
                   alt="Students collaborating during the First Byte datathon"
@@ -182,28 +141,12 @@ export default function FirstBytePage() {
                   `}
                   priority
                 />
-
-                <img
-                  src="/events/launch.webp"
-                  alt="Launch Fire"
-                  className={`
-                    absolute bottom-0 left-0 w-full h-[45%]
-                    object-cover object-bottom
-                    transition-all duration-700 ease-out
-                    z-0
-                    ${
-                      isLaunching
-                        ? "translate-y-[75%] scale-60 opacity-100 blur-none"
-                        : "translate-y-24 scale-40 opacity-0 blur-sm"
-                    }
-                  `}
-                />
               </div>
 
               {/* Apply Button */}
               <div className="p-6 space-y-4">
                 <a
-                  href={"/membership/events/first-byte"}
+                  href="https://docs.google.com/forms/d/e/1FAIpQLScUD_0WTiar7YLFGphfmix-ZP0Xz6CO9tga0ZGrHHSlq1p3Aw/viewform"
                   target="_blank"
                   rel="noreferrer"
                   onMouseEnter={() => setIsLaunching(true)}
@@ -232,17 +175,13 @@ export default function FirstBytePage() {
                       key={idx}
                       className="group relative flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/20 transition-all text-center"
                     >
-                      <div className="w-16 h-16 rounded-xl overflow-hidden mb-3 ring-1 ring-white/10">
+                      <div className="w-full h-24 mb-3 flex items-center justify-center">
                         <img
                           src={sponsor.image}
                           alt={sponsor.name}
-                          className="w-full h-full object-cover"
+                          className="max-h-full max-w-full object-contain"
                         />
                       </div>
-
-                      <h5 className="font-bold text-white text-sm">
-                        {sponsor.name}
-                      </h5>
                     </div>
                   ))}
 

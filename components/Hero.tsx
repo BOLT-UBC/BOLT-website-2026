@@ -484,70 +484,106 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* ===================================================== */}
-      {/* STATS */}
-      {/* ===================================================== */}
+{/* ===================================================== */}
+{/* UPCOMING EVENT BAR */}
+{/* ===================================================== */}
 
-      <div
-        className="
-          relative
-          z-20
-          mx-auto
-          max-w-7xl
-          px-6
-          pb-16
-          md:px-10
-        "
-      >
-        <div
-          className="
-            grid
-            grid-cols-2
-            overflow-hidden
-            rounded-2xl
-            border
-            border-white/15
-            bg-white/[0.02]
-            backdrop-blur-sm
-            md:grid-cols-4
-          "
-        >
-          {[
-            ["500+", "Members"],
-            ["20+", "Events Hosted"],
-            ["10+", "Industry Partners"],
-            ["5+", "Years of Impact"],
-          ].map(([value, label]) => (
-            <div
-              key={label}
-              className="
-                border-white/10
-                p-7
-                text-center
-                md:border-r
-                md:last:border-r-0
-              "
-            >
-              <div
-                className="
-                  text-3xl
-                  font-semibold
-                "
-              >
-                {value}
-              </div>
+<div className="relative z-20 mx-auto max-w-7xl px-6 pb-16 md:px-10">
+  <div
+    className="
+      flex flex-col gap-6
+      rounded-2xl
+      border border-purple-400/20
+      bg-[#0f0a24]/70
+      p-5
+      backdrop-blur-sm
+      lg:flex-row lg:items-center lg:gap-8
+    "
+  >
+    {/* Calendar icon */}
+    <div
+      className="
+        hidden h-14 w-14 flex-shrink-0 items-center justify-center
+        rounded-xl bg-purple-500/10 text-purple-300
+        sm:flex
+      "
+    >
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="1.8"
+        strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </svg>
+    </div>
 
-              <div
-                className="
-                  mt-1
-                  text-sm
-                  text-white/55
-                "
-              >
-                {label}
-              </div>
-            </div>
-          ))}
+    {/* Event info */}
+    <div className="flex-shrink-0">
+      <p className="text-[11px] uppercase tracking-[0.25em] text-purple-400">
+        Upcoming Event
+      </p>
+      <h3 className="mt-1 text-xl font-semibold text-white">
+        First Byte Datathon -10:30 AM - 4:30 PM
+      </h3>
+      <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-white/60">
+        <span className="flex items-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round"
+            className="text-purple-400">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+          Oct 17th , 2026
+        </span>
+        <span className="flex items-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round"
+            className="text-purple-400">
+            <path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z" />
+            <circle cx="12" cy="10" r="2.5" />
+          </svg>
+          UBC Campus
+        </span>
+      </div>
+    </div>
+
+    {/* Divider */}
+    <div className="hidden h-14 w-px flex-shrink-0 bg-white/10 lg:block" />
+
+    {/* Description */}
+    <p className="max-w-sm flex-1 text-sm leading-relaxed text-white/60">
+      A beginner-friendly case competition and networking event for students exploring data and 
+      Business Analytics.NO EXPERIENCE NEEDED!. Don&apos;t miss out , secure your spot today!
+    </p>
+
+   {/* CTA */}
+          <button
+            type="button"
+            onClick={() =>
+              window.open(
+                "https://docs.google.com/forms/d/e/1FAIpQLScUD_0WTiar7YLFGphfmix-ZP0Xz6CO9tga0ZGrHHSlq1p3Aw/viewform",
+                "_blank",
+                "noopener,noreferrer"
+              )
+            }
+            className="
+              flex flex-shrink-0 items-center justify-center gap-2
+              rounded-full
+              bg-gradient-to-r from-purple-500 to-violet-600
+              px-6 py-3
+              text-sm font-semibold text-white
+              shadow-lg shadow-purple-900/30
+              transition hover:brightness-110
+            "
+          >
+            Sign Up Now
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </button>
         </div>
       </div>
 
