@@ -554,7 +554,7 @@ const Hero: React.FC = () => {
     {/* Description */}
     <p className="max-w-sm flex-1 text-sm leading-relaxed text-white/60">
       A beginner-friendly case competition and networking event for students exploring data and
-      business analytics. <strong className="font-semibold text-white">No experience needed!</strong> Don&apos;t miss out. Secure your spot today!
+      business analytics. NO EXPERIENCE NEEDED! Don&apos;t miss out. Secure your spot today!
     </p>
 
    {/* CTA */}
