@@ -6,6 +6,9 @@ import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import EventTimeline from "@/components/EventTimeline";
 
+const CASE_URL =
+  "https://drive.google.com/file/d/1-0kovMiCkIrg0ekSWHfxVz7aAU6zUW-H/view?usp=sharing";
+
 export default function FirstBytePage() {
   const [isLaunching, setIsLaunching] = useState(false);
 
@@ -29,6 +32,10 @@ export default function FirstBytePage() {
       date: "Wednesday, October 7",
       dateISO: "2026-10-07",
       description: "The case is released to all registered competitors.",
+      cta: {
+        label: "Download Case",
+        href: CASE_URL,
+      },
     },
     {
       name: "Registrations Close",
@@ -159,6 +166,33 @@ export default function FirstBytePage() {
 
                   <span className="relative z-10 font-bold text-white tracking-widest uppercase text-sm sm:text-base">
                     Apply Now
+                  </span>
+                </a>
+
+                {/* Case Download */}
+                <a
+                  href={CASE_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl border border-purple-400/40 bg-purple-500/10 py-4 transition-all duration-300 hover:border-purple-300/70 hover:bg-purple-500/20"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-5 w-5 text-purple-200 transition-transform duration-300 group-hover:translate-y-0.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 3v12" />
+                    <path d="m7 10 5 5 5-5" />
+                    <path d="M5 21h14" />
+                  </svg>
+                  <span className="font-bold text-purple-100 tracking-widest uppercase text-sm sm:text-base">
+                    Download the Case
                   </span>
                 </a>
               </div>
