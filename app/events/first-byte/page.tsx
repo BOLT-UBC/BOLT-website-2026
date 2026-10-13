@@ -7,7 +7,7 @@ import Footer from "../../../components/Footer";
 import EventTimeline from "@/components/EventTimeline";
 
 const CASE_URL =
-  "https://drive.google.com/file/d/1-0kovMiCkIrg0ekSWHfxVz7aAU6zUW-H/view?usp=sharing";
+  "https://drive.google.com/drive/folders/1UIa5x28v3PZZzIPi1shXPh4hdZllg6MM";
 
 export default function FirstBytePage() {
   const [isLaunching, setIsLaunching] = useState(false);
