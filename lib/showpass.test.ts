@@ -78,6 +78,11 @@ test('test pings, unknown events and missing emails are ignored', () => {
   assert.equal(interpretEvent(payload).kind, 'ignore')
 })
 
+test('the dashboard "Send test" ping (endpoint settings, no event_type) is ignored', () => {
+  const ping = { id: 1230, url: 'https://www.boltubc.com/api/webhooks/showpass', is_enabled: true } as unknown as ShowpassWebhook
+  assert.equal(interpretEvent(ping).kind, 'ignore')
+})
+
 test('payloads from another organization are ignored when SHOWPASS_ORG_ID is set', () => {
   assert.equal(interpretEvent(samplePayload(), '5796').kind, 'grant')
   assert.equal(interpretEvent(samplePayload(), '1234').kind, 'ignore')

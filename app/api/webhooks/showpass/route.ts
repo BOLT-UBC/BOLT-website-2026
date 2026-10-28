@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { randomUUID } from 'crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { getSupabaseAdmin } from '@/lib/serverAuth'
 import { interpretEvent, verifySignature, type MembershipAction, type ShowpassWebhook } from '@/lib/showpass'
@@ -71,7 +72,9 @@ export async function POST(request: NextRequest) {
     } catch {
       return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
     }
-    if (payload?.id === undefined || !payload.event_type) {
+    // Only `id` is required: the dashboard's "Send test" posts the endpoint's
+    // own settings, which have no event_type. interpretEvent ignores those.
+    if (payload?.id === undefined || payload.id === null) {
       return NextResponse.json({ error: 'Malformed payload' }, { status: 400 })
     }
 
@@ -97,11 +100,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Our own history, since Showpass only keeps 15 days of webhook logs.
-    if (payload.webhook_event_uuid) {
+    // Test pings have no webhook_event_uuid, so give them one to log them too.
+    {
       const { error: logError } = await supabaseAdmin.from('showpass_webhook_events').upsert(
         {
-          webhook_event_uuid: payload.webhook_event_uuid,
-          event_type: payload.event_type,
+          webhook_event_uuid: payload.webhook_event_uuid ?? `no-uuid:${randomUUID()}`,
+          event_type: payload.event_type ?? 'unknown',
           transaction_id: payload.data?.transaction_id ?? String(payload.id),
           outcome: action.kind === 'ignore' ? `ignore: ${action.reason}` : action.status,
           payload,
