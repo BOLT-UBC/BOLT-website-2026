@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { authService } from '@/lib/auth'
 import { useAuth } from '@/lib/useAuth'
+import { SITE_URLS } from '@/lib/config'
 
 export default function LoginPage() {
   return (
@@ -357,6 +358,40 @@ function LoginForm() {
             />
 
             <div className="relative p-6 sm:p-8">
+
+              {/* Membership email notice */}
+              <div
+                className="
+                  mb-6
+                  p-3.5
+                  rounded-xl
+                  bg-purple-500/[0.08]
+                  border
+                  border-purple-400/20
+                "
+              >
+                <p className="text-purple-100/80 text-xs leading-relaxed">
+                  {isLogin ? 'Sign in' : 'Sign up'} using the{' '}
+                  <span className="font-semibold text-white">
+                    same email you bought your BOLT membership with
+                  </span>{' '}
+                  on Showpass. That&apos;s how we unlock your member portal.{' '}
+                  {!isLogin && (
+                    <>
+                      No membership yet?{' '}
+                      <a
+                        href={SITE_URLS.membership}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-purple-300 hover:text-purple-200 underline underline-offset-2"
+                      >
+                        Buy one here
+                      </a>
+                      .
+                    </>
+                  )}
+                </p>
+              </div>
 
               {/* Form */}
               <form

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useAuth } from '@/lib/useAuth'
 import { authService } from '@/lib/auth'
+import { SITE_URLS } from '@/lib/config'
 import {
   Sidebar,
   DeleteAccountModal,
@@ -114,30 +115,53 @@ export default function MembershipPortal() {
     )
   }
 
-  // Gate non-members out of the full member portal - they haven't been
-  // approved yet, so show an "awaiting approval" message instead of the
-  // full panel set.
+  // Gate non-members out of the full member portal. Accounts are promoted to
+  // bolt_member automatically once a Showpass membership purchase with the
+  // same email is recorded (see app/api/webhooks/showpass), so point them
+  // at the purchase page instead of an approval queue.
   if (profile && profile.role === 'non_member') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#1a0b2e] via-[#614ea5] to-[#493b7b] flex items-center justify-center">
         <div className="text-center text-white max-w-lg px-6">
-          <h1 className="text-4xl font-bold mb-4">Awaiting Approval</h1>
-          <p className="text-xl mb-6">
-            Thanks for signing up! Your account is currently pending membership approval.
-            You&apos;ll get full access to the member portal once an admin approves your membership.
+          <h1 className="text-4xl font-bold mb-4">Membership Required</h1>
+          <p className="text-xl mb-4">
+            We couldn&apos;t find a BOLT membership purchased with{' '}
+            <span className="font-semibold">{user.email}</span>. You need to buy a membership on
+            Showpass before you can access the member portal.
           </p>
-          <button
-            onClick={async () => {
-              try {
-                await authService.signOut()
-              } finally {
-                router.push('/')
-              }
-            }}
-            className="px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors"
-          >
-            Log Out
-          </button>
+          <p className="text-base text-white/80 mb-8">
+            Your account must use the same email you bought your membership with. If you purchased
+            with a different email, log out and create an account with that email instead.
+            Just bought one? It can take a minute to sync, so check again shortly.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href={SITE_URLS.membership}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 bg-white text-purple-600 rounded-lg font-medium hover:bg-white/90 transition-colors"
+            >
+              Buy Membership
+            </a>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 border border-white/40 text-white rounded-lg font-medium hover:bg-white/10 transition-colors"
+            >
+              Check Again
+            </button>
+            <button
+              onClick={async () => {
+                try {
+                  await authService.signOut()
+                } finally {
+                  router.push('/')
+                }
+              }}
+              className="px-6 py-3 border border-white/40 text-white rounded-lg font-medium hover:bg-white/10 transition-colors"
+            >
+              Log Out
+            </button>
+          </div>
         </div>
       </div>
     )
