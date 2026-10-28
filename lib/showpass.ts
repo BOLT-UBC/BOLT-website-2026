@@ -15,7 +15,8 @@ export interface ShowpassItem {
 export interface ShowpassWebhook {
   // Transaction id, shared by every event on a transaction. The only signed field.
   id: string | number
-  event_type: string
+  // Missing on the dashboard's "Send test" ping.
+  event_type?: string
   // Unique per delivery.
   webhook_event_uuid?: string
   data?: {
@@ -76,7 +77,7 @@ export function normalizeEmail(email: string | null | undefined): string | null 
 export function interpretEvent(payload: ShowpassWebhook, orgId?: string): MembershipAction {
   if (payload.event_type === 'webhook.test') return { kind: 'ignore', reason: 'test event' }
 
-  const status = STATUS_BY_EVENT[payload.event_type]
+  const status = payload.event_type ? STATUS_BY_EVENT[payload.event_type] : undefined
   if (!status) return { kind: 'ignore', reason: `unhandled event_type ${payload.event_type}` }
 
   const data = payload.data
@@ -121,6 +122,6 @@ export function interpretEvent(payload: ShowpassWebhook, orgId?: string): Member
     customerName: data.customer_name ?? null,
     membershipName:
       membershipItems[0]?.ticket_type_name ?? membershipTickets[0]?.ticket_type_name ?? null,
-    eventType: payload.event_type,
+    eventType: payload.event_type!,
   }
 }
